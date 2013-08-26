@@ -553,7 +553,7 @@ function form_add() {
                     $('#total-penjualan').html('0');
                     $('#biaya-apt').html('0');
                     $('#newrow,.adding').remove();
-                    cetak_struk();
+                    cetak_struk(data.id);
                     //alert_tambah('#noresep');
                 }
             }
