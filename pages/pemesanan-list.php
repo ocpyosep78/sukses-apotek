@@ -33,6 +33,7 @@ $(function() {
         'id' => $_GET['id_pemesanan'],
         'limit' => $limit,
         'start' => $offset,
+        'id_supplier' => '',
         'search' => $_GET['search']
     );
     $pemesanan = pemesanan_load_data($param);

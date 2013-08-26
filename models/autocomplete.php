@@ -238,7 +238,7 @@ if ($method === 'get_detail_harga_barang') {
 if ($method === 'get_data_noresep') {
     $sql = "select r.*, p.nama, p.id_asuransi, a.diskon as reimburse from resep r 
         join pelanggan p on (r.id_pasien = p.id)
-        join asuransi a on (p.id_asuransi = a.id)
+        left join asuransi a on (p.id_asuransi = a.id)
         where r.id like ('%$q%') or p.nama like ('%$q%') order by locate('$q', r.id)";
     $result = mysql_query($sql);
     $rows = array();
