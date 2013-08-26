@@ -117,6 +117,8 @@ if ($method === 'save_barang') {
         mysql_query($sql);
         $id = mysql_insert_id();
         
+        $default = $_POST['default'];
+        
         if (isset($_POST['jumlah'])) {
             $jumlah     = $_POST['jumlah'];
             for ($i = 0; $i <= $jumlah; $i++) {
@@ -127,15 +129,31 @@ if ($method === 'save_barang') {
                 $satuan     = $_POST['satuan'.$i]; // kemasan terkecil
                 $isi_satuan = $_POST['isi_kecil'.$i];
                 $bertingkat = isset($_POST['is_bertingkat'.$i])?$_POST['is_bertingkat'.$i]:'0';
-        
-                $query="insert into kemasan set 
+                
+                if ($default == $i) {
+                    $query="insert into kemasan set 
                         id_barang = '$id',
                         barcode = '$barcode',
                         id_kemasan = '$kemasan',
                         isi = '$isi',
                         id_satuan = '$satuan',
                         isi_satuan = '$isi_satuan',
+                        default_kemasan = '1',
                         is_harga_bertingkat = '".(isset($bertingkat)?$bertingkat:'0')."'";
+                } else {
+                    $query="insert into kemasan set 
+                        id_barang = '$id',
+                        barcode = '$barcode',
+                        id_kemasan = '$kemasan',
+                        isi = '$isi',
+                        id_satuan = '$satuan',
+                        isi_satuan = '$isi_satuan',
+                        default_kemasan = '0',
+                        is_harga_bertingkat = '".(isset($bertingkat)?$bertingkat:'0')."'";
+                }
+                //echo $default.' - '.$i.' - '.$dft_kmsan."<br/>";
+                
+                //echo $query."-";
                 mysql_query($query);
                 $id_packing = mysql_insert_id();
                 if (isset($_POST['awal'.$i])) {
@@ -200,6 +218,7 @@ if ($method === 'save_barang') {
         }
         $sql.="where id = '$id_barang'";
         mysql_query($sql);
+        mysql_query("update kemasan set default_kemasan = '0' where id_barang = '$id_barang'");
         $id = $id_barang;
         
         if (isset($_POST['jumlah'])) {
@@ -213,27 +232,55 @@ if ($method === 'save_barang') {
                 $isi_satuan = $_POST['isi_kecil'.$i];
                 $bertingkat = isset($_POST['is_bertingkat'.$i])?$_POST['is_bertingkat'.$i]:'0';
                 if ($id_kemasan !== '') {
-                $query="update kemasan set 
-                        id_barang = '$id',
-                        barcode = '$barcode',
-                        id_kemasan = '$kemasan',
-                        isi = '$isi',
-                        id_satuan = '$satuan',
-                        isi_satuan = '$isi_satuan',
-                        is_harga_bertingkat = '$bertingkat'
-                        where id = '$id_kemasan'";
+                    if ($_POST['default'] == $id_kemasan) {
+                        $query="update kemasan set 
+                            id_barang = '$id',
+                            barcode = '$barcode',
+                            id_kemasan = '$kemasan',
+                            isi = '$isi',
+                            id_satuan = '$satuan',
+                            isi_satuan = '$isi_satuan',
+                            default_kemasan = '1',
+                            is_harga_bertingkat = '$bertingkat'
+                            where id = '$id_kemasan'";
+                    } else {
+                        $query="update kemasan set 
+                            id_barang = '$id',
+                            barcode = '$barcode',
+                            id_kemasan = '$kemasan',
+                            isi = '$isi',
+                            id_satuan = '$satuan',
+                            isi_satuan = '$isi_satuan',
+                            default_kemasan = '0',
+                            is_harga_bertingkat = '$bertingkat'
+                            where id = '$id_kemasan'";
+                    }
+                    //echo $query."<br/>";
                     mysql_query($query);
-                    //echo $query;
                     $id_packing = $id_kemasan;
                 } else {
-                    $query="insert into kemasan set
-                        id_barang = '$id',
-                        barcode = '$barcode',
-                        id_kemasan = '$kemasan',
-                        isi = '$isi',
-                        id_satuan = '$satuan',
-                        isi_satuan = '$isi_satuan',
-                        is_harga_bertingkat = '$bertingkat'";
+                    if ($_POST['default'] == $i) {
+                        $query="insert into kemasan set 
+                            id_barang = '$id',
+                            barcode = '$barcode',
+                            id_kemasan = '$kemasan',
+                            isi = '$isi',
+                            id_satuan = '$satuan',
+                            isi_satuan = '$isi_satuan',
+                            default_kemasan = '1',
+                            is_harga_bertingkat = '$bertingkat'";
+                    } else {
+                        $query="insert into kemasan set 
+                            id_barang = '$id',
+                            barcode = '$barcode',
+                            id_kemasan = '$kemasan',
+                            isi = '$isi',
+                            id_satuan = '$satuan',
+                            isi_satuan = '$isi_satuan',
+                            default_kemasan = '0',
+                            is_harga_bertingkat = '$bertingkat'";
+                    }
+                    //echo $query."<br/>";
                     mysql_query($query);
                     $id_packing = mysql_insert_id();
                 }
@@ -266,6 +313,7 @@ if ($method === 'save_barang') {
                     }
                 }
             }
+            
         }
     }
     

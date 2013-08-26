@@ -112,7 +112,7 @@ $tile[] = array("type"=>"flip","group"=>1,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"
 */
 	
 /* GROUP 3 */
-$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#5f5f5f","url"=>"",
+$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#5f5f5f","url"=>"arus-stok.php",
 	"img"=>"img/icons/chart.png","desc"=>"Arus Stok",
 	"showDescAlways"=>true,"showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
@@ -121,8 +121,12 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/lap-sp.png","desc"=>"Pemesanan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#175e88","url"=>"layanan.php",
-	"img"=>"img/icons/layanan.png","desc"=>"Penerimaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#175e88","url"=>"lap-penjualan.php",
+	"img"=>"img/icons/penjualan.png","desc"=>"Penjualan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
+$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#3c17b7","url"=>"lap-resep.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Resep","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 ?> 

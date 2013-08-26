@@ -2,6 +2,12 @@
 
 include_once '../config/database.php';
 
+function apotek_atribute() {
+    $sql = mysql_query("select * from apotek");
+    $row = mysql_fetch_object($sql);
+    return $row;
+}
+
 function load_data_barang($param) {
     $q = NULL;
     if ($param['id'] !== '') {
@@ -357,7 +363,8 @@ function fda_load_data() {
 }
 
 function kemasan_load_data($id) {
-    $sql = "select * from kemasan where id_barang = '$id'";
+    $sql = "select k.*, s.nama from kemasan k
+        join satuan s on (k.id_kemasan = s.id) where k.id_barang = '$id'";
     $query = mysql_query($sql);
     $data = array();
     while ($row = mysql_fetch_object($query)) {

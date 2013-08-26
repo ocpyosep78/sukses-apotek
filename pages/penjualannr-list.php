@@ -4,7 +4,18 @@ include_once '../inc/functions.php';
 ?>
 <script type="text/javascript">
 $(function() {
-    $( document ).tooltip();
+    //$(document).tooltip();
+//    $('.detail').on('mouseover',function() {
+//        $.ajax({
+//            url: 'pages/tooltip-detail-transaksi.php',
+//            data: 'id='+$(this).attr('id'),
+//            cache: false,
+//            success: function(msg) {
+//                $('.list-data tbody tr.detail').attr('title',msg);
+//                $( document ).tooltip();
+//            }
+//        });
+//    });
 });
 </script>
 <table cellspacing="0" width="100%" class="list-data">
@@ -19,7 +30,7 @@ $(function() {
         <th width="10%">Tuslah RP.</th>
         <th width="10%">Embalage RP.</th>
         <th width="10%">Total</th>
-        <!--<th width="5%">#</th>-->
+        <th width="5%">#</th>
     </tr>
 </thead>
 <tbody>
@@ -42,21 +53,24 @@ $(function() {
     $penjualan_nr = penjualan_nr_load_data($param);
     $list_data = $penjualan_nr['data'];
     $total_data= $penjualan_nr['total'];
-    foreach ($list_data as $key => $data) { ?>
-        <tr class="<?= ($key%2==0)?'even':'odd' ?>">
+    $detail = "";
+    foreach ($list_data as $key => $data) { 
+        
+        ?>
+        <tr id="<?= $data->id ?>" title="" class="detail <?= ($key%2==0)?'even':'odd' ?>">
             <td align="center"><?= (++$key+$offset) ?></td>
-            <td align="center"><?= datefmysql($data->waktu) ?></td>
-            <td><?= $data->customer ?></td>
+            <td align="center"><?= datetimefmysql($data->waktu) ?></td>
+            <td><?= ($data->customer !== NULL)?$data->customer:'-' ?></td>
             <td align="right"><?= $data->diskon_rupiah ?></td>
             <td align="center"><?= $data->diskon_persen ?></td>
             <td align="center"><?= $data->ppn ?></td>
             <td align="right"><?= $data->tuslah ?></td>
             <td align="right"><?= $data->embalage ?></td>
             <td align="right"><?= rupiah($data->total) ?></td>
-<!--            <td class='aksi' align='center'>
-                <a class='edition' onclick="edit_penjualan_nr('<?= $str ?>');" title="Klik untuk edit penjualan_nr">&nbsp;</a>
-                <a class='deletion' onclick="delete_penjualan_nr('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus penjualan_nr">&nbsp;</a>
-            </td>-->
+            <td class='aksi' align='center'>
+                <!--<a class='edition' onclick="edit_penjualan_nr('<?= $str ?>');" title="Klik untuk edit penjualan_nr">&nbsp;</a>-->
+                <a class='deletion' onclick="delete_penjualannr('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
+            </td>
         </tr>
     <?php }
     ?>

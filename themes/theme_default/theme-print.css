@@ -1,0 +1,23 @@
+/* 
+    Document   : theme-print
+    Created on : Aug 23, 2013, 1:56:51 PM
+    Author     : arvinnizar
+    Description:
+        Purpose of the stylesheet follows.
+*/
+html{
+	font-family: "Open Sans", Segoe UI light, Verdana, Tahoma,Helvetica,sans-serif;
+	font-size:10px;
+}
+h1 { font-size: 11px; text-align: center; }
+
+.layout-print-struk th { font-size: 11px; text-align: left; }
+.layout-print-struk table td { width: 100%; font-family: Arial; font-size: 10px; line-height: 9px; }
+
+
+.list-data-print { text-transform: uppercase; border-top: 1px solid #6eb7ff; border-left: 1px solid #6eb7ff; margin: 10px 0; background: #fff; color: #000; font-size: inherit; }
+.list-data-print th { font-weight: bold; border-right: 1px solid #6eb7ff; height: 20px; border-bottom: 1px solid #ccc; background: #3399ff; border-bottom: #dfdfdf; height: 40px; color: #fff; cursor: pointer; }
+.list-data-print td { border-right: 1px solid #ccc; height: 20px; border-bottom: 1px solid #ccc; height: 20px; padding: 2px; empty-cells: show; }
+.list-data-print .even { background: #fff; cursor: pointer; }
+.list-data-print .odd { background: #f4f4f4; cursor: pointer; }
+.list-data-print .even:hover, .list-data .odd:hover {background: #d0e7fe; }

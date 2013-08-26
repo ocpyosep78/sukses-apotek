@@ -3,12 +3,12 @@ include_once '../models/masterdata.php';
 include_once '../inc/functions.php';
 
 $barang_packing = kemasan_load_data($_GET['id']);
-$kemasan  = satuan_load_data('0');
+$kemasan  = satuan_load_data();
 
 foreach ($barang_packing as $key => $rows) {
 
     ?>
-    <tr class="mother" id="mother<?= $key ?>"><td width=15%>Barcode:</td><td width=70%><?= form_hidden('id_kemasan'.$key, $rows->id, 'id=id_kemasan'.$key) ?><?= form_input('barcode'.$key, $rows->barcode, 'id=barcode'.$key.' class=barcode size=10') ?> 
+    <tr class="mother" id="mother<?= $key ?>"><td width=15%><input type=radio name=default <?= ($rows->default_kemasan === '1')?'checked':NULL ?> value="<?= $rows->id ?>" title="Kemasan jual default" /> Barcode:</td><td width=70%><?= form_hidden('id_kemasan'.$key, $rows->id, 'id=id_kemasan'.$key) ?><?= form_input('barcode'.$key, $rows->barcode, 'id=barcode'.$key.' class=barcode size=10') ?> 
     Kemasan: <select name=kemasan<?= $key ?> onchange="isi_satuan_terkecil(<?= $key ?>);" id="kemasan<?= $key ?>" style="min-width: 100px;"><option value="">Pilih ...</option><?php foreach ($kemasan as $data) { echo '<option value="'.$data->id.'" '.(($data->id === $rows->id_kemasan)?"selected":NULL).'>'.$data->nama.'</option>'; } ?></select> 
     isi: <?= form_input('isi'.$key, $rows->isi, 'id=isi'.$key.' size=5 onblur="isi_satuan_terkecil('.$key.');"') ?> 
     Satuan: <select name=satuan<?= $key ?> id="satuan<?= $key ?>" onChange="config_auto_suggest(<?= $key ?>);" style="min-width: 100px;"><option value="">Pilih ...</option><?php foreach ($kemasan as $data) { echo '<option value="'.$data->id.'" '.(($data->id === $rows->id_satuan)?"selected":NULL).'>'.$data->nama.'</option>'; } ?></select>&nbsp;

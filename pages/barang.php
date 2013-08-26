@@ -11,8 +11,8 @@ include_once("inc/functions.php");
 include_once("models/masterdata.php");
 include_once("pages/message.php");
 $golongan = golongan_load_data();
-$satuan_kekuatan = satuan_load_data('1');
-$kemasan  = satuan_load_data('0');
+$satuan_kekuatan = satuan_load_data();
+$kemasan  = satuan_load_data();
 $sediaan  = sediaan_load_data();
 $admr     = admr_load_data();
 $perundangan = perundangan_load_data();
@@ -44,7 +44,7 @@ function create_new_packing(i) {
 }
 
 function kemasan_add(i) {
-    var str = '<tr class="mother" id="mother'+i+'"><td width=15%>Barcode:</td><td width=70%><input type=hidden name=id_kemasan'+i+' id=id_kemasan'+i+' /><input type=text name=barcode'+i+' id=barcode'+i+' class=barcode size=10 />'+
+    var str = '<tr class="mother" id="mother'+i+'"><td width=15%><input type=radio name=default value="'+i+'" title="Kemasan jual default" /> Barcode:</td><td width=70%><input type=hidden name=id_kemasan'+i+' id=id_kemasan'+i+' /><input type=text name=barcode'+i+' id=barcode'+i+' class=barcode size=10 />'+
                 '&nbsp;Kemasan: <select name=kemasan'+i+' id="kemasan'+i+'" onchange="isi_satuan_terkecil('+i+')" style="min-width: 100px;"><option value="">Pilih ...</option><?php foreach ($kemasan as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select> '+
                 'Isi: <input type=text name=isi'+i+' id=isi'+i+' onblur="isi_satuan_terkecil('+i+')" size=5 />&nbsp;'+
                 'Satuan: <select name=satuan'+i+' id="satuan'+i+'" onchange="config_auto_suggest('+i+')" style="min-width: 100px;"><option value="">Pilih ...</option><?php foreach ($kemasan as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select>&nbsp;'+
@@ -441,7 +441,7 @@ var str = '<div id=form_add>'+
                         alert_edit();
                         $('#form_add').dialog().remove();
                         var page = $('.noblock').html();
-                        load_data_barang(page,'');
+                        load_data_barang(page,$('#search').val());
                     }
                     
                 }
@@ -485,11 +485,12 @@ function edit_barang(str) {
     $('#pabrik').val(arr[8]);
     $('#id_pabrik').val(arr[7]);
     $('#rak').val(arr[9]);
-    if (arr[10] === '1') { $('#ya').attr('checked','checked'); }
-    if (arr[10] === '0') { $('#tidak').attr('checked','checked'); }
+    //alert(arr[11]);
+    if (arr[10] === 'Ya') { $('#yes').attr('checked','checked'); }
+    if (arr[10] === 'Tidak') { $('#no').attr('checked','checked'); }
     
-    if (arr[11] === '1') { $('#yes').attr('checked','checked'); }
-    if (arr[11] === '0') { $('#no').attr('checked','checked'); }
+    if (arr[11] === '1') { $('#ya').attr('checked','checked'); }
+    if (arr[11] === '0') { $('#tidak').attr('checked','checked'); }
     
     $('#indikasi').val(arr[12]);
     $('#dosis').val(arr[13]);

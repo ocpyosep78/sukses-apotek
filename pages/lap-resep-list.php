@@ -18,7 +18,6 @@ include_once '../inc/functions.php';
     <th width="3%">Dosis <br/> Racik</th>
     <th width="4%">Jumlah<br/> Pakai</th>
     <th width="5%">Harga<br/>Barang</th>
-    <th width="3%">#</th>
 </tr>
 </thead>
 <tbody>
@@ -33,10 +32,13 @@ include_once '../inc/functions.php';
     }
     
     $param = array(
-        'id' => $_GET['id_resep'],
+        'id' => '',
         'limit' => $limit,
         'start' => $offset,
-        'search' => $_GET['search']
+        'awal' => date2mysql($_GET['awal']),
+        'akhir' => date2mysql($_GET['akhir']),
+        'pasien' => $_GET['id_pasien'],
+        'dokter' => $_GET['id_dokter']
     );
     $list_data = load_data_resep($param);
     $master_resep = $list_data['data'];
@@ -61,13 +63,6 @@ include_once '../inc/functions.php';
         <td align="center"><?= $data->dosis_racik ?></td>
         <td align="center"><?= $data->jumlah_pakai ?></td>
         <td align="right"><?= rupiah($data->jual_harga) ?></td>
-        <td class='aksi' align='center'>
-            <?php
-            if ($data->id_resep !== $id_resep) { ?>
-                <a class='edition' onclick="edit_resep('<?= $str ?>','<?= $data->id_resep ?>');" title="Klik untuk edit resep">&nbsp;</a>
-                <a class='deletion' onclick="delete_resep('<?= $data->id_resep ?>', '<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
-            <?php } ?>
-        </td>
     </tr>
     <?php 
     $jasa = $data->r_no;

@@ -39,6 +39,13 @@ $pageTitles['penjualan.php'] = "Penjualan Resep";
 $pageTitles['penjualan-nr.php'] = "Penjualan Non Resep";
 $pageTitles['penerimaan.php'] = "Penerimaan";
 $pageTitles['stok-opname.php'] = "Stok Opname";
-$pageTitles['resep.php'] = "Resep";
+$pageTitles['resep.php'] = "Receipt";
 $pageTitles['retur-penerimaan.php'] = "Retur Penerimaan";
+
+/*Laporan*/
+$pageTitles['arus-stok.php'] = "Arus Stok";
+$pageTitles['lap-sp.php'] = "Laporan Pemesanan";
+$pageTitles['lap-resep.php'] = "Laporan Resep";
+$pageTitles['lap-penjualan.php'] = "Laporan Penjualan";
+
 ?>

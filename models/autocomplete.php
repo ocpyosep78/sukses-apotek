@@ -71,13 +71,14 @@ if ($method === 'barang') {
 
 if ($method === 'get_barang') {
     $barcode = $_GET['barcode'];
-    $sql = mysql_query("select b.*, p.nama as pabrik, g.nama as golongan, st.nama as satuan, sd.nama as sediaan,
+    $sql = mysql_query("select b.*, k.id as id_packing, p.nama as pabrik, g.nama as golongan, st.nama as satuan, sd.nama as sediaan,
         concat_ws(' ', b.nama, b.kekuatan, st.nama) as nama_barang
         from barang b 
+        join kemasan k on (b.id = k.id_barang)
         left join pabrik p on (b.id_pabrik = p.id)
         left join golongan g on (b.id_golongan = g.id)
         left join satuan st on (b.satuan_kekuatan = st.id)
-        left join sediaan sd on (b.id_sediaan = sd.id) where b.barcode = '$barcode'");
+        left join sediaan sd on (b.id_sediaan = sd.id) where b.barcode = '$barcode' and default_kemasan = '1'");
     $data = mysql_fetch_object($sql);
     die(json_encode($data));
 }
@@ -118,7 +119,10 @@ if ($method === 'get_detail_barang_by_ed') {
 if ($method === 'get_kemasan_barang') {
     $id = $_GET['id'];
     $rows = NULL;
-    $sql = mysql_query("select k.id, k.id_kemasan, s.nama from kemasan k join satuan s on (k.id_kemasan = s.id) where k.id_barang = '$id' order by k.id desc");
+    $sql = mysql_query("select k.id, k.default_kemasan, k.id_kemasan, s.nama 
+        from kemasan k 
+        join satuan s on (k.id_kemasan = s.id) 
+        where k.id_barang = '$id' order by k.id desc");
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;
     }
@@ -153,12 +157,13 @@ if ($method === 'get_attr_penerimaan') {
 }
 
 if ($method === 'get_data_pemesanan_penerimaan') {
+    $id = $_GET['id'];
     $sql = "select b.id as id_barang, b.nama, b.kekuatan, st.nama as satuan_kekuatan, s.id as id_kemasan, s.nama as kemasan, k.id, dp.jumlah 
         from detail_pemesanan dp
         join kemasan k on (k.id = dp.id_kemasan)
         join barang b on (b.id = k.id_barang)
         join satuan s on (k.id_kemasan = s.id)
-        join satuan st on (b.satuan_kekuatan = st.id)";
+        join satuan st on (b.satuan_kekuatan = st.id) where dp.id_pemesanan = '$id'";
     $result = mysql_query($sql);
     while ($data = mysql_fetch_object($result)) {
         $rows[] = $data;
@@ -174,18 +179,83 @@ if ($method === 'get_stok_sisa') {
     die(json_encode($row));
 }
 
+if ($method === 'get_detail_harga_barang_pemesanan') { // ambil data barang resep
+    $id = $_GET['id']; // id barang
+    $id_kemasan = $_GET['id_kemasan'];
+    $query = mysql_query("select b.*, (b.hna*k.isi_satuan*k.isi) as esti, k.id as id_packing from barang b
+        join kemasan k on (b.id = k.id_barang)
+        where k.id_barang = '$id' and k.id_kemasan = '$id_kemasan'");
+    $get = mysql_fetch_object($query);
+    
+    die(json_encode($get));
+}
+
+if ($method === 'get_detail_harga_barang_resep') { // ambil data barang resep
+    $id = $_GET['id']; // id barang
+    $jml= $_GET['jumlah'];
+    $query = mysql_query("select b.*, k.id as id_packing from barang b
+        join kemasan k on (b.id = k.id_barang)
+        where b.id = '$id' and k.default_kemasan = '1'");
+    $get = mysql_fetch_object($query);
+    
+    $qry= mysql_query("select is_harga_bertingkat from kemasan where id = '".$get->id_packing."'");
+    $cek= mysql_fetch_object($qry);
+    if ($cek->is_harga_bertingkat === '0') {
+        $sql = mysql_query("select b.*, k.id as id_packing, (b.hna+(b.hna*(b.margin_resep/100))) as harga_jual from kemasan k join barang b on (k.id_barang = b.id) where k.id = '".$get->id_packing."'");
+        $rows= mysql_fetch_object($sql);
+    } else {
+        $sql= mysql_query("select d.*, d.hj_resep as harga_jual, k.id as id_packing, d.hj_resep as harga_jual_resep, (k.isi*k.isi_satuan) as isi_satuan
+            from dinamic_harga_jual d
+            join kemasan k on (d.id_kemasan = k.id)
+            where d.id_kemasan = '".$get->id_packing."' and $jml between d.jual_min and d.jual_max");
+        $rows= mysql_fetch_object($sql);
+    }
+    die(json_encode($rows));
+}
+
 if ($method === 'get_detail_harga_barang') {
-    $id = $_GET['id'];
+    $id = $_GET['id']; // id packing
     $jml= $_GET['jumlah'];
     $qry= mysql_query("select is_harga_bertingkat from kemasan where id = '$id'");
     $cek= mysql_fetch_object($qry);
     if ($cek->is_harga_bertingkat === '0') {
-        $sql = mysql_query("select b.*, (b.hna+(b.hna*(b.margin_non_resep/100))) as harga_jual from kemasan k join barang b on (k.id_barang = b.id) where k.id = '$id'");
+        $sql = mysql_query("select b.*, (b.hna+(b.hna*(b.margin_non_resep/100))) as harga_jual, 
+            (b.hna+(b.hna*(b.margin_resep/100))) as harga_jual_resep, (k.isi*k.isi_satuan) as isi_satuan
+            from kemasan k 
+            join barang b on (k.id_barang = b.id) 
+            where k.id = '$id'");
         $rows= mysql_fetch_object($sql);
     } else {
-        $sql= mysql_query("select *, hj_non_resep as harga_jual from dinamic_harga_jual where id_kemasan = '$id' and $jml between jual_min and jual_max");
+        $sql= mysql_query("select d.*, d.hj_non_resep as harga_jual, d.hj_resep as harga_jual_resep, (k.isi*k.isi_satuan) as isi_satuan
+            from dinamic_harga_jual d
+            join kemasan k on (d.id_kemasan = k.id)
+            where d.id_kemasan = '$id' and $jml between d.jual_min and d.jual_max");
         $rows= mysql_fetch_object($sql);
     }
     die(json_encode($rows));
+}
+
+if ($method === 'get_data_noresep') {
+    $sql = "select r.*, p.nama, p.id_asuransi, a.diskon as reimburse from resep r 
+        join pelanggan p on (r.id_pasien = p.id)
+        join asuransi a on (p.id_asuransi = a.id)
+        where r.id like ('%$q%') or p.nama like ('%$q%') order by locate('$q', r.id)";
+    $result = mysql_query($sql);
+    $rows = array();
+    while ($data = mysql_fetch_object($result)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'get_no_resep') {
+    $sql = mysql_query("select count(*) as jumlah from resep where date(waktu) like '%".date("Y-m")."%'");
+    $row = mysql_fetch_object($sql);
+    if (!isset($row->jumlah)) {
+        $str = "001-".date("m")."/".date("Y");
+    } else {
+        $str = str_pad((string)($row->jumlah+1), 3, "0", STR_PAD_LEFT)."-".date("m")."/".date("Y");
+    }
+    die(json_encode($str));
 }
 ?>

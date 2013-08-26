@@ -28,7 +28,7 @@ nav img{
 }
 /* Subnav, on each page */
 #subNav a{	
-	font-size:14px;
+	font-size:13px;
 	color:#FFF;
 }
 #subNav a:hover{
@@ -116,7 +116,7 @@ em{
 }
 /* HEADINGS */
 h1{
-	font-size:40px;
+	font-size:20px;
 	font-weight:300;
 	margin:20px 0 5px 0;
 	color:#FFF;
@@ -310,7 +310,7 @@ hr.light{border-color:#AAA;}
 
 .list-data { text-transform: uppercase; border-top: 1px solid #6eb7ff; border-left: 1px solid #6eb7ff; margin: 10px 0; background: #fff; color: #000; font-size: 11px; }
 .list-data th { font-weight: bold; border-right: 1px solid #6eb7ff; height: 20px; border-bottom: 1px solid #ccc; background: #3399ff; border-bottom: #dfdfdf; height: 40px; color: #fff; cursor: pointer; }
-.list-data td { border-right: 1px solid #ccc; height: 20px; border-bottom: 1px solid #ccc; height: 20px; padding: 2px; }
+.list-data td { border-right: 1px solid #ccc; height: 20px; border-bottom: 1px solid #ccc; height: 20px; padding: 2px; empty-cells: show; }
 .list-data .even { background: #fff; cursor: pointer; }
 .list-data .odd { background: #f4f4f4; cursor: pointer; }
 .list-data .even:hover, .list-data .odd:hover {background: #d0e7fe; }

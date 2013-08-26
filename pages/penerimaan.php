@@ -9,6 +9,14 @@ include_once("pages/message.php");
 ?>
 <script type="text/javascript">
 load_data_penerimaan();
+    $.cookie('session', 'false');
+    $(document).keydown(function(e) {
+        if (e.keyCode === 120) {
+            if ($.cookie('session') === 'false') {
+                $('#button').click();
+            }
+        }
+    });
 function removeMe(el) {
     var parent = el.parentNode.parentNode;
     parent.parentNode.removeChild(parent);
@@ -126,7 +134,7 @@ function form_add() {
               '</form></div>';
     $('body').append(str);
     var wWidth = $(window).width();
-    var dWidth = wWidth * 0.95;
+    var dWidth = wWidth * 1;
     
     var wHeight= $(window).height();
     var dHeight= wHeight * 1;
@@ -144,11 +152,14 @@ function form_add() {
             }, 
             "Cancel": function() {    
                 $(this).dialog().remove();
+                $.cookie('session', 'false');
             }
         }, close: function() {
             $(this).dialog().remove();
+            $.cookie('session', 'false');
         }, open: function() {
             $('#no_sp').focus();
+            $.cookie('session', 'true');
         }
     });
     var lebar = $('#supplier').width();
@@ -317,7 +328,7 @@ function delete_penerimaan(id, page) {
 </script>
 <h1 class="margin-t-0">Penerimaan Barang</h1>
 <hr>
-<button id="button">Tambah Penerimaan</button>
+<button id="button">Tambah Penerimaan (F9)</button>
 <button id="reset">Reset</button>
 <div id="result-penerimaan">
     

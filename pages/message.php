@@ -9,6 +9,9 @@ function alert_tambah(param) {
                 $(param).focus();
             }
           }
+        },
+        open: function() {
+            //$( "#tambah" ).
         }
     });
 }
@@ -48,6 +51,19 @@ function alert_resets() {
 
 function alert_empty(variable, focus) {
     $( "<div title='Alert: Warning'>Data "+variable+" tidak boleh kosong !</div>" ).dialog({
+        autoOpen: true,
+        modal: true,
+        buttons: {
+          Ok: function() {
+            $( this ).dialog( "close" );
+            $(focus).focus();
+          }
+        }
+    });
+}
+
+function alert_dinamic(variable, focus) {
+    $( "<div title='Alert: Warning'>"+variable+"</div>" ).dialog({
         autoOpen: true,
         modal: true,
         buttons: {

@@ -1,8 +1,8 @@
 <?php
 $subNav = array(
 	"Penjualan Bebas ; penjualan-nr.php ; #509601;",
-        "Entri Resep ; resep.php ; #509601;",
-        "Penjualan Resep ; penjualan.php ; #509601;"
+        "Penjualan Resep ; penjualan.php ; #509601;",
+        "Entri Resep ; metallica.php ; #509601;"
 );
 set_include_path("../");
 include_once("inc/essentials.php");
@@ -10,38 +10,17 @@ include_once("inc/functions.php");
 include_once("models/masterdata.php");
 include_once("pages/message.php");
 $biaya_apoteker = tarif_load_data();
-
-$array = array(
-    '1' => array('1','1'),
-    '2' => array('1/4','0.25'),
-    '3' => array('1/3','0.33'),
-    '4' => array('1/2','0.5'),
-    '5' => array('1,5','1.5'),
-    '6' => array('2','2'),
-    '7' => array('3','3'),
-    '8' => array('4','4'),
-    '9' => array('5','5'));
 ?>
 <script type="text/javascript">
-
-    //$(document).tooltip();
+$(function() {
+    $(document).tooltip();
     $.cookie('session', 'false');
     $(document).keydown(function(e) {
         if (e.keyCode === 120) { 
-            //alert($.cookie('session'));
             if ($.cookie('session') === 'false') {
-                $('#button').click();
+                form_add();
             }
-        }
-        if (e.keyCode === 115) {
-            if ($.cookie('session') === 'true') {
-                var next = (isNaN($('#nr').val())?'0':parseInt($('#nr').val())+1);
-                $('#nr').val(next);
-                $('#jr,#jt,#ap,#ja').val('');
-                $('#it').val('0');
-                $('#jr').focus();
-            }
-        }
+        } 
     });
     load_data_resep();
     $('#button').button({
@@ -49,7 +28,7 @@ $array = array(
             primary: 'ui-icon-newwin'
         }
     }).click(function() {
-        form_receipt();
+        form_add();
     });
     $('#reset').button({
         icons: {
@@ -62,6 +41,7 @@ $array = array(
         var row = $('.masterresep').length;
         addnoresep(row);
     });
+});
 
 function subTotal() {
     
@@ -128,9 +108,7 @@ function addnoresep() {
     var no_r        = $('#nr').val();
     var permintaan  = $('#jr').val();
     var tebus       = $('#jt').val();
-    //var aturan_pakai= $('#a').val()+'DD'+$('#p').val();
-    var a           = $('#a').val();
-    var p           = $('#p').val();
+    var aturan_pakai= $('#ap').val();
     var iterasi     = $('#it').val();
     var jasa        = jasa_apt[1];
     var kekuatan    = $('#kekuatan').html();
@@ -142,8 +120,7 @@ function addnoresep() {
                 '<td>'+barang+' <input type=hidden name=id_barang[] id=id_barang'+i+' value="'+id_barang+'" style="text-align: center;" /></td>'+
                 '<td><input type=text name=jp[] id=jp'+i+' value="'+permintaan+'" style="text-align: center;" /></td>'+
                 '<td><input type=text name=jt[] id=jt'+i+' value="'+tebus+'" style="text-align: center;" /></td>'+
-                '<td align=center id=sisa'+i+'></td>'+
-                '<td><input type=text name=a[] id=a'+i+' value="'+a+'" style="text-align: right; width: 40%" /> X <input type=text name=p[] id=p'+i+' value="'+p+'" style="text-align: left; width: 40%" /></td>'+
+                '<td><input type=text name=ap[] id=ap'+i+' value="'+aturan_pakai+'" style="text-align: center;" /></td>'+
                 '<td><input type=text name=it[] id=it'+i+' value="'+iterasi+'" style="text-align: center;" /></td>'+
                 '<td><input type=text name=dr[] id=dr'+i+' value="'+dosis_racik+'" style="text-align: center;" /></td>'+
                 '<td><input type=text name=jpi[] id=jpi'+i+' value="'+jml_pakai+'" style="text-align: center;" /></td>'+
@@ -162,19 +139,6 @@ function addnoresep() {
                 total_perkiraan_resep();
             }
         });
-        $.ajax({
-        url: 'models/autocomplete.php?method=get_stok_sisa&id='+id_barang,
-        dataType: 'json',
-        cache: false,
-        success: function(data) {
-            if (data.sisa === null) {
-                sisa = '0';
-            } else {
-                sisa = data.sisa;
-            }
-            $('#sisa'+i).html(sisa);
-        }
-    });
 }
 
 function removeMe(el) {
@@ -185,34 +149,30 @@ function removeMe(el) {
 function total_perkiraan_resep() {
     var jumlah  = $('.tr_rows').length;
     var total   = 0;
-    //var jasa    = 0;
     for (i = 1; i <= jumlah; i++) {
         var subtotal = parseInt(currencyToNumber($('#hrg_barang'+i).val()));
-        var jasa     = parseInt(currencyToNumber($('#jasa'+i).val()));
-        total   = total + subtotal + jasa;
+        total   = total + subtotal;
     }
     $('#total').html(numberToCurrency(parseInt(total)));
 }
 
 function hitung_jml_pakai() {
-    var dosis_racik = ($('#dr').val())*1;
+    var dosis_racik = parseInt($('#dr').val());
     var jumlah_tbs  = parseInt($('#jt').val());
-    var kekuatan    = ($('#kekuatan').html())*1;
+    var kekuatan    = parseInt($('#kekuatan').html());
     //alert(dosis_racik+' '+jumlah_tbs+' '+kekuatan);
-    
     var jumlah_pakai= (dosis_racik*jumlah_tbs)/kekuatan;
     var jml_pakai = isNaN(jumlah_pakai)?'':jumlah_pakai;
     $('#jmlpakai').val(jml_pakai);
 }
 
-function form_receipt() {
+function form_add() {
     var str = '<div id=form_resep>'+
                 '<form id=resep_save>'+
                 '<input type=hidden name=id_resep id=id_resep />'+
                 '<table width=100% class=data-input><tr valign=top><td width=33% style="border-right: 1px solid #ccc;">'+
                     '<table width=100%>'+
-                        '<tr><td width=25%>Nomor Resep:</td><td><?= form_input('noresep', NULL, 'id=noresep size=10') ?></td></tr>'+
-                        '<tr><td>Waktu:</td><td><?= form_input('waktu', date("d/m/Y"), 'id=waktu size=10') ?></td></tr>'+
+                        '<tr><td width=25%>Waktu:</td><td><?= form_input('waktu', date("d/m/Y"), 'id=waktu size=10') ?></td></tr>'+
                         '<tr><td>Dokter:</td><td><?= form_input('dokter', NULL, 'id=dokter style="width: 90%"') ?><?= form_hidden('id_dokter', NULL, 'id=id_dokter') ?></td></tr>'+
                         '<tr><td>Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien style="width: 90%"') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>'+
                         '<tr><td>Keterangan:</td><td><?= form_input('keterangan', NULL, ' style="width: 90%" id=keterangan') ?></td></tr>'+
@@ -221,12 +181,9 @@ function form_receipt() {
                         '<tr><td width=25%>No. R/:</td><td><input type=text name=nr id=nr value="1" class=nr size=20 onkeyup=Angka(this) maxlength=2 /></td></tr>'+
                         '<tr><td>Permintaan:</td><td><input type=text name=jr id=jr class=jr size=20 onkeyup=Angka(this) /></td></tr>'+
                         '<tr><td>Jumlah Tebus:</td><td><input type=text name=jt id=jt class=jt onblur="hitung_jml_pakai();" onkeyup=Angka(this) size=20 /></td></tr>'+
-                        '<tr><td>Aturan Pakai:</td><td><select name=a id=a style="min-width: 65px;">'+
-                        '<?php for ($i = 1; $i<=10;$i++) { echo '<option value="'.$i.'">'.$i.'</option>'; } ?></select> X <select name=p id=p style="min-width: 65px;">'+
-                        '<?php foreach($array as $key => $i) { echo '<option value="'.$i[1].'">'.$i[0].'</option>'; } ?></select>'+
-                        '</td></tr>'+
-                        '<tr><td>Iterasi:</td><td><input type=text name=it id=it class=it size=20 value="0" onkeyup=Angka(this) /></td></tr>'+
-                        '<tr><td>Jasa Apoteker:</td><td><select style="width: 100px;" onchange="subTotal()" name=ja id=ja><option value="0-0">Pilih biaya ..</option><?php foreach ($biaya_apoteker as $value) { echo '<option value="'.$value->id.'-'.$value->nominal.'"> Rp. '.$value->nominal.' '.$value->nama.'</option>'; } ?></select> F4 = No. R/ selanjutnya</td></tr>'+
+                        '<tr><td>Aturan Pakai:</td><td><input type=text name=ap id=ap class=ap size=20 /></td></tr>'+
+                        '<tr><td>Iterasi:</td><td><input type=text name=it id=it class=it size=10 value="0" onkeyup=Angka(this) /></td></tr>'+
+                        '<tr><td>Jasa Apoteker:</td><td><select style="max-width: 100px;" onchange="subTotal()" name=ja id=ja><option value="0-0">Pilih biaya ..</option><?php foreach ($biaya_apoteker as $value) { echo '<option value="'.$value->id.'-'.$value->nominal.'"> Rp. '.$value->nominal.' '.$value->nama.'</option>'; } ?></select> F8 = No. R/ selanjutnya</td></tr>'+
                     '</table>'+
                     '</td><td width=33% style="padding-left: 10px;">'+
                     '<table align=right width=100%>'+
@@ -235,7 +192,7 @@ function form_receipt() {
                         '<tr><td>Kekuatan:</td><td><span class=label id=kekuatan>-</span></td></tr>'+
                         '<tr><td>Dosis Racik:</td><td> <input type=text name=dr id=dr class=dr size=10 onblur="hitung_jml_pakai();" /></td></tr>'+
                         '<tr><td>Jumlah Pakai:</td><td><?= form_input('jmlpakai', NULL, 'id=jmlpakai size=10') ?></td></tr>'+
-                        '<tr><td>TOTAL:</td><td style="font-size: 30px;"><span>Rp </span><span id=total></span>,00</td></tr>'+
+                        '<tr><td>TOTAL:</td><td id=total style="font-size: 30px;"></td></tr>'+
                     '</table>'+
                     '</td></tr></table>'+
                 '<table width=100% cellspacing="0" class="list-data-input" id="resep-list"><thead>'+
@@ -244,7 +201,6 @@ function form_receipt() {
                         '<th width=25%>Nama Barang</th>'+
                         '<th width=10%>Jumlah<br/>Permintaan</th>'+
                         '<th width=10%>Jumlah<br/>Tebus</th>'+
-                        '<th width=5%>Sisa<br/>Stok</th>'+
                         '<th width=10%>Aturan Pakai</th>'+
                         '<th width=5%>Iterasi</th>'+
                         '<th width=8%>Dosis Racik</th>'+
@@ -258,18 +214,21 @@ function form_receipt() {
                 '</form>'+
               '</div>';
     $('body').append(str);
-    $(document).keydown(function(e) {
-        if (e.keyCode === 119) {
-            $('#resep_save').submit();
-        }
-    });
     var lebar = $('#dokter').width();
     $('#jmlpakai').keydown(function(e) {
         if (e.keyCode === 13) {
             addnoresep();
-            $('#pb,#id_pb,#dr,#jmlpakai,#ja').val('');
+            $('#pb,#id_pb,#dr,#jmlpakai').val('');
             $('#kekuatan').html('-');
             $('#pb').focus();
+        }
+    });
+    $(document).keydown(function(e) {
+        if (e.keyCode === 119) {
+            var next = (isNaN($('#nr').val())?'0':parseInt($('#nr').val()))+1;
+            $('#nr').val(next);
+            $('#jr,#jt,#ap,#it,#ja').val('');
+            $('#jr').focus();
         }
     });
     $('#keterangan').keydown(function(e) {
@@ -282,12 +241,9 @@ function form_receipt() {
         if (e.keyCode === 13) { $('#jt').focus().select(); }
     });
     $('#jt').keydown(function(e) {
-        if (e.keyCode === 13) { $('#a').focus().select(); }
+        if (e.keyCode === 13) { $('#ap').focus().select(); }
     });
-    $('#a').keydown(function(e) {
-        if (e.keyCode === 13) { $('#p').focus().select(); }
-    });
-    $('#p').keydown(function(e) {
+    $('#ap').keydown(function(e) {
         if (e.keyCode === 13) { $('#it').focus().select(); }
     });
     $('#it').keydown(function(e) {
@@ -396,7 +352,7 @@ function form_receipt() {
                     if (data.action === 'add') {
                         alert_tambah('#dokter');
                         $('input:text,select').val('');
-                        $('#resep-list tbody, #total').html('');
+                        $('#resep-list').html('');
                         load_data_resep();
                     } else {
                         alert_edit();
@@ -421,7 +377,7 @@ function form_receipt() {
         hide: 'clip',
         show: 'blind',
         buttons: {
-            "Simpan (F8)": function() {
+            "Simpan": function() {
                 $('#resep_save').submit();
             }, 
             "Cancel": function() {    
@@ -432,14 +388,6 @@ function form_receipt() {
             $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
-            $.ajax({
-                url: 'models/autocomplete.php?method=get_no_resep',
-                cache: false,
-                dataType: 'json',
-                success: function(data) {
-                    $('#noresep').val(data);
-                }
-            });
             $('#dokter').focus();
             $.cookie('session', 'true');
         }
@@ -463,7 +411,7 @@ function load_data_resep(page, search, id) {
 
 function edit_resep(data, id) {
     var arr = data.split('#');
-    form_receipt();
+    form_add();
     $('#id_resep').val(arr[0]);
     $('#id_dokter').val(arr[1]);
     $('#dokter').val(arr[2]);

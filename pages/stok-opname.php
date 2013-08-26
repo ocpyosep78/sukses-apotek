@@ -13,17 +13,17 @@ function removeMe(el) {
     var parent = el.parentNode.parentNode;
     parent.parentNode.removeChild(parent);
 }
-function add_new_rows(id_brg, nama_brg) {
+function add_new_rows(id_brg, nama_brg, batch, ed, masuk, keluar) {
     var jml = $('.tr_rows').length+1;
     
     var str = '<tr class="tr_rows">'+
                 '<td align=center>'+jml+'</td>'+
                 '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_barang[] value="'+id_brg+'" class=id_barang id=id_barang'+jml+' /></td>'+
-                '<td><input type=text name=nobatch[] id=nobatch'+jml+' /></td>'+
-                '<td><input type=text name=ed[] id=ed'+jml+' /></td>'+
+                '<td><input type=text name=nobatch[] id=nobatch'+jml+' value="'+batch+'" /></td>'+
+                '<td><input type=text name=ed[] id=ed'+jml+' value="'+ed+'" /></td>'+
                 '<td align=center id=sisa'+jml+'></td>'+
-                '<td><input type=text name=masuk[] id=masuk'+jml+' /></td>'+
-                '<td><input type=text name=keluar[] id=keluar'+jml+' /></td>'+
+                '<td><input type=text name=masuk[] id=masuk'+jml+' value="'+masuk+'" /></td>'+
+                '<td><input type=text name=keluar[] id=keluar'+jml+' value="'+keluar+'" /></td>'+
                 '<td align=center><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
               '</tr>';
     $('#pesanan-list tbody').append(str);
@@ -53,9 +53,13 @@ function form_add() {
             '<table width=100% class=data-input><tr valign=top><td width=50%><table width=100%>'+
                 '<tr><td>Tanggal:</td><td><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
                 '<tr><td width=20%>Nama Barang:</td><td><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?></td></tr>'+
-                '<tr><td></td><td><input type=button value="Pilih" id=pilih /></td></tr>'+
+                '<tr><td>No. Batch:</td><td><?= form_input('batch', NULL, 'id=batch size=10') ?></td></tr>'+
             '</table></td><td width=50%>'+
-                
+            '<table width=100%>'+
+                '<tr><td>Expired Date:</td><td><?= form_input('ed', NULL, 'id=ed size=10') ?></td></tr>'+
+                '<tr><td>Masuk:</td><td><?= form_input('masuk', NULL, 'id=masuk size=10') ?></td></tr>'+
+                '<tr><td>Keluar:</td><td><?= form_input('keluar', NULL, 'id=pilih size=10') ?></td></tr>'+
+            '</table>'+
             '</td></tr></table>'+
             '<table width=100% cellspacing="0" class="list-data-input" id="pesanan-list"><thead>'+
                 '<tr><th width=5%>No.</th>'+
@@ -75,13 +79,39 @@ function form_add() {
     $('#pilih').click(function() {
         var id_barang   = $('#id_barang').val();
         var nama        = $('#barang').val();
+        var batch       = $('#batch').val();
+        var ed          = $('#ed').val();
+        var masuk       = $('#masuk').val();
+        var keluar      = $('#keluar').val();
         if (id_barang !== '') {
-            add_new_rows(id_barang, nama);
+            add_new_rows(id_barang, nama, batch, ed, masuk, keluar);
         }
         $('#id_barang').val('');
         $('#barang').val('').focus();
     });
+    $('#ed').datepicker({
+        changeYear: true,
+        changeMonth: true,
+        onSelect: function() {
+            $('#masuk').focus();
+        }
+    });
     $('#barang').keydown(function(e) {
+        if (e.keyCode === 13) {
+            $('#batch').focus();
+        }
+    });
+    $('#batch').keydown(function(e) {
+        if (e.keyCode === 13) {
+            $('#ed').focus();
+        }
+    });
+    $('#ed').keydown(function(e) {
+        if (e.keyCode === 13) {
+            $('#masuk').focus();
+        }
+    });
+    $('#masuk').keydown(function(e) {
         if (e.keyCode === 13) {
             $('#pilih').focus();
         }
@@ -111,7 +141,7 @@ function form_add() {
         $('#id_barang').val(data.id);
     });
     var wWidth = $(window).width();
-    var dWidth = wWidth * 0.6;
+    var dWidth = wWidth * 1;
     
     var wHeight= $(window).height();
     var dHeight= wHeight * 1;

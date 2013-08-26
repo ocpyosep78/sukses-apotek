@@ -35,7 +35,8 @@ $jsFiles = array( /* Add your js files to this array */
         'plugins/metro-jquery/jquery.autocomplete.js',
         'plugins/metro-jquery/combo.autocomplete.js',
         'plugins/metro-jquery/jquery.form.js',
-        'plugins/metro-jquery/functions.js'
+        'plugins/metro-jquery/functions.js',
+        'plugins/metro-jquery/jquery.cookies.js'
 );
 
 /* PLUGIN SYSTEM */

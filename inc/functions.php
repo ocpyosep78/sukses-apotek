@@ -16,6 +16,10 @@ function form_upload($name, $value = NULL, $attr = NULL) {
     return '<input type=file name="'.$name.'"  value="'.$value.'" '.$attr.' />';
 }
 
+function form_button($value, $attr) {
+    return '<input type=button value="'.$value.'" '.$attr.' />';
+}
+
 function form_radio($name, $value, $id, $label = null, $checked = FALSE) {
     $attr = "";
     if ($checked == TRUE) {
@@ -136,6 +140,17 @@ function datefmysql($tgl) {
         $tgl = explode("-", $tgl);
         $new = $tgl[2] . "/" . $tgl[1] . "/" . $tgl[0];
         return $new;
+    }
+}
+
+function datetimefmysql($dt, $time = NULL) {
+    $var = explode(" ", $dt);
+    $var1 = explode("-", $var[0]);
+    $var2 = "$var1[2]/$var1[1]/$var1[0]";
+    if ($time != NULL) {
+        return $var2 . ' ' . $var[1];
+    } else {
+        return $var2;
     }
 }
 

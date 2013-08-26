@@ -1,7 +1,79 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+include_once '../models/transaksi.php';
+include_once '../inc/functions.php';
 ?>
+<script type="text/javascript">
+$(function() {
+    $('.detail').on('mouseover',function() {
+        $.ajax({
+            url: 'pages/tooltip-detail-transaksi.php',
+            data: 'id='+$(this).attr('id'),
+            cache: false,
+            success: function(msg) {
+                $('.list-data tbody tr.detail').attr('title',msg);
+                $( document ).tooltip();
+            }
+        });
+    });
+});
+</script>
+<table cellspacing="0" width="100%" class="list-data">
+<thead>
+    <tr class="italic">
+        <th width="5%">No.</th>
+        <th width="10%">Tanggal</th>
+        <th width="20%">Customer</th>
+        <th width="10%">Diskon Rp.</th>
+        <th width="10%">Diskon %</th>
+        <th width="10%">PPN %</th>
+        <th width="10%">Tuslah RP.</th>
+        <th width="10%">Embalage RP.</th>
+        <th width="10%">Total</th>
+        <th width="10%">Terbayar</th>
+        <th width="5%">#</th>
+    </tr>
+</thead>
+<tbody>
+    <?php
+    $limit = 10;
+    $page  = $_GET['page'];
+    if ($_GET['page'] === '') {
+        $page = 1;
+        $offset = 0;
+    } else {
+        $offset = ($page-1)*$limit;
+    }
+    
+    $param = array(
+        'id' => $_GET['id_penjualan'],
+        'limit' => $limit,
+        'start' => $offset,
+        'search' => $_GET['search']
+    );
+    $penjualan = penjualan_load_data($param);
+    $list_data = $penjualan['data'];
+    $total_data= $penjualan['total'];
+    foreach ($list_data as $key => $data) { 
+        $str = $data->id.'#'.$data->id_resep.'#'.$data->customer.'#'.$data->id_customer;
+        ?>
+        <tr id="<?= $data->id ?>" class="detail <?= ($key%2==0)?'even':'odd' ?>">
+            <td align="center"><?= (++$key+$offset) ?></td>
+            <td align="center"><?= datetimefmysql($data->waktu) ?></td>
+            <td><?= $data->customer ?></td>
+            <td align="right"><?= $data->diskon_rupiah ?></td>
+            <td align="center"><?= $data->diskon_persen ?></td>
+            <td align="center"><?= $data->ppn ?></td>
+            <td align="right"><?= $data->tuslah ?></td>
+            <td align="right"><?= $data->embalage ?></td>
+            <td align="right"><?= rupiah($data->total) ?></td>
+            <td align="right"><?= rupiah($data->terbayar) ?></td>
+            <td class='aksi' align='center'>
+                <!--<a class='edition' onclick="edit_penjualan('<?= $str ?>');" title="Klik untuk edit">&nbsp;</a>-->
+                <a class='deletion' onclick="delete_penjualan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
+            </td>
+        </tr>
+    <?php }
+    ?>
+</tbody>
+</table>
+<?= paging_ajax($total_data, $limit, $page, '1', $_GET['search']) ?>
