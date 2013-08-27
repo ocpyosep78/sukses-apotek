@@ -8,7 +8,7 @@ $(function() {
     $('#loader').hide();
     $(document).keydown(function() {
         open_login();
-        $('#username').focus();
+        //$('#username').focus();
     });
     $(document).click(function() {
         open_login();

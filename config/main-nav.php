@@ -11,7 +11,7 @@
 	Laporan
 </a>
 
-<div class="logout" onclick="location.href='pages/logout.php'">
+<a rel="group3" onclick="location.href='pages/logout.php'">
         <img src="img/icons/logout.png" alt="Logout" align="center"/>
         Logout
-</div>
+</a>

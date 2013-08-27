@@ -25,21 +25,15 @@ $array = array(
 <script type="text/javascript">
 
     //$(document).tooltip();
+    $('#nor').click(function() {
+        
+    });
     $.cookie('session', 'false');
     $(document).keydown(function(e) {
         if (e.keyCode === 120) { 
             //alert($.cookie('session'));
             if ($.cookie('session') === 'false') {
                 $('#button').click();
-            }
-        }
-        if (e.keyCode === 115) {
-            if ($.cookie('session') === 'true') {
-                var next = (isNaN($('#nr').val())?'0':parseInt($('#nr').val())+1);
-                $('#nr').val(next);
-                $('#jr,#jt,#ap,#ja').val('');
-                $('#it').val('0');
-                $('#jr').focus();
             }
         }
     });
@@ -258,9 +252,20 @@ function form_receipt() {
                 '</form>'+
               '</div>';
     $('body').append(str);
-    $(document).keydown(function(e) {
+    $('#form_resep').keydown(function(e) {
         if (e.keyCode === 119) {
             $('#resep_save').submit();
+        }
+        if (e.keyCode === 115) {
+            if ($.cookie('session') === 'true') {
+                var prev = $.cookie('nomor_r');
+                var next = parseInt(prev)+1;
+                $('#nr').val(next);
+                $('#jr,#jt,#ap,#ja').val('');
+                $('#it').val('0');
+                $('#jr').focus();
+                $.cookie('nomor_r', next);
+            }
         }
     });
     var lebar = $('#dokter').width();
@@ -442,6 +447,7 @@ function form_receipt() {
             });
             $('#dokter').focus();
             $.cookie('session', 'true');
+            $.cookie('nomor_r', $('#nr').val());
         }
     });
 }
@@ -512,6 +518,7 @@ function paging(page, tab, search) {
 <hr>
 <button id="button">Resep Baru (F9)</button>
 <button id="reset">Reset</button>
+<button id="nor" style="display: none;"></button>
 <div id="result-resep">
     
 </div>
