@@ -21,15 +21,21 @@ $(function() {
 <table cellspacing="0" width="100%" class="list-data">
 <thead>
     <tr class="italic">
-        <th width="5%">No.</th>
-        <th width="10%">Tanggal</th>
-        <th width="20%">Customer</th>
-        <th width="10%">Diskon Rp.</th>
-        <th width="10%">Diskon %</th>
-        <th width="10%">PPN %</th>
-        <th width="10%">Tuslah RP.</th>
-        <th width="10%">Embalage RP.</th>
-        <th width="10%">Total</th>
+        <th width="3%">No.</th>
+        <th width="5%">Tanggal</th>
+        <th width="15%">Customer</th>
+        <th width="5%">Diskon <br/>Rp.</th>
+        <th width="6%">Diskon <br/>%</th>
+        <th width="5%">PPN %</th>
+        <th width="5%">Tuslah <br/>RP.</th>
+        <th width="5%">Embalage <br/>RP.</th>
+        <th width="5%">Total</th>
+        <th width="5%">Terbayar</th>
+        <th width="20%">Nama Barang</th>
+        <th width="5%">Kemasan</th>
+        <th width="5%">Jumlah</th>
+        <th width="5%">Harga</th>
+        <th width="10%">Subtotal</th>
         <th width="5%">#</th>
     </tr>
 </thead>
@@ -54,25 +60,41 @@ $(function() {
     $list_data = $penjualan_nr['data'];
     $total_data= $penjualan_nr['total'];
     $detail = "";
+    $id = "";
+    $no = 1;
     foreach ($list_data as $key => $data) { 
         
         ?>
         <tr id="<?= $data->id ?>" title="" class="detail <?= ($key%2==0)?'even':'odd' ?>">
-            <td align="center"><?= (++$key+$offset) ?></td>
-            <td align="center"><?= datetimefmysql($data->waktu) ?></td>
-            <td><?= ($data->customer !== NULL)?$data->customer:'-' ?></td>
-            <td align="right"><?= $data->diskon_rupiah ?></td>
-            <td align="center"><?= $data->diskon_persen ?></td>
-            <td align="center"><?= $data->ppn ?></td>
-            <td align="right"><?= $data->tuslah ?></td>
-            <td align="right"><?= $data->embalage ?></td>
-            <td align="right"><?= rupiah($data->total) ?></td>
+            <td align="center"><?= ($id !== $data->id)?($no+$offset):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?datetimefmysql($data->waktu):NULL ?></td>
+            <td><?= ($id !== $data->id)?$data->customer:NULL ?></td>
+            <td align="right"><?= ($id !== $data->id)?rupiah($data->diskon_rupiah):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?$data->diskon_persen:NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?$data->ppn:NULL ?></td>
+            <td align="right"><?= ($id !== $data->id)?rupiah($data->tuslah):NULL ?></td>
+            <td align="right"><?= ($id !== $data->id)?rupiah($data->embalage):NULL ?></td>
+            <td align="right"><?= ($id !== $data->id)?rupiah($data->total):NULL ?></td>
+            <td align="right"><?= ($id !== $data->id)?rupiah($data->terbayar):NULL ?></td>
+            <td><?= $data->nama_barang ?></td>
+            <td align="center"><?= $data->kemasan ?></td>
+            <td align="center"><?= $data->qty ?></td>
+            <td align="right"><?= rupiah($data->harga_jual) ?></td>
+            <td align="right"><?= rupiah($data->subtotal) ?></td>
             <td class='aksi' align='center'>
                 <!--<a class='edition' onclick="edit_penjualan_nr('<?= $str ?>');" title="Klik untuk edit penjualan_nr">&nbsp;</a>-->
+                <?php
+                if ($id !== $data->id) { ?>
                 <a class='deletion' onclick="delete_penjualannr('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
+                <?php } ?>
             </td>
         </tr>
-    <?php }
+    <?php 
+    if ($id !== $data->id) {
+        $no++;
+    }
+    $id = $data->id;
+    }
     ?>
 </tbody>
 </table>

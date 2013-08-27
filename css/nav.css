@@ -15,8 +15,8 @@ nav>a, #navItems>a{
 	height:auto;
 	width:95px;
 	-webkit-transition: background 100ms ease-in;
-    -moz-transition: background 100ms ease-in;
-    -o-transition: background 100ms ease-in;
+        -moz-transition: background 100ms ease-in;
+        -o-transition: background 100ms ease-in;
 	-ms-transition: background 100ms ease-in;
     transition: background 100ms ease-in;
 }

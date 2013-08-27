@@ -189,9 +189,18 @@ function penjualan_nr_load_data($param) {
         $q.="and p.id = '".$param['id']."' ";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, a.nama as asuransi from penjualan p
+    $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, a.nama as asuransi,
+        (select sum(bayar) from detail_bayar_penjualan where id_penjualan = p.id) as terbayar,
+        concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, (dp.harga_jual*dp.qty) as subtotal
+        from penjualan p
+        join detail_penjualan dp on (p.id = dp.id_penjualan)
+        join kemasan k on (k.id = dp.id_kemasan)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
+        left join satuan st on (k.id_kemasan = st.id)
         left join pelanggan pl on (p.id_pelanggan = pl.id)
-        left join asuransi a on (pl.id_asuransi = a.id) where p.id is not NULL $q order by p.waktu desc";
+        left join asuransi a on (pl.id_asuransi = a.id) 
+        where p.id_resep is NULL $q order by p.waktu desc";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -209,12 +218,19 @@ function penjualan_load_data($param) {
         $q.="and p.id = '".$param['id']."' ";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer, a.nama as asuransi, sum(db.bayar) as terbayar from penjualan p
+    $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer, a.nama as asuransi, 
+        (select sum(bayar) from detail_bayar_penjualan where id_penjualan = p.id) as terbayar,
+        concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, (dp.harga_jual*dp.qty) as subtotal
+        from penjualan p
+        join detail_penjualan dp on (p.id = dp.id_penjualan)
+        join kemasan k on (k.id = dp.id_kemasan)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
+        left join satuan st on (k.id_kemasan = st.id)
         left join pelanggan pl on (p.id_pelanggan = pl.id)
         left join asuransi a on (pl.id_asuransi = a.id) 
         join resep r on (p.id_resep = r.id)
-        join detail_bayar_penjualan db on (db.id_penjualan = p.id)
-        where p.id is not NULL $q group by db.id_penjualan order by p.waktu desc";
+        where p.id_resep is not NULL $q order by p.waktu desc";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {

@@ -129,4 +129,5 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/lap-resep.png","desc"=>"Resep","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
+
 ?> 

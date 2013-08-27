@@ -43,3 +43,7 @@ table.data-input input[type=text], table.data-input textarea { margin: 0.5px; ma
     background: #019601; color: #fff; padding: 4px 10px 6px 10px; margin-left: 2px;}
 .page-prev { float: left; width: 22px; cursor:pointer;font-size:10px; background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #42c3eb), color-stop(1, #289ad9) );
     background: #019601; color: #fff; padding: 4px 10px 6px 10px; margin-right: 2px;}
+.logout { color: #fff; padding: 6px 27px 2px 27px; margin-top: 0; display: block; min-width: 30px; float: right; text-align: center; }
+.logout:hover { background: #2c5564; padding: 6px 27px 8px 27px; cursor: pointer; }
+.logout img { display: block; margin-bottom: 4px; margin-left: 5px; }
+

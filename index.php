@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 /* METRO UI TEMPLATE v4.a4
 /*
@@ -165,7 +166,7 @@ if($bgImage!=""){
     </div>
     <?php triggerEvent("headerEnd");?>
 </header>
-<div id="wrapper">
+<div id="wrapper">        
 	<div id="centerWrapper">
   		<?php
 		if(!$bot || ($bot && $reqUrl == "")){
@@ -218,16 +219,10 @@ if($bgImage!=""){
 </div> 
 <div id="catchScroll"></div>
 <?php
-/*if(isset($_SESSION['username']) && $_SESSION['username'] == $username){?>
-	<div id="adminPanel">
-	<ul id="adminHovered">
-	<li><a href="" target="_blank" id="adminEditButton">Edit this page</a></li>
-	<li><a href="admin/logout.php" id="logoutButton">Logout</a></li>
-	</ul>
-	<a href="admin/" id="adminText">Welcome admin</a>
-	</div>
-	<?php
-}*/
+if(!isset($_SESSION['username'])){
+    
+    header("location:pages/login.php");
+}
 /*if($device=='mobileOnDesktop'){
 	?>
 	<a id="mobileOnDesktop" href="mobile.php">Go to mobile site</a>

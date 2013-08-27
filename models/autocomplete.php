@@ -1,8 +1,26 @@
 <?php
-
 include_once '../config/database.php';
 $method = isset($_GET['method'])?$_GET['method']:NULL;
 $q      = isset($_GET['q'])?$_GET['q']:NULL;
+if ($method === 'login') {
+    session_start();
+    $username = strip_tags($_POST['username']);
+    $password = md5(strip_tags($_POST['password']));
+    $query  = "select u.*, k.nama from users u 
+        join karyawan k on (u.id_karyawan = k.id) 
+        where u.username = '$username' and u.password = '$password'";
+    $result = mysql_query($query);
+    $data   = mysql_fetch_object($result);
+    if (isset($data->username)) {
+        $_SESSION['username'] = $data->username;
+        $_SESSION['password'] = $data->password;
+        $_SESSION['id_user']  = $data->id;
+        $_SESSION['level']    = $data->level;
+    } else {
+        $_SESSION['username'] = NULL;
+    }
+    die(json_encode($_SESSION));
+}
 if ($method === 'pabrik') {
     $rows = array();
     $sql = mysql_query("select * from pabrik where nama like ('%$q%') order by locate('$q',nama)");

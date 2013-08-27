@@ -102,7 +102,7 @@ function form_add() {
                 '<table width=100% class=data-input><tr valign=top><td width=50%>'+
                     '<table width=100%>'+
                         '<tr><td>No. SP:</td><td><input type=text name=no_sp id=no_sp size=10 /></td></tr>'+
-                        '<tr><td>Faktur:</td><td><input type=text name=faktur id=faktur size=10 readonly /></td></tr>'+
+                        '<tr><td>Faktur:</td><td><input type=text name=faktur id=faktur size=10 /></td></tr>'+
                         '<tr><td>Tanggal:</td><td><input type=text value="<?= date("d/m/Y") ?>" name=tanggal id=tanggal size=10 /></td></tr>'+
                         '<tr><td>Supplier:</td><td><input type=text name=supplier id=supplier size=40 /><input type=hidden name=id_supplier id=id_supplier /></td></tr>'+
                         '<tr><td>Jatuh Tempo:</td><td><input type=text name=tempo id=tempo size=10 /></td></tr>'+
@@ -133,6 +133,10 @@ function form_add() {
                 '</table>'+
               '</form></div>';
     $('body').append(str);
+    $('#tempo,#tanggal').datepicker({
+        changeYear: true,
+        changeMonth: true
+    });
     var wWidth = $(window).width();
     var dWidth = wWidth * 1;
     

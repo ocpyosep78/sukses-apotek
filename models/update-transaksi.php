@@ -198,12 +198,12 @@ if ($method === 'save_penjualannr') {
     $diskon_pr  = $_POST['diskon_pr'];
     $diskon_rp  = currencyToNumber($_POST['diskon_pr']);
     $ppn        = $_POST['ppn'];
-    $total      = $_POST['total_penjualan'];
+    $total      = currencyToNumber($_POST['total_penjualan']);
     $tuslah     = currencyToNumber($_POST['tuslah']);
     $asuransi   = ($_POST['asuransi'] !== '')?$_POST['asuransi']:'NULL';
     $embalage   = currencyToNumber($_POST['embalage']);
     $reimburse  = isset($_POST['reimburse'])?$_POST['reimburse']:'0';
-    $pembayaran = $_POST['pembulatan']; // yang dientrikan pembulatan pembayarannya
+    $pembayaran = currencyToNumber($_POST['pembulatan']); // yang dientrikan pembulatan pembayarannya
     $sql = "insert into penjualan set
         waktu = '$tanggal',
         id_pelanggan = $customer,

@@ -75,6 +75,7 @@ function hitung_total_penjualan() {
     } else {
         total = total_tambah_tuslah;
     }
+    
     $('#total-penjualan').html(numberToCurrency(parseInt(total)));
     $('#total_penjualan').val(parseInt(total_tambah_tuslah));
 }
@@ -510,10 +511,15 @@ function form_add() {
                 if (data.status === true) {
                     load_data_penjualannr();
                     $('#pesanan-list tbody').html('');
-                    $('#total_penjualan, #customer, #id_customer, #pilih, #ppn, #tuslah, #embalage').val('');
+                    $('#total_penjualan, #customer, #id_customer, #pilih').val('');
+                    $('#ppn, #tuslah, #embalage').val('0');
                     $('#total-penjualan').html('0');
                     $('#form-pembayaran').dialog().remove();
+                    $('#barang').focus();
+                    $.cookie('session', 'true');
+                    $.cookie('formbayar', 'false');
                     cetak_struk(data.id);
+                    
                     //alert_tambah('#barcode');
                 }
             }
