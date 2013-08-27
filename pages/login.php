@@ -1,3 +1,4 @@
+<title>Metro | Apotek</title>
 <link rel="stylesheet" href="../themes/theme_default/theme-login.css" />
 <script type="text/javascript" src="../plugins/metro-jquery/jquery-1.8.3.js"></script>
 <script type="text/javascript" src="../plugins/metro-jquery/jquery-ui-1.9.2.custom.js"></script>
@@ -7,9 +8,11 @@ $(function() {
     $('#loader').hide();
     $(document).keydown(function() {
         open_login();
+        $('#username').focus();
     });
     $(document).click(function() {
         open_login();
+        $('#username').focus();
     });
     $('#login').click(function() {
         $('#formlogin').submit();
