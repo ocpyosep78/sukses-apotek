@@ -15,7 +15,8 @@ table.data-input input[type=text], table.data-input textarea { margin: 0.5px; ma
 .data-input select:focus { border: 1px solid blue; padding: 1px 1px 1px 2px; }
 .data-input select { margin-left: 0.5px; margin-top: 1px; margin-bottom: 1px; min-width: 155px; }
 .data-input input[type=radio] { margin-left: 0; margin-right: 2px; }
-.data-input input[type=checkbox], .data-input input[type=file] { margin-left: 0; }
+.data-input input[type=checkbox] { margin-left: 0; }
+.data-input input[type=file] { margin: 0; }
 .data-input .space { width: 20px; display: inline-table; }
 .data-input textarea { max-width: 300px; height: 20px; text-transform: uppercase; }
 .edition { background: url(../../img/icons/edit.png) center no-repeat; width: 19px; height: 19px; text-align: center; display: inline-block; }
@@ -47,3 +48,49 @@ table.data-input input[type=text], table.data-input textarea { margin: 0.5px; ma
 .logout:hover { background: #2c5564; padding: 6px 27px 8px 27px; cursor: pointer; }
 .logout img { display: block; margin-bottom: 4px; margin-left: 5px; }
 
+.ui-tooltip, .arrow:after {
+    background: black;
+    border: 2px solid white;
+  }
+  .ui-tooltip {
+    padding: 10px 20px;
+    color: white;
+    border-radius: 20px;
+    font: bold 14px "Helvetica Neue", Sans-Serif;
+    text-transform: uppercase;
+    box-shadow: 0 0 7px black;
+  }
+  .arrow {
+    width: 70px;
+    height: 16px;
+    overflow: hidden;
+    position: absolute;
+    left: 50%;
+    margin-left: -35px;
+    bottom: -16px;
+  }
+  .arrow.top {
+    top: -16px;
+    bottom: auto;
+  }
+  .arrow.left {
+    left: 20%;
+  }
+  .arrow:after {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: -20px;
+    width: 25px;
+    height: 25px;
+    box-shadow: 6px 5px 9px -9px black;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    tranform: rotate(45deg);
+  }
+  .arrow.top:after {
+    bottom: -20px;
+    top: auto;
+  }

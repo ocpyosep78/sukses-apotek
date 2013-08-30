@@ -187,6 +187,8 @@ function penjualan_nr_load_data($param) {
     $q = NULL;
     if ($param['id'] !== '') {
         $q.="and p.id = '".$param['id']."' ";
+    } else {
+        $q.="and date(p.waktu) between '".date("Y-m-d")."' and '".date("Y-m-d")."'";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
     $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, a.nama as asuransi,
@@ -201,6 +203,7 @@ function penjualan_nr_load_data($param) {
         left join pelanggan pl on (p.id_pelanggan = pl.id)
         left join asuransi a on (pl.id_asuransi = a.id) 
         where p.id_resep is NULL $q order by p.waktu desc";
+    //echo $sql.$limit;
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -213,12 +216,25 @@ function penjualan_nr_load_data($param) {
 }
 
 function penjualan_load_data($param) {
-    $q = NULL;
+    $q = NULL; $limit = NULL;
     if ($param['id'] !== '') {
-        $q.="and p.id = '".$param['id']."' ";
+        $q.=" and p.id = '".$param['id']."' ";
+    } 
+    if (isset($param['pasien']) and $param['pasien'] !== '') {
+        $q.=" and p.id_pelanggan = '".$param['pasien']."'";
     }
-    $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer, a.nama as asuransi, 
+    if (isset($param['dokter']) and $param['dokter'] !== '') {
+        $q.=" and r.id_dokter = '".$param['dokter']."'";
+    }
+    if (isset($param['laporan'])) {
+        $q.=" and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
+        $q.=" group by p.id";
+    } else {
+        $q.=" and date(p.waktu) between '".date("Y-m-d")."' and '".date("Y-m-d")."'";
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
+    
+    $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer, a.nama as asuransi, d.nama as dokter, 
         (select sum(bayar) from detail_bayar_penjualan where id_penjualan = p.id) as terbayar,
         concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, (dp.harga_jual*dp.qty) as subtotal
         from penjualan p
@@ -230,7 +246,9 @@ function penjualan_load_data($param) {
         left join pelanggan pl on (p.id_pelanggan = pl.id)
         left join asuransi a on (pl.id_asuransi = a.id) 
         join resep r on (p.id_resep = r.id)
+        left join dokter d on (r.id_dokter = d.id)
         where p.id_resep is not NULL $q order by p.waktu desc";
+    //echo $sql.$limit;
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -258,5 +276,31 @@ function penjualan_load_data_barang($id) {
         $data[] = $row;
     }
     return $data;
+}
+
+function pemeriksaan_load_data($param) {
+    $q = NULL;
+    if ($param['id'] !== '') {
+        $q.=" and p.id = '".$param['id']."'";
+    }
+    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    $sql = "select p.*, pl.nama as pasien, d.nama as dokter, py.topik, py.sub_kode, tr.id as id_tarif, tr.nama as tarif, t.nominal from pemeriksaan p
+        join pelanggan pl on (p.id_pelanggan = pl.id)
+        join dokter d on (p.id_dokter = d.id)
+        left join diagnosis dg on (p.id = dg.id_pemeriksaan)
+        left join penyakit py on (dg.id_penyakit = py.id)
+        left join tindakan t on (p.id = t.id_pemeriksaan)
+        left join tarif tr on (t.id_tarif = tr.id)
+        where p.id is not NULL $q order by p.tanggal desc";
+    
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
 }
 ?>

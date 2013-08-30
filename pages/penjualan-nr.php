@@ -519,7 +519,7 @@ function form_add() {
                     $.cookie('session', 'true');
                     $.cookie('formbayar', 'false');
                     cetak_struk(data.id);
-                    
+                    $('#form_penjualannr').dialog().remove();
                     //alert_tambah('#barcode');
                 }
             }

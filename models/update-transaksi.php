@@ -460,4 +460,96 @@ if ($method === 'save_penjualan') {
     }
     die(json_encode(array('status' => TRUE, 'id' => $id_penjualan)));
 }
+
+if ($method === 'save_pemeriksaan') {
+    $id         = $_POST['nopemeriksaan'];
+    $tanggal    = date2mysql($_POST['tanggal']);
+    $anamnesis  = $_POST['anamnesis'];
+    $pemeriksaan= $_POST['pemeriksaan'];
+    $id_pasien  = $_POST['id_pasien'];
+    $id_dokter  = $_POST['id_dokter'];
+    
+    $id_diagnosis = $_POST['id_diagnosis'];
+    $id_tindakan  = $_POST['id_tindakan'];
+    $nominal      = $_POST['nominal'];
+    $UploadDirectory	= '../img/pemeriksaan/'; //Upload Directory, ends with slash & make sure folder exist
+    $NewFileName= "";
+        // replace with your mysql database details
+    if (!@file_exists($UploadDirectory)) {
+            //destination folder does not exist
+            die("Make sure Upload directory exist!");
+    }
+    if(isset($_FILES['mFile']['name'])) {
+
+            $FileName           = strtolower($_FILES['mFile']['name']); //uploaded file name
+            $FileTitle		= mysql_real_escape_string($_POST['pasien']); // file title
+            $ImageExt		= substr($FileName, strrpos($FileName, '.')); //file extension
+            $FileType		= $_FILES['mFile']['type']; //file type
+            //$FileSize		= $_FILES['mFile']["size"]; //file size
+            $RandNumber   		= rand(0, 9999999999); //Random number to make each filename unique.
+            //$uploaded_date		= date("Y-m-d H:i:s");
+            
+            switch(strtolower($FileType))
+            {
+                    //allowed file types
+                    case 'image/png': //png file
+                    case 'image/gif': //gif file 
+                    case 'image/jpeg': //jpeg file
+                    case 'application/pdf': //PDF file
+                    case 'application/msword': //ms word file
+                    case 'application/vnd.ms-excel': //ms excel file
+                    case 'application/x-zip-compressed': //zip file
+                    case 'text/plain': //text file
+                    case 'text/html': //html file
+                            break;
+                    default:
+                            die('Unsupported File!'); //output error
+            }
+
+
+            //File Title will be used as new File name
+            $NewFileName = preg_replace(array('/\s/', '/\.[\.]+/', '/[^\w_\.\-]/'), array('_', '.', ''), strtolower($FileTitle));
+            $NewFileName = $NewFileName.'_'.$RandNumber.$ImageExt;
+       //Rename and save uploded file to destination folder.
+       if(move_uploaded_file($_FILES['mFile']["tmp_name"], $UploadDirectory . $NewFileName ))
+       {
+            //die('Success! File Uploaded.');
+       }else{
+            //die('error uploading File!');
+       }
+    }
+    $sql = "insert into pemeriksaan set
+        id = '$id',
+        tanggal = '$tanggal',
+        anamnesis = '$anamnesis',
+        pemeriksaan = '$pemeriksaan',
+        id_pelanggan = '$id_pasien',
+        id_dokter = '$id_dokter',
+        foto = '$NewFileName'";
+   mysql_query($sql);
+   $id_pemeriksaan = $id;
+
+   foreach ($id_diagnosis as $key => $data) {
+       $query = "insert into diagnosis set
+            id_pemeriksaan = '$id_pemeriksaan',
+            waktu = '$tanggal ".date("H:i:s")."',
+            id_penyakit = '$data'";
+       mysql_query($query);
+   }
+
+   foreach ($id_tindakan as $key => $data) {
+       $query = "insert into tindakan set
+            waktu = '$tanggal ".date("H:i:s")."',
+            id_pemeriksaan = '$id_pemeriksaan',
+            id_tarif = '$data',
+            nominal = '$nominal[$key]'
+            ";
+       mysql_query($query);
+   }
+   die(json_encode(array('status' => TRUE, 'id' => $id_pemeriksaan)));
+}
+
+if ($method === 'delete_pemeriksaan') {
+    mysql_query("delete from pemeriksaan where id = '$_GET[id]'");
+}
 ?>

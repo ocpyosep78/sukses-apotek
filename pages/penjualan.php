@@ -316,7 +316,7 @@ function form_add() {
             '<table width=100% class=data-input><tr valign=top><td width=50%><table width=100% id="attr-utama">'+
                 '<tr><td width=20%>Tanggal:</td><td><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
                 '<tr><td width=20%>No. Resep:</td><td><?= form_input('noresep', NULL, 'id=noresep size=40') ?> <?= form_hidden('id_resep', NULL, 'id=id_resep') ?></td></tr>'+
-                '<tr><td>Customer:</td><td><?= form_input('customer', NULL, 'id=customer size=40') ?> <?= form_hidden('id_customer', NULL, 'id=id_customer') ?> <?= form_hidden('asuransi', NULL, 'id=asuransi') ?></td></tr>'+
+                '<tr><td>Pasien:</td><td><?= form_input('customer', NULL, 'id=customer size=40') ?> <?= form_hidden('id_customer', NULL, 'id=id_customer') ?> <?= form_hidden('asuransi', NULL, 'id=asuransi') ?></td></tr>'+
                 '<tr><td>Diskon:</td><td><?= form_input('diskon_pr', '0', 'id=diskon_pr maxlength=5 onblur="hitung_total_penjualan();" size=10') ?> %, Rp. <?= form_input('diskon_rp', '0', 'id=diskon_rp onblur="hitung_total_penjualan();" size=10') ?></td></tr>'+
                 '<tr><td>PPN:</td><td><?= form_input('ppn', '0', 'id=ppn size=10 maxlength=5 onblur="hitung_total_penjualan();"') ?> %</td></tr>'+
                 '<tr><td>Tuslah Rp.:</td><td><?= form_input('tuslah', '0', 'id=tuslah onblur=FormNum(this) onkeyup="hitung_total_penjualan();" size=10') ?></td></tr>'+
@@ -553,6 +553,7 @@ function form_add() {
                     $('#total-penjualan').html('0');
                     $('#biaya-apt').html('0');
                     $('#newrow,.adding').remove();
+                    $('#form_penjualan').dialog().remove();
                     cetak_struk(data.id);
                     //alert_tambah('#noresep');
                 }

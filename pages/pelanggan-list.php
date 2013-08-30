@@ -4,7 +4,20 @@ include_once '../inc/functions.php';
 ?>
 <script type="text/javascript">
 $(function() {
-    $( document ).tooltip();
+    $( document ).tooltip({
+      position: {
+        my: "center bottom-20",
+        at: "center top",
+        using: function( position, feedback ) {
+          $( this ).css( position );
+          $( "<div>" )
+            .addClass( "arrow" )
+            .addClass( feedback.vertical )
+            .addClass( feedback.horizontal )
+            .appendTo( this );
+        }
+      }
+    });
 });
 </script>
 <table cellspacing="0" width="100%" class="list-data">
@@ -49,7 +62,7 @@ $(function() {
         ?>
     <tr class="<?= ($key%2==0)?'even':'odd' ?>">
         <td align="center"><?= (++$key+$offset) ?></td>
-        <td><span title="<img src='img/pelanggan/<?= $data->foto ?>' />"><?= $data->nama ?></span></td>
+        <td><span title="<img src='img/pelanggan/<?= $data->foto ?>' width='200px' />"><?= $data->nama ?></span></td>
         <td><?= $data->jenis ?></td>
         <td align="center"><?= $data->kelamin ?></td>
         <td><?= $data->alamat ?></td>

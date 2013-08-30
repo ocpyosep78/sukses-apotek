@@ -13,6 +13,14 @@ include_once("pages/message.php");
 ?>
 <script>
     load_data_itemkit();
+$.cookie('session', 'false');
+$(document).keydown(function(e) {
+    if (e.keyCode === 120) {
+        if ($.cookie('session') === 'false') {
+            form_add();
+        }
+    }
+});
 $('#button').button({
     icons: {
         primary: 'ui-icon-newwin'
@@ -27,8 +35,159 @@ $('#reset').button({
 }).click(function() {
     load_data_barang();
 });
+function hitung_estimasi() {
+    var jml_baris = $('.tr_rows').length;
+    var estimasi = 0;
+    for (i = 1; i <= jml_baris; i++) {
+        var subtotal = parseInt(currencyToNumber($('#subtotal'+i).html()));
+        estimasi = estimasi + subtotal;
+    }
+    $('#estimasi').html(numberToCurrency(parseInt(estimasi)));
+}
+function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
+    if (id_kemasan === null) {
+        alert('Kemasan tidak boleh kosong !');
+        return false;
+    }
+    var jml     = $('.tr_rows').length+1;
+    var kemasan = $('#kemasan option:selected').text();
+    var str = '<tr class="tr_rows">'+
+                '<td align=center>'+jml+'</td>'+
+                '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_barang[] value="'+id_brg+'" class=id_barang id=id_barang'+jml+' /></td>'+
+                '<td align=center>'+kemasan+'<input type=hidden name=kemasan[] id=kemasan'+jml+' value="'+id_kemasan+'" /></td>'+
+                '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" size=10 style="text-align: center;" /></td>'+
+                '<td align=right id=subtotal'+jml+'></td>'+
+                '<td align=center><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
+              '</tr>';
+    $('#pesanan-list tbody').append(str);
+    $.ajax({
+        url: 'models/autocomplete.php?method=get_detail_harga_barang_pemesanan&id='+id_brg+'&id_kemasan='+id_kemasan,
+        dataType: 'json',
+        cache: false,
+        success: function(data) {
+            var subtotal = data.esti*jumlah;
+            //alert(subtotal+' '+data.esti+' '+jumlah);
+            $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
+            hitung_estimasi();
+        }
+    });
+}
+
 function form_add() {
+    var str = '<div id="item_kit"><form id="form_item_kit">'+
+                '<table width=100% class=data-input><tr valign=top><td width=50%>'+
+                    '<table width=100%>'+
+                        '<tr><td width=30%>Nama Item:</td><td><?= form_input('nama_item', NULL, 'id=nama_item size=40') ?></td></tr>'+
+                        '<tr><td>Margin:</td><td><?= form_input('margin_pr', '0', 'id=margin_pr size=10') ?> %, Rp. <?= form_input('margin_rp', '0', 'id=margin_rp size=10') ?></td></tr>'+
+                        '<tr><td>Diskon:</td><td><?= form_input('diskon_pr', '0', 'id=diskon_pr size=10') ?> %, Rp. <?= form_input('diskon_rp', '0', 'id=diskon_rp size=10') ?></td></tr>'+
+                    '</table>'+
+                    '</td><td width=50%>'+
+                    '<table width=100%>'+
+                        '<tr><td width=20%>Nama Barang:</td><td width=50%><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?></td></tr>'+
+                        '<tr><td>Kemasan:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select></td></tr>'+
+                        '<tr><td>Jumlah:</td><td><?= form_input('jumlah', NULL, 'id=jumlah size=10') ?></td></tr>'+
+                        '<tr><td>Harga:</td><td style="font-size: 40px;"><span>Rp</span> <span id=estimasi>0</span>, 00</td></tr>'+
+                    '</table>'+
+                    '</td></tr>'+
+                '</table>'+
+                '<table width=100% cellspacing="0" class="list-data-input" id="item-kit-list"><thead>'+
+                '<tr>'+
+                    '<th width=5%>No.</th>'+
+                    '<th width=43%>Nama Barang</th>'+
+                    '<th width=20%>Kemasan</th>'+
+                    '<th width=10%>Jumlah</th>'+
+                    '<th width=10%>Harga</th>'+
+                    '<th width=10%>Subtotal</th>'+
+                    '<th width=2%>#</th></tr></thead>'+
+                '<tbody></tbody>'+
+            '</table>'+
+              '</form></div>';
+    $('body').append(str);
+    $('#jumlah').keydown(function(e) {
+        if (e.keyCode === 13) {
+            add_new_rows($('#id_barang').val(), $('#barang').val(), $('#jumlah').val(), $('#kemasan').val());
+            $('#id_barang').val('');
+            $('#jumlah').val('');
+            $('#kemasan').html('').append('<option value="">Pilih ...</option>');
+            $('#barang').val('').focus();
+            
+        }
+    });
+    $('#barang').keydown(function(e) {
+        if (e.keyCode === 13) {
+            $('#kemasan').focus();
+            //$('#jumlah').val('1').focus().select();
+        }
+    });
+    $('#kemasan').keydown(function(e) {
+        if (e.keyCode === 13) {
+            //$('#kemasan').focus();
+            $('#jumlah').val('1').focus().select();
+        }
+    });
+    var lebar = $('#barang').width();
+    $('#barang').autocomplete("models/autocomplete.php?method=barang",
+    {
+        parse: function(data){
+            var parsed = [];
+            for (var i=0; i < data.length; i++) {
+                parsed[i] = {
+                    data: data[i],
+                    value: data[i].nama // nama field yang dicari
+                };
+            }
+            return parsed;
+        },
+        formatItem: function(data,i,max){
+            var str = '<div class=result>'+data.nama_barang+'</div>';
+            return str;
+        },
+        width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
+        dataType: 'json', // tipe data yang diterima oleh library ini disetup sebagai JSON
+        cacheLength: 0
+    }).result(
+    function(event,data,formated){
+        $(this).val(data.nama_barang);
+        $('#id_barang').val(data.id);
+        $('#kemasan').html('');
+        $.getJSON('models/autocomplete.php?method=get_kemasan_barang&id='+data.id, function(data){
+            if (data === null) {
+                alert('Kemasan tidak barang tidak tersedia !');
+            } else {
+                $.each(data, function (index, value) {
+                    $('#kemasan').append("<option value='"+value.id_kemasan+"'>"+value.nama+"</option>");
+                });
+            }
+        });
+    });
+    var wWidth = $(window).width();
+    var dWidth = wWidth * 1;
     
+    var wHeight= $(window).height();
+    var dHeight= wHeight * 1;
+    $('#item_kit').dialog({
+        title: 'Tambah Item Kit',
+        autoOpen: true,
+        modal: true,
+        width: dWidth,
+        height: dHeight,
+        hide: 'clip',
+        show: 'blind',
+        buttons: {
+            "Simpan (F8)": function() {
+                $('#form_item_kit').submit();
+            }, 
+            "Cancel": function() {    
+                $(this).dialog().remove();
+                $.cookie('session', 'false');
+            }
+        }, close: function() {
+            $(this).dialog().remove();
+            $.cookie('session', 'false');
+        }, open: function() {
+            $.cookie('session', 'true');
+        }
+    });
 }
 function load_data_itemkit(page, search, id) {
     pg = page; src = search; id_barg = id;
@@ -51,7 +210,7 @@ function paging(page, tab, search) {
 </script>
 <h1 class="margin-t-0">Item Kit (Packaging)</h1>
 <hr>
-<button id="button">Tambah Data</button>
+<button id="button">Tambah Data (F9)</button>
 <button id="reset">Reset</button>
 <div id="result-itemkit">
     

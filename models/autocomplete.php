@@ -42,12 +42,18 @@ if ($method === 'dokter') {
 if ($method === 'pasien') {
     $sql = mysql_query("select p.*, a.nama as asuransi, a.diskon as reimburse from pelanggan p
         left join asuransi a on (p.id_asuransi = a.id) 
-        where p.nama like ('%$q%') order by locate('$q', p.nama)");
+        where p.nama like ('%$q%') or p.id like ('%$q%') order by locate('$q', p.id)");
     $rows = array();
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;
     }
     die(json_encode($rows));
+}
+
+if ($method === 'get_photo_pemeriksaan') {
+    $sql = mysql_query("select * from pemeriksaan where id_pelanggan = '".$_GET['id_pelanggan']."' order by tanggal desc limit 1");
+    $row = mysql_fetch_object($sql);
+    die(json_encode($row));
 }
 
 if ($method === 'get_data_kemasan') {
@@ -275,5 +281,36 @@ if ($method === 'get_no_resep') {
         $str = str_pad((string)($row->jumlah+1), 3, "0", STR_PAD_LEFT)."-".date("m")."/".date("Y");
     }
     die(json_encode($str));
+}
+
+if ($method === 'get_no_pemeriksaan') {
+    $sql = mysql_query("select count(*) as jumlah from pemeriksaan where tanggal like '%".date("Y-m")."%'");
+    $row = mysql_fetch_object($sql);
+    if (!isset($row->jumlah)) {
+        $str = "PR.001-".date("m")."/".date("Y");
+    } else {
+        $str = "PR.".str_pad((string)($row->jumlah+1), 3, "0", STR_PAD_LEFT)."-".date("m")."/".date("Y");
+    }
+    die(json_encode($str));
+}
+
+if ($method === 'diagnosis') {
+    $sql = "select * from penyakit where topik like ('%$q%') order by locate('$q', topik)";
+    $result = mysql_query($sql);
+    $rows = array();
+    while ($data = mysql_fetch_object($result)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'tindakan') {
+    $sql = "select * from tarif where nama like ('%$q%') order by locate('$q', nama)";
+    $result = mysql_query($sql);
+    $rows = array();
+    while ($data = mysql_fetch_object($result)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
 }
 ?>

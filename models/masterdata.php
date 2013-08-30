@@ -482,4 +482,30 @@ function get_data_day() {
     return array('Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu');
 }
 
+function item_kit_load_data($param) {
+    $q = null;
+    if ($param['id'] !== '') {
+        $q = " and id = '".$param['id']."'";
+    }
+    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    $sql = "select i.*, concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, id.jumlah from item_kit i
+        join item_kit_detail id on (i.id = id.id_item_kit)
+        join kemasan k on (id.id_kemasan = k.id)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (s.id = b.satuan_kekuatan)
+        left join satuan st on (k.id_kemasan = st.id)
+        where i.id is not NULL $q order by i.nama
+        ";
+    //echo $sql;
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
 ?>

@@ -41,6 +41,7 @@ $pageTitles['penerimaan.php'] = "Penerimaan";
 $pageTitles['stok-opname.php'] = "Stok Opname";
 $pageTitles['resep.php'] = "Receipt";
 $pageTitles['retur-penerimaan.php'] = "Retur Penerimaan";
+$pageTitles['pemeriksaan.php'] = "Pemeriksaan";
 
 /*Laporan*/
 $pageTitles['arus-stok.php'] = "Arus Stok";

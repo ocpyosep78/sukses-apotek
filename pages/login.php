@@ -4,7 +4,6 @@
 <script type="text/javascript" src="../plugins/metro-jquery/jquery-ui-1.9.2.custom.js"></script>
 <script type="text/javascript">
 $(function() {
-    window.setTimeout("waktu()",1000);
     $('#loader').hide();
     $(document).keydown(function() {
         open_login();
@@ -58,14 +57,15 @@ function open_login() {
     $('.body-lock').hide();
 }
   
-function waktu() {   
-    var jam = document.getElementById("jam");
-    var now = new Date();                    
-    var dt  = now.toLocaleTimeString().split(':');
-    $('#jam').html(dt[0]+':'+dt[1]);
-    
+function displayTime() {
+    var elt = document.getElementById("jam");  // Find element with id="clock"
+    var now = new Date();                        // Get current time
+    var dt  = now.toLocaleTimeString();
+    var disp= dt.split(':');
+    elt.innerHTML = disp[0]+':'+disp[1];    // Make elt display it
+    setTimeout(displayTime, 1000);               // Run again in 1 second
 }
-window.onload = waktu();
+window.onload = displayTime;
 
 </script>
 <div class="body-lock">
