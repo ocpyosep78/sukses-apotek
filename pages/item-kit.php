@@ -36,13 +36,31 @@ $('#reset').button({
     load_data_barang();
 });
 function hitung_estimasi() {
+    
     var jml_baris = $('.tr_rows').length;
     var estimasi = 0;
     for (i = 1; i <= jml_baris; i++) {
         var subtotal = parseInt(currencyToNumber($('#subtotal'+i).html()));
         estimasi = estimasi + subtotal;
     }
-    $('#estimasi').html(numberToCurrency(parseInt(estimasi)));
+    var margin_pr = $('#margin_pr').val()/100;
+    var margin_rp = parseInt(currencyToNumber($('#margin_rp').val()));
+    if (margin_pr !== 0) {
+        termargin = estimasi+(estimasi*(margin_pr));
+    } else {
+        termargin = estimasi+margin_rp;
+    }
+    
+    var diskon_pr = $('#diskon_pr').val()/100;
+    var diskon_rp = parseInt(currencyToNumber($('#diskon_rp').val()));
+    if (diskon_pr !== 0) {
+        terdiskon = termargin-(termargin*(diskon_pr));
+    } else {
+        terdiskon = termargin-diskon_rp;
+    }
+    //alert(margin_pr+' - '+margin_rp+' - '+diskon_pr+' '+diskon_rp);
+    $('#estimasi').html(numberToCurrency(parseInt(terdiskon)));
+    $('#harga_jual').val(parseInt(terdiskon));
 }
 function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
     if (id_kemasan === null) {
@@ -56,10 +74,11 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
                 '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_barang[] value="'+id_brg+'" class=id_barang id=id_barang'+jml+' /></td>'+
                 '<td align=center>'+kemasan+'<input type=hidden name=kemasan[] id=kemasan'+jml+' value="'+id_kemasan+'" /></td>'+
                 '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" size=10 style="text-align: center;" /></td>'+
+                '<td align=right id=harga'+jml+'></td>'+
                 '<td align=right id=subtotal'+jml+'></td>'+
                 '<td align=center><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
               '</tr>';
-    $('#pesanan-list tbody').append(str);
+    $('#item-kit-list tbody').append(str);
     $.ajax({
         url: 'models/autocomplete.php?method=get_detail_harga_barang_pemesanan&id='+id_brg+'&id_kemasan='+id_kemasan,
         dataType: 'json',
@@ -67,6 +86,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
         success: function(data) {
             var subtotal = data.esti*jumlah;
             //alert(subtotal+' '+data.esti+' '+jumlah);
+            $('#harga'+jml).html(numberToCurrency(parseInt(data.esti)));
             $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
             hitung_estimasi();
         }
@@ -78,29 +98,29 @@ function form_add() {
                 '<table width=100% class=data-input><tr valign=top><td width=50%>'+
                     '<table width=100%>'+
                         '<tr><td width=30%>Nama Item:</td><td><?= form_input('nama_item', NULL, 'id=nama_item size=40') ?></td></tr>'+
-                        '<tr><td>Margin:</td><td><?= form_input('margin_pr', '0', 'id=margin_pr size=10') ?> %, Rp. <?= form_input('margin_rp', '0', 'id=margin_rp size=10') ?></td></tr>'+
-                        '<tr><td>Diskon:</td><td><?= form_input('diskon_pr', '0', 'id=diskon_pr size=10') ?> %, Rp. <?= form_input('diskon_rp', '0', 'id=diskon_rp size=10') ?></td></tr>'+
+                        '<tr><td>Margin:</td><td><?= form_input('margin_pr', '0', 'id=margin_pr size=10') ?> %, Rp. <?= form_input('margin_rp', '0', 'id=margin_rp onblur="FormNum(this)" size=10') ?></td></tr>'+
+                        '<tr><td>Diskon:</td><td><?= form_input('diskon_pr', '0', 'id=diskon_pr size=10') ?> %, Rp. <?= form_input('diskon_rp', '0', 'id=diskon_rp onblur="FormNum(this)" size=10') ?></td></tr>'+
                     '</table>'+
                     '</td><td width=50%>'+
                     '<table width=100%>'+
                         '<tr><td width=20%>Nama Barang:</td><td width=50%><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?></td></tr>'+
                         '<tr><td>Kemasan:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select></td></tr>'+
                         '<tr><td>Jumlah:</td><td><?= form_input('jumlah', NULL, 'id=jumlah size=10') ?></td></tr>'+
-                        '<tr><td>Harga:</td><td style="font-size: 40px;"><span>Rp</span> <span id=estimasi>0</span>, 00</td></tr>'+
+                        '<tr><td>Harga:</td><td style="font-size: 40px;"><?= form_hidden('harga_jual', NULL, 'id=harga_jual') ?><span>Rp</span> <span id=estimasi>0</span>, 00</td></tr>'+
                     '</table>'+
                     '</td></tr>'+
                 '</table>'+
                 '<table width=100% cellspacing="0" class="list-data-input" id="item-kit-list"><thead>'+
-                '<tr>'+
-                    '<th width=5%>No.</th>'+
-                    '<th width=43%>Nama Barang</th>'+
-                    '<th width=20%>Kemasan</th>'+
-                    '<th width=10%>Jumlah</th>'+
-                    '<th width=10%>Harga</th>'+
-                    '<th width=10%>Subtotal</th>'+
-                    '<th width=2%>#</th></tr></thead>'+
-                '<tbody></tbody>'+
-            '</table>'+
+                    '<tr>'+
+                        '<th width=5%>No.</th>'+
+                        '<th width=44%>Nama Barang</th>'+
+                        '<th width=20%>Kemasan</th>'+
+                        '<th width=10%>Jumlah</th>'+
+                        '<th width=10%>Harga</th>'+
+                        '<th width=10%>Subtotal</th>'+
+                        '<th width=1%>#</th></tr></thead>'+
+                    '<tbody></tbody>'+
+                '</table>'+
               '</form></div>';
     $('body').append(str);
     $('#jumlah').keydown(function(e) {
@@ -112,6 +132,37 @@ function form_add() {
             $('#barang').val('').focus();
             
         }
+    });
+    $(document).keydown(function(e) {
+        if (e.keyCode === 119) {
+            if ($.cookie('session') === 'true') {
+                $('#form_item_kit').submit();
+            }
+        }
+    });
+    $('#margin_pr').blur(function() {
+        if ($('#margin_pr').val() !== '' && $('#margin_pr').val() !== '0') {
+            $('#margin_rp').val('0');
+        }
+        hitung_estimasi();
+    });
+    $('#margin_rp').blur(function() {
+        if ($('#margin_rp').val() !== '' && $('#margin_rp').val() !== '0') {
+            $('#margin_pr').val('0');
+        }
+        hitung_estimasi();
+    });
+    $('#diskon_pr').blur(function() {
+        if ($('#diskon_pr').val() !== '' && $('#diskon_pr').val() !== '0') {
+            $('#diskon_rp').val('0');
+        }
+        hitung_estimasi();
+    });
+    $('#diskon_rp').blur(function() {
+        if ($('#diskon_rp').val() !== '' && $('#diskon_rp').val() !== '0') {
+            $('#diskon_pr').val('0');
+        }
+        hitung_estimasi();
     });
     $('#barang').keydown(function(e) {
         if (e.keyCode === 13) {
@@ -187,6 +238,23 @@ function form_add() {
         }, open: function() {
             $.cookie('session', 'true');
         }
+    });
+    $('#form_item_kit').submit(function() {
+        $.ajax({
+            url: 'models/update-masterdata.php?method=save_item_kit',
+            data: $(this).serialize(),
+            type: 'POST',
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+                if (data.status === true) {
+                    alert_tambah('#nama_item');
+                    $('#nama_item').val('');
+                    $('#margin_pr, #margin_rp, #diskon_pr, #diskon_rp').val('0');
+                    $('#item-kit-list tbody').html('');
+                }
+            }
+        });
     });
 }
 function load_data_itemkit(page, search, id) {

@@ -165,7 +165,7 @@ function load_data_bank($param = null) {
 function load_data_customer($param) {
     $q = null;
     if ($param['id'] !== '') {
-        $q = "and id = '".$param['id']."'";
+        $q = "and p.id = '".$param['id']."'";
     }
     if ($param['search'] !== '') {
         $q = "and p.nama like '%".$param['search']."%'";
