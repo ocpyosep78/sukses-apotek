@@ -2,6 +2,27 @@
 
 include_once '../config/database.php';
 
+function header_surat() {
+    $sql = "select * from apotek";
+    $result = mysql_query($sql);
+    $data   = mysql_fetch_object($result);
+    echo "<h1 class=kop-surat>".$data->nama."<br/>".$data->alamat."<br/>".$data->telp." ".$data->email."</h1>";
+}
+
+function get_bottom_label() {
+    $sql = "select * from apotek";
+    $result = mysql_query($sql);
+    $data   = mysql_fetch_object($result);
+    return $data;
+}
+
+function get_apa_from_karyawan() {
+    $sql = "select * from karyawan where jabatan = 'APA'";
+    $result = mysql_query($sql);
+    $data   = mysql_fetch_object($result);
+    return $data;
+}
+
 function pemesanan_load_data($param) {
     $q = NULL;
     if ($param['id'] !== '') {

@@ -80,6 +80,4 @@ function currencyToNumber(a) {
     } else {
         return '';
     }
-    
-    
 }

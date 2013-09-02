@@ -164,12 +164,43 @@ function currencyToNumber($a) {
 }
 
 function get_last_pemesanan() {
-    $sql = mysql_query("select id from pemesanan order by id desc limit 1");
+    $sql = mysql_query("select substr(id, 4,3) as id  from pemesanan order by tanggal desc limit 1");
     $row = mysql_fetch_object($sql);
     if (!isset($row->id)) {
-        return "000001";
+        return "SP.001/".date("m/Y");
     } else {
-        return str_pad((string)($row->id+1), 6, "0", STR_PAD_LEFT);
+        return "SP.".str_pad((string)($row->id+1), 3, "0", STR_PAD_LEFT)."/".date("m/Y");
     }
+}
+
+function indo_tgl($tgl) {
+    $baru = explode("-", $tgl);
+    if ($baru[1] == '01')
+        $mo = "Januari";
+    if ($baru[1] == '02')
+        $mo = "Februari";
+    if ($baru[1] == '03')
+        $mo = "Maret";
+    if ($baru[1] == '04')
+        $mo = "April";
+    if ($baru[1] == '05')
+        $mo = "Mei";
+    if ($baru[1] == '06')
+        $mo = "Juni";
+    if ($baru[1] == '07')
+        $mo = "Juli";
+    if ($baru[1] == '08')
+        $mo = "Agustus";
+    if ($baru[1] == '09')
+        $mo = "September";
+    if ($baru[1] == '10')
+        $mo = "Oktober";
+    if ($baru[1] == '11')
+        $mo = "November";
+    if ($baru[1] == '12')
+        $mo = "Desember";
+    $new = "$baru[2] $mo $baru[0]";
+
+    return $new;
 }
 ?>

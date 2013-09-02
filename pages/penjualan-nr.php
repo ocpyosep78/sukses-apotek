@@ -10,7 +10,9 @@ include_once("inc/functions.php");
 include_once("models/transaksi.php");
 include_once("pages/message.php");
 ?>
-
+<head>
+    <meta http-equiv="Cache-control" content="no-cache">
+</head>
 <script type="text/javascript">
 load_data_penjualannr();
 $.cookie('session', 'false');
@@ -114,7 +116,6 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
         cache: false,
         success: function(data) {
             hitung_detail_total(jml, jumlah, data.diskon_rupiah, data.diskon_persen, Math.ceil(data.harga_jual));
-            hitung_total_penjualan();
         }
     });
     $.ajax({

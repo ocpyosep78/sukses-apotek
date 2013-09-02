@@ -402,7 +402,8 @@ function form_receipt() {
                         alert_tambah('#dokter');
                         $('input:text,select').val('');
                         $('#resep-list tbody, #total').html('');
-                        load_data_resep();
+                        //load_data_resep();
+                        location.reload();
                     } else {
                         alert_edit();
                         load_data_resep($('.noblock').html());

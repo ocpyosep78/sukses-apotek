@@ -554,7 +554,9 @@ function form_add() {
                     $('#biaya-apt').html('0');
                     $('#newrow,.adding').remove();
                     $('#form_penjualan').dialog().remove();
+                    //location.reload();
                     cetak_struk(data.id);
+                    
                     //alert_tambah('#noresep');
                 }
             }

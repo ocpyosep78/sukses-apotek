@@ -15,6 +15,9 @@ $(function() {
         <th width="10%">Tanggal</th>
         <th width="20%">Nama Supplier</th>
         <th width="15%">Karyawan</th>
+        <th width="15%">Nama Barang</th>
+        <th width="5%">Kemasan</th>
+        <th width="5%">Jumlah</th>
         <th width="5%">#</th>
     </tr>
 </thead>
@@ -39,19 +42,32 @@ $(function() {
     $pemesanan = pemesanan_load_data($param);
     $list_data = $pemesanan['data'];
     $total_data= $pemesanan['total'];
+    $no = 1;
+    $sp = "";
     foreach ($list_data as $key => $data) { ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
-            <td align="center"><?= (++$key+$offset) ?></td>
-            <td><?= $data->id ?></td>
-            <td align="center"><?= datefmysql($data->tanggal) ?></td>
-            <td><?= ($data->supplier !== NULL)?$data->supplier:'-' ?></td>
-            <td><?= ($data->karyawan !== NULL)?$data->karyawan:'-' ?></td>
+            <td align="center"><?= ($sp !== $data->id)?($no+$offset):NULL ?></td>
+            <td><?= ($sp !== $data->id)?$data->id:NULL ?></td>
+            <td align="center"><?= ($sp !== $data->id)?datefmysql($data->tanggal):NULL ?></td>
+            <td><?= ($sp !== $data->id)?$data->supplier:NULL ?></td>
+            <td><?= ($sp !== $data->id)?$data->karyawan:NULL ?></td>
+            <td><?= $data->nama_barang ?></td>
+            <td align="center"><?= $data->kemasan ?></td>
+            <td align="center"><?= $data->jumlah ?></td>
             <td class='aksi' align='center'>
                 <!--<a class='edition' onclick="edit_pemesanan('<?= $str ?>');" title="Klik untuk edit pemesanan">&nbsp;</a>-->
-                <a class='deletion' onclick="delete_pemesanan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus pemesanan">&nbsp;</a>
+                <?php
+                if ($sp !== $data->id) { ?>
+                    <a class='deletion' onclick="delete_pemesanan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus pemesanan">&nbsp;</a>
+                <?php } ?>
             </td>
         </tr>
-    <?php }
+    <?php 
+    if ($sp !== $data->id) {
+        $no++;
+    }
+    $sp = $data->id;
+    }
     ?>
 </tbody>
 </table>

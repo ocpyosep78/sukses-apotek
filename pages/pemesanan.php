@@ -53,7 +53,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
                 '<td align=center>'+kemasan+'<input type=hidden name=kemasan[] id=kemasan'+jml+' value="'+id_kemasan+'" /></td>'+
                 '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" size=10 style="text-align: center;" /></td>'+
                 '<td align=right id=subtotal'+jml+'></td>'+
-                '<td align=center><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
+                '<td align=center><input type=hidden id=perundangan'+jml+' /><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
               '</tr>';
     $('#pesanan-list tbody').append(str);
     $.ajax({
@@ -64,9 +64,15 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
             var subtotal = data.esti*jumlah;
             //alert(subtotal+' '+data.esti+' '+jumlah);
             $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
+            $('#perundangan'+jml).val(data.perundangan);
             hitung_estimasi();
         }
     });
+}
+
+function cetak_sp(id_pemesanan) {
+    var perundangan = $('#perundangan1').val();
+    window.open('pages/pemesanan-print.php?id='+id_pemesanan+'&perundangan='+perundangan, 'Pemesanan Cetak', 'width=300px, height=500px, scrollabars=1, resizable=1');
 }
 
 function form_add() {
@@ -85,7 +91,7 @@ function form_add() {
             '</table>'+
             '</td></tr></table>'+
             '<table width=100% cellspacing="0" class="list-data-input" id="pesanan-list"><thead>'+
-                '<tr><th width=5%>No.</th><th width=53%>Nama Barang</th><th width=20%>Kemasan</th><th width=10%>Jumlah</th><th width=10%>Subtotal</th><th width=2%>#</th></tr></thead>'+
+                '<tr><th width=5%>No.</th><th width=54%>Nama Barang</th><th width=20%>Kemasan</th><th width=10%>Jumlah</th><th width=10%>Subtotal</th><th width=1%>#</th></tr></thead>'+
                 '<tbody></tbody>'+
             '</table>'+
             '</form></div>';
@@ -232,6 +238,7 @@ function form_add() {
                     $('#pesanan-list tbody').html('');
                     $('#estimasi').html('0');
                     load_data_pemesanan();
+                    cetak_sp(data.id);
                 } else {
                     alert_edit();
                 }

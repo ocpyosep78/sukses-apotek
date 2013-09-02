@@ -2,9 +2,11 @@
 include_once '../config/database.php';
 include_once '../inc/functions.php';
 $method = $_GET['method'];
-
+date_default_timezone_set("Asia/Jakarta");
 if ($method === 'save_pemesanan') {
-    $tanggal        = date2mysql($_POST['tanggal']);
+    session_start();
+    $id             = $_POST['no_sp'];
+    $tanggal        = date2mysql($_POST['tanggal'])." ".date("H:i:s");
     $tgl_datang     = date2mysql($_POST['tanggal_datang']);
     $id_supplier    = $_POST['id_supplier'];
     $id_barang      = $_POST['id_barang'];
@@ -12,11 +14,13 @@ if ($method === 'save_pemesanan') {
     $jumlah         = $_POST['jumlah'];
     //$id_user        = 'NULL';
     $sql = "insert INTO pemesanan set
+        id = '$id',
         tanggal = '$tanggal',
         tgl_datang = '$tgl_datang',
-        id_supplier = '$id_supplier'";
+        id_supplier = '$id_supplier',
+        id_users = '".$_SESSION['id_user']."'";
     mysql_query($sql);
-    $id_pemesanan = mysql_insert_id();
+    $id_pemesanan = $id;
     
     foreach ($id_barang as $key => $data) {
         $id_packing = mysql_fetch_object(mysql_query("select id from kemasan where id_barang = '$data' and id_kemasan = '".$id_kemasan[$key]."'"));
@@ -31,7 +35,7 @@ if ($method === 'save_pemesanan') {
     
     $result['status'] = TRUE;
     $result['id_pemesanan'] = get_last_pemesanan();
-    
+    $result['id'] = $id_pemesanan;
     die(json_encode($result));
 }
 
@@ -258,6 +262,7 @@ if ($method === 'save_penjualannr') {
 if ($method === 'delete_penjualannr') {
     $id     = $_GET['id'];
     mysql_query("delete from penjualan where id = '$id'");
+    mysql_query("delete from stok where transaksi = 'Penjualan' and id_transaksi = '$id'");
 }
 
 if ($method === 'save_retur_penerimaan') {

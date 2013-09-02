@@ -5,6 +5,7 @@
     Description:
         Purpose of the stylesheet follows.
 */
+
 input.search { float: right; font-family: inherit; margin-right: 0; }
 .aksi { white-space: nowrap; }
 table.data-input input[type=text], table.data-input textarea { margin: 0.5px; max-width: 300px; text-transform: uppercase; }
@@ -35,6 +36,7 @@ table.data-input input[type=text], table.data-input textarea { margin: 0.5px; ma
 .input-parameter table tr {  }
 .input-parameter input[type=text] { font-size: inherit; border: 1px solid #f4f4f4; padding: 1px; }
 .input-parameter input[type=text]:focus { border: 1px solid #ccc; }
+
 /*paging*/
 .titik { float: left; }
 .noblock { float: left; text-align: center; min-width: 15px; padding:2px 5px 2px 5px; background: #04a4f2; border:1px solid #ccc; text-decoration: none; color: #fff; margin-right: 0;}
