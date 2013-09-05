@@ -45,6 +45,7 @@ function add_new_rows(id_brg, nama_brg, batch, ed, masuk, keluar) {
             $('#sisa'+jml).html(sisa);
         }
     });
+    $('#id_barang, #barang, #batch, #ed, #masuk, #pilih').val('');
 }
 
 function form_add() {
@@ -76,18 +77,20 @@ function form_add() {
             '</form></div>';
     $('body').append(str);
     var lebar = $('#pabrik').width();
-    $('#pilih').click(function() {
-        var id_barang   = $('#id_barang').val();
-        var nama        = $('#barang').val();
-        var batch       = $('#batch').val();
-        var ed          = $('#ed').val();
-        var masuk       = $('#masuk').val();
-        var keluar      = $('#keluar').val();
-        if (id_barang !== '') {
-            add_new_rows(id_barang, nama, batch, ed, masuk, keluar);
+    $('#pilih').keydown(function(e) {
+        if (e.keyCode === 13) {
+            var id_barang   = $('#id_barang').val();
+            var nama        = $('#barang').val();
+            var batch       = $('#batch').val();
+            var ed          = $('#ed').val();
+            var masuk       = $('#masuk').val();
+            var keluar      = $('#pilih').val();
+            if (id_barang !== '') {
+                add_new_rows(id_barang, nama, batch, ed, masuk, keluar);
+            }
+            $('#id_barang').val('');
+            $('#barang').val('').focus();
         }
-        $('#id_barang').val('');
-        $('#barang').val('').focus();
     });
     $('#ed').datepicker({
         changeYear: true,
