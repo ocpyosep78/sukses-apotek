@@ -9,13 +9,13 @@ foreach ($attr_array as $attr);
 ?>
 <link rel="stylesheet" href="../themes/theme_default/theme-print.css" />
 <script type="text/javascript">
+window.onunload = refreshParent;
+function refreshParent() {
+    window.opener.location.reload();
+}
 function cetak() {  		
-    
     window.print();
-    if (confirm('Apakah menu print ini akan ditutup?')) {
-        window.close();
-    }
-    SCETAK.innerHTML = '<br /><input onClick=\'cetak()\' type=\'submit\' name=\'Submit\' value=\'Cetak\' class=\'tombol\'>';
+    setTimeout(function(){ window.close();},300);
 }
 </script>
 <body onload="cetak();" class="default-printing">

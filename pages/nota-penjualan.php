@@ -19,7 +19,7 @@ function cetak() {
     setTimeout(function(){ window.close();},300);
 }
 </script>
-<body onload="cetak()">
+<body onload="cetak();">
 <div class="layout-print-struk">
     <table style="border-bottom: 1px solid #000;" width="100%">
         <tr><td align="center" style="text-transform: uppercase; font-size: 12px;"><?= $apt->nama ?></td> </tr>

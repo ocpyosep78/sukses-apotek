@@ -87,9 +87,14 @@ function hitung_sub_total(i) {
     var ppn_total   = total+(total*ppn); // total PPN faktur setelah ditambah dengan total barang
     
     var disc_percent= $('#disc_pr').val()/100; // persentase diskon per faktur
-    var dp_total    = ppn_total*disc_percent;
-                      $('#disc_rp').val(numberToCurrency(parseInt(Math.ceil(dp_total))));
-    var diskon_ttl  = parseInt(currencyToNumber($('#disc_rp').val()));
+    if (disc_percent !== 0) {
+        var dp_total    = ppn_total*disc_percent;
+        $('#disc_rp').val(numberToCurrency(parseInt(Math.ceil(dp_total))));
+        var diskon_ttl  = parseInt(currencyToNumber($('#disc_rp').val()));
+    }
+    else {
+        var diskon_ttl  = parseInt(currencyToNumber($('#disc_rp').val()));
+    }
     var disc_ppn_ttl= ppn_total-diskon_ttl;
     var general_ttl = disc_ppn_ttl+materai;
     
@@ -109,9 +114,9 @@ function form_add() {
                     '</table>'+
                     '</td><td width=50%>'+
                     '<table width=100%>'+
-                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn size=10 /> %</td></tr>'+
-                        '<tr><td>Diskon:</td><td><input type=text name=disc_pr id=disc_pr size=10 /> %, Rp. <input type=text name=disc_rp id=disc_rp size=10 /></td></tr>'+
-                        '<tr><td>Materai (Rp.):</td><td><input type=text name=materai onblur=FormNum(this); id=materai size=10 /></td></tr>'+
+                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn size=10 value="0" /> %</td></tr>'+
+                        '<tr><td>Diskon:</td><td><input type=text name=disc_pr id=disc_pr value="0" size=10 /> %, Rp. <input type=text name=disc_rp id=disc_rp onblur=FormNum(this); onfocus=javascript:this.value=currencyToNumber(this.value); size=10 value="0" /></td></tr>'+
+                        '<tr><td>Materai (Rp.):</td><td><input type=text name=materai onblur=FormNum(this); id=materai size=10 value="0" /></td></tr>'+
                         '<tr><td>Total (Rp.):</td><td><input type=text name=total id=total size=10 /></td></tr>'+
                     '</table>'+
                 '</td></tr></table>'+

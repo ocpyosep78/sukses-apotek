@@ -25,7 +25,7 @@ $(document).on('keydown', function(e) {
     }
 });
 //hitung_detail_total(jml, jum, data.diskon_rupiah, data.diskon_persen, data.harga_jual);
-function hitung_detail_total(jml, jum, diskon_rupiah, diskon_persen, harga_jual) {
+function hitung_detail_total(jml, jum, diskon_rupiah, diskon_persen, harga_jual, isi_satuan) {
     if (diskon_persen === undefined) {
         dp = '0';
     } else {
@@ -41,7 +41,7 @@ function hitung_detail_total(jml, jum, diskon_rupiah, diskon_persen, harga_jual)
     $('#harga_jual'+jml).val(parseInt(harga_jual));
     //$('#diskon_rupiah'+jml).val(numberToCurrency(parseInt(dr)));
     //$('#diskon_persen'+jml).val(dp);
-    var subtotal = (jum*harga_jual);
+    var subtotal = (jum*harga_jual*isi_satuan);
     $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
     hitung_total_penjualan();
 }
@@ -94,7 +94,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
                 '<td align=center>'+jml+'</td>'+
                 '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_barang[] value="'+id_brg+'" class=id_barang id=id_barang'+jml+' /></td>'+
                 '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" style="text-align: center;" /></td>'+
-                '<td><input type=hidden name=harga_jual[] id=harga_jual'+jml+' /> <select name=kemasan[] id=kemasan'+jml+'></select></td>'+
+                '<td><input type=hidden name=harga_jual[] id=harga_jual'+jml+' /> <input type=hidden name=isi_satuan[] id=isi_satuan'+jml+' /> <select name=kemasan[] id=kemasan'+jml+'></select></td>'+
                 '<td align=center id=sisa'+jml+'></td>'+
                 '<td align=right id=hargajual'+jml+'></td>'+
                 '<td><input type=text name=diskon_rupiah[] style="text-align: right;" id=diskon_rupiah'+jml+' value="0" onblur="FormNum(this)" /></td>'+
@@ -115,7 +115,8 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
         dataType: 'json',
         cache: false,
         success: function(data) {
-            hitung_detail_total(jml, jumlah, data.diskon_rupiah, data.diskon_persen, Math.ceil(data.harga_jual));
+            hitung_detail_total(jml, jumlah, data.diskon_rupiah, data.diskon_persen, Math.ceil(data.harga_jual), data.isi_satuan);
+            $('#isi_satuan'+jml).val(data.isi_satuan);
         }
     });
     $.ajax({
@@ -139,6 +140,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
     $('#jumlah'+jml).blur(function() {
         var jumlah      = $('#jumlah'+jml).val();
         var hrg_jual    = parseInt(currencyToNumber($('#hargajual'+jml).html()));
+        var isi_satuan  = parseInt($('#isi_satuan'+jml).val());
         var diskon      = 0;
         if ($('#diskon_rupiah'+jml).val() !== '0') {
             diskon  = parseInt(currencyToNumber($('#diskon_rupiah'+jml).val()));
@@ -148,7 +150,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
             diskon  = ((jumlah*hrg_jual)*diskonpr);
         }
         
-        var subtotal    = (hrg_jual*jumlah)-diskon;
+        var subtotal    = (hrg_jual*jumlah*isi_satuan)-diskon;
         $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
         hitung_total_penjualan();
     });
@@ -158,6 +160,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
         }
         var jumlah      = $('#jumlah'+jml).val();
         var hrg_jual    = parseInt(currencyToNumber($('#hargajual'+jml).html()));
+        var isi_satuan  = parseInt($('#isi_satuan'+jml).val());
         var diskon      = 0;
         if ($('#diskon_rupiah'+jml).val() !== '0') {
             diskon  = parseInt(currencyToNumber($('#diskon_rupiah'+jml).val()));
@@ -167,7 +170,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
             diskon  = ((jumlah*hrg_jual)*diskonpr);
         }
         
-        var subtotal    = (hrg_jual*jumlah)-diskon;
+        var subtotal    = (hrg_jual*jumlah*isi_satuan)-diskon;
         $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
         hitung_total_penjualan();
     });
@@ -177,6 +180,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
         }
         var jumlah      = $('#jumlah'+jml).val();
         var hrg_jual    = parseInt(currencyToNumber($('#hargajual'+jml).html()));
+        var isi_satuan  = parseInt($('#isi_satuan'+jml).val());
         var diskon      = 0;
         if ($('#diskon_rupiah'+jml).val() !== '0') {
             diskon  = parseInt(currencyToNumber($('#diskon_rupiah'+jml).val()));
@@ -186,7 +190,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
             diskon  = ((jumlah*hrg_jual)*diskonpr);
         }
         
-        var subtotal    = (hrg_jual*jumlah)-diskon;
+        var subtotal    = (hrg_jual*jumlah*isi_satuan)-diskon;
         $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
         hitung_total_penjualan();
     });
@@ -198,7 +202,8 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
             dataType: 'json',
             cache: false,
             success: function(data) {
-                hitung_detail_total(jml, jum, data.diskon_rupiah, data.diskon_persen, Math.ceil(data.harga_jual));
+                $('#isi_satuan'+jml).val(data.isi_satuan);
+                hitung_detail_total(jml, jum, data.diskon_rupiah, data.diskon_persen, Math.ceil(data.harga_jual), data.isi_satuan);
                 hitung_total_penjualan();
             }
         });

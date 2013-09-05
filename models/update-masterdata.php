@@ -894,4 +894,38 @@ if ($method === 'delete_penyakit') {
     $id = $_GET['id'];
     mysql_query("delete from penyakit where id = '$id'");
 }
+
+if ($method === 'save_item_kit') {
+    $nama       = $_POST['nama_item'];
+    $margin_pr  = $_POST['margin_pr'];
+    $margin_rp  = $_POST['margin_rp'];
+    $diskon_pr  = $_POST['diskon_pr'];
+    $diskon_rp  = $_POST['diskon_rp'];
+    
+    $query = "insert into item_kit set
+        nama = '$nama',
+        margin_persen = '$margin_pr',
+        margin_rupiah = '$margin_rp',
+        diskon_persen = '$diskon_pr',
+        diskon_rupiah = '$diskon_rp'";
+    mysql_query($query);
+    $id_item_kit= mysql_insert_id();
+    $id_barang  = $_POST['id_barang']; // array
+    $kemasan    = $_POST['kemasan']; // array
+    $jumlah     = $_POST['jumlah']; // array
+    
+    foreach ($id_barang as $key => $data) {
+        $id_kemasan = mysql_fetch_object(mysql_query("select id from kemasan where id_barang = '$data' and id_kemasan = '".$kemasan[$key]."'"));
+        $sql = "insert into item_kit_detail set
+            id_item_kit = '$id_item_kit',
+            id_kemasan = '".$id_kemasan->id."',
+            jumlah = '".$jumlah[$key]."'";
+        //echo $sql."<br/>";
+        mysql_query($sql);
+    }
+    
+    $result['status'] = TRUE;
+    $result['id'] = $id_item_kit;
+    die(json_encode($result));
+}
 ?>

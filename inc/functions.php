@@ -167,10 +167,11 @@ function get_last_pemesanan() {
     $sql = mysql_query("select substr(id, 4,3) as id  from pemesanan order by tanggal desc limit 1");
     $row = mysql_fetch_object($sql);
     if (!isset($row->id)) {
-        return "SP.001/".date("m/Y");
+        $result = "SP.001/".date("m/Y");
     } else {
-        return "SP.".str_pad((string)($row->id+1), 3, "0", STR_PAD_LEFT)."/".date("m/Y");
+        $result = "SP.".str_pad((string)($row->id+1), 3, "0", STR_PAD_LEFT)."/".date("m/Y");
     }
+    return $result;
 }
 
 function indo_tgl($tgl) {

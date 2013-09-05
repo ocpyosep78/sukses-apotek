@@ -62,6 +62,24 @@ function hitung_estimasi() {
     $('#estimasi').html(numberToCurrency(parseInt(terdiskon)));
     $('#harga_jual').val(parseInt(terdiskon));
 }
+
+function removeMe(el) {
+    var parent = el.parentNode.parentNode;
+    parent.parentNode.removeChild(parent);
+    var jml_baris = $('.tr_rows').length;
+    var index = 0;
+    for(i = 1; i <= jml_baris; i++) {
+        $('.tr_rows:eq('+index+')').children('td:eq(0)').html(i);
+        $('.tr_rows:eq('+index+')').children('td:eq(1)').children('.id_barang').attr('id','id_barang'+i);
+        $('.tr_rows:eq('+index+')').children('td:eq(2)').children('.kemasan').attr('id','kemasan'+i);
+        $('.tr_rows:eq('+index+')').children('td:eq(3)').children('.jumlah').attr('id','jumlah'+i);
+        $('.tr_rows:eq('+index+')').children('td:eq(4)').attr('id','harga'+i);
+        $('.tr_rows:eq('+index+')').children('td:eq(5)').attr('id','subtotal'+i);
+        index++;
+    }
+    hitung_estimasi();
+}
+
 function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
     if (id_kemasan === null) {
         alert('Kemasan tidak boleh kosong !');
@@ -72,8 +90,8 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
     var str = '<tr class="tr_rows">'+
                 '<td align=center>'+jml+'</td>'+
                 '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_barang[] value="'+id_brg+'" class=id_barang id=id_barang'+jml+' /></td>'+
-                '<td align=center>'+kemasan+'<input type=hidden name=kemasan[] id=kemasan'+jml+' value="'+id_kemasan+'" /></td>'+
-                '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" size=10 style="text-align: center;" /></td>'+
+                '<td align=center>'+kemasan+'<input type=hidden name=kemasan[] id=kemasan'+jml+' class=kemasan value="'+id_kemasan+'" /></td>'+
+                '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" class=jumlah size=10 style="text-align: center;" /></td>'+
                 '<td align=right id=harga'+jml+'></td>'+
                 '<td align=right id=subtotal'+jml+'></td>'+
                 '<td align=center><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
@@ -240,6 +258,12 @@ function form_add() {
         }
     });
     $('#form_item_kit').submit(function() {
+        if ($('#nama_item').val() === '') {
+            alert_empty('item', '#nama_item'); return false;
+        }
+        if ($('.tr_rows').length === 0) {
+            alert_dinamic('Belum ada barang yang terpilih !','#barang'); return false;
+        }
         $.ajax({
             url: 'models/update-masterdata.php?method=save_item_kit',
             data: $(this).serialize(),
@@ -251,10 +275,12 @@ function form_add() {
                     alert_tambah('#nama_item');
                     $('#nama_item').val('');
                     $('#margin_pr, #margin_rp, #diskon_pr, #diskon_rp').val('0');
+                    $('#estimasi').html('0');
                     $('#item-kit-list tbody').html('');
                 }
             }
         });
+        return false;
     });
 }
 function load_data_itemkit(page, search, id) {

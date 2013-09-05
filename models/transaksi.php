@@ -40,7 +40,7 @@ function pemesanan_load_data($param) {
         join satuan st on (st.id = km.id_kemasan)
         left join users u on (p.id_users = u.id)
         left join karyawan k on (u.id_karyawan = k.id)
-        where p.id is not NULL $q";
+        where p.id is not NULL $q order by p.tanggal desc";
     //echo $sql;
     $query = mysql_query($sql.$limit);
     $data = array();

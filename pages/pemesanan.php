@@ -79,7 +79,7 @@ function form_add() {
     var str = '<div id="form_pemesanan">'+
             '<form id="save_pemesanan">'+
             '<table width=100% class=data-input><tr valign=top><td width=50%><table width=100%>'+
-                '<tr><td width=15%>No. SP:</td><td width=30%><?= form_input('no_sp', get_last_pemesanan(), 'id=no_sp size=10 readonly') ?></td></tr>'+
+                '<tr><td width=15%>No. SP:</td><td width=30%><?= form_input('no_sp', NULL, 'id=no_sp size=10 readonly') ?></td></tr>'+
                 '<tr><td>Tanggal Pembuatan SP:</td><td><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
                 '<tr><td>Tanggal Diharapkan Datang:</td><td><?= form_input('tanggal_datang', date("d/m/Y"), 'id=tanggal_datang size=10') ?></td></tr>'+
                 '<tr><td>Supplier:</td><td width=20%><?= form_input('supplier', NULL, 'id=supplier size=40') ?><?= form_hidden('id_supplier', NULL, 'id=id_supplier') ?></td></tr>'+
@@ -213,6 +213,14 @@ function form_add() {
         }, open: function() {
             $('#supplier').focus();
             $.cookie('session', 'true');
+            $.ajax({
+                url: 'models/autocomplete.php?method=generate_new_sp',
+                dataType: 'json',
+                cache: false,
+                success: function(data) {
+                    $('#no_sp').val(data.sp);
+                }
+            });
         }
     });
     $('#save_pemesanan').submit(function() {
