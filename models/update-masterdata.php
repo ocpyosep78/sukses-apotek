@@ -473,6 +473,8 @@ if ($method === 'save_pelanggan') {
     $tempat     = $_POST['tmp_lahir'];
     $tgllahir   = $_POST['tgl_lahir'];
     $alamat     = $_POST['alamat'];
+    $kota       = $_POST['kota'];
+    $provinsi   = $_POST['provinsi'];
     $telp       = $_POST['telp'];
     $email      = $_POST['email'];
     $diskon     = $_POST['diskon'];
@@ -537,6 +539,8 @@ if ($method === 'save_pelanggan') {
                 tempat_lahir = '$tempat',
                 tanggal_lahir = '".date2mysql($tgllahir)."',
                 alamat = '$alamat',
+                kabupaten = '$kota',
+                provinsi = '$provinsi',
                 telp = '$telp',
                 email = '$email',
                 diskon = '$diskon',
@@ -557,6 +561,8 @@ if ($method === 'save_pelanggan') {
                 tempat_lahir = '$tempat',
                 tanggal_lahir = '".date2mysql($tgllahir)."',
                 alamat = '$alamat',
+                kabupaten = '$kota',
+                provinsi = '$provinsi',
                 telp = '$telp',
                 email = '$email',
                 diskon = '$diskon',

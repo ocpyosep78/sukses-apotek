@@ -30,6 +30,8 @@ var str = '<div id=form_add>'+
                 '<tr><td>Kelamin:</td><td><input type="radio" name=kelamin value="P" checked id="prm" /> <label for="prm">Perempuan</label> <input type="radio" name=kelamin value="L" id="l" /> <label for="l">Laki-laki</label></td></tr>'+
                 '<tr><td>Tempat / Tgl Lahir:</td><td><input type=text name=tmp_lahir size=5 style="min-width: 200px;" id=tmp_lahir /> / <input type=text name=tgl_lahir style="min-width: 80px;" size=5 id="tanggal" /></td></tr>'+
                 '<tr><td>Alamat:</td><td><?= form_input('alamat', NULL, 'id=alamat size=40 onBlur="javascript:this.value=this.value.toUpperCase();"') ?><input type=hidden name="id_pabrik" /></td></tr>'+
+                '<tr><td>Kota / Kodya:</td><td><?= form_input('kota', '', 'id=kota size=40') ?></td></tr>'+
+                '<tr><td>Provinsi:</td><td><?= form_input('provinsi', '', 'id=provinsi size=40') ?></td></tr>'+
                 '<tr><td>Telp:</td><td><?= form_input('telp', '', 'id=telp size=40') ?></td></tr>'+
                 '<tr><td>Email:</td><td><?= form_input('email','', 'id=email size=40') ?></td></tr>'+
                 '<tr><td>Diskon:</td><td><?= form_input('diskon', '', 'id=diskon size=40') ?></td></tr>'+
@@ -48,7 +50,7 @@ var str = '<div id=form_add>'+
         title: 'Tambah Customer',
         autoOpen: true,
         width: 480,
-        height: 390,
+        height: 430,
         modal: true,
         hide: 'clip',
         show: 'blind',
@@ -173,6 +175,8 @@ function edit_pelanggan(str) {
     $('#catatan').val(arr[10]);
     $('#asuransi').val(arr[11]);
     $('#nopolish').val(arr[12]);
+    $('#kota').val(arr[13]);
+    $('#provinsi').val(arr[14]);
     
 }
 
