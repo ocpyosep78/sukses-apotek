@@ -24,6 +24,7 @@ if ($method === 'save_pemesanan') {
     
     foreach ($id_barang as $key => $data) {
         $id_packing = mysql_fetch_object(mysql_query("select id from kemasan where id_barang = '$data' and id_kemasan = '".$id_kemasan[$key]."'"));
+        //echo "select id from kemasan where id_barang = '$data' and id_kemasan = '".$id_kemasan[$key]."'<br/>";
         $sql = "insert into detail_pemesanan set
             id_pemesanan = '$id_pemesanan',
             id_kemasan = '".$id_packing->id."',
@@ -556,5 +557,100 @@ if ($method === 'save_pemeriksaan') {
 
 if ($method === 'delete_pemeriksaan') {
     mysql_query("delete from pemeriksaan where id = '$_GET[id]'");
+}
+
+if ($method === 'save_inkaso') {
+    $noref      = $_POST['noref'];
+    $tanggal    = date2mysql($_POST['tanggal']);
+    $id_supplier= $_POST['id_supplier'];
+    $nokuitansi = $_POST['nokuitansi'];
+    $cara_bayar = $_POST['cara_bayar'];
+    $id_bank    = ($_POST['bank'] !== '')?$_POST['bank']:'NULL';
+    $no_trans   = $_POST['notransaksi'];
+    $keterangan = $_POST['keterangan'];
+    $nominal    = currencyToNumber($_POST['nominal']);
+    
+    $sql = "insert into inkaso set
+        no_ref = '$noref',
+        tanggal = '$tanggal',
+        id_supplier = '$id_supplier',
+        no_kuitansi = '$nokuitansi',
+        cara_bayar = '$cara_bayar',
+        id_bank = $id_bank,
+        no_transaksi = '$no_trans',
+        keterangan = '$keterangan',
+        nominal = '$nominal'";
+    
+    mysql_query($sql);
+    die(json_encode(array('status' => TRUE)));
+}
+
+if ($method === 'delete_inkaso') {
+    $id = $_GET['id'];
+    mysql_query("delete from inkaso where id = '$id'");
+}
+
+if ($method === 'add_rencana_pemesanan') {
+    $id = $_GET['id'];
+    mysql_query("insert INTO defecta set
+        id_barang = '$id',
+        jumlah = '1'");
+}
+
+if ($method === 'delete_pemesanan_plant') {
+    $id = $_GET['id'];
+    mysql_query("delete from defecta where id = '$id'");
+}
+
+if ($method === 'save_rencana_pemesanan') {
+    session_start();
+    $id             = $_POST['no_sp'];
+    $tanggal        = date2mysql($_POST['tanggal'])." ".date("H:i:s");
+    $tgl_datang     = date2mysql($_POST['tanggal_datang']);
+    $id_supplier    = $_POST['id_supplier'];
+    $id_barang      = $_POST['id_barang'];
+    $id_kemasan     = $_POST['kemasan'];
+    $jumlah         = $_POST['jumlah'];
+    //$id_user        = 'NULL';
+    $sql = "insert INTO pemesanan set
+        id = '$id',
+        tanggal = '$tanggal',
+        tgl_datang = '$tgl_datang',
+        id_supplier = '$id_supplier',
+        id_users = '".$_SESSION['id_user']."'";
+    mysql_query($sql);
+    $id_pemesanan = $id;
+    
+    foreach ($id_barang as $key => $data) {
+        $sql = "insert into detail_pemesanan set
+            id_pemesanan = '$id_pemesanan',
+            id_kemasan = '$id_kemasan[$key]',
+            jumlah = '$jumlah[$key]'";
+        //echo "select id from kemasan where id_barang = '$data' and id_kemasan = '".$id_kemasan[$key]."'<br/>";
+        //echo $sql;
+        mysql_query($sql);
+        mysql_query("update defecta set status = '1' where id_barang = '".$data."'");
+    }
+    
+    $result['status'] = TRUE;
+    $result['id_pemesanan'] = get_last_pemesanan();
+    $result['id'] = $id_pemesanan;
+    die(json_encode($result));
+}
+
+if ($method === 'save_pendaftaran') {
+    $waktu      = date("Y-m-d H:i:s");
+    $pasien     = $_GET['pasien'];
+    $spesialis  = $_GET['spesialis'];
+    $noantri    = $_GET['noantri'];
+    $sql = "insert into pendaftaran set
+        waktu = '$waktu',
+        id_pelanggan = '$pasien',
+        no_antri = '$noantri',
+        id_spesialisasi = '$spesialis'";
+    mysql_query($sql);
+    $result['id'] = mysql_insert_id();
+    $result['status'] = TRUE;
+    die(json_encode($result));
 }
 ?>

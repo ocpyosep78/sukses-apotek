@@ -16,7 +16,7 @@ $spacing = 5; // space between tiles, in px
 
 /* Tilegroup settings */
 $groupTitles = array('Transaksi','Master Data','Laporan'); // titles of the tileGroups
-$groupSpacing = array(4,4,4); // width of each tileGroup (spacing between the groups in tiles)
+$groupSpacing = array(5,4,4); // width of each tileGroup (spacing between the groups in tiles)
 $groupDirection = "horizontal"; // put the groups in a vertical or horizontal order?
 $mouseScroll = true; // disable or enable scrolling with mousewheel
 

@@ -1,4 +1,8 @@
 <?php
+$subNav = array(
+	"Data Pendaftaran ; pendaftaran.php ; #509601;",
+        "Data Pemeriksaan ; pemeriksaan.php ; #509601;"
+);
 set_include_path("../");
 include_once("inc/essentials.php");
 include_once("inc/functions.php");
@@ -57,7 +61,7 @@ function add_tindakan(id, nama, nominal) {
 function form_add() {
     var str = '<div id=form_pemeriksaan>'+
                 '<form id=save_pemeriksaan action="models/update-transaksi.php?method=save_pemeriksaan" enctype=multipart/form-data>'+
-                    '<span id=output></span>'+
+                    '<span id=output></span><?= form_hidden('id_pendaftaran', NULL, 'id=id_pendaftaran') ?>'+
                     '<table width=100% class=data-input><tr valign=top><td width=33%>'+
                     '<table width=100%>'+
                         '<tr><td>No. Pemeriksaan</td><td><?= form_input('nopemeriksaan', NULL, 'id=nopemeriksaan readonly size=10') ?></td></tr>'+
@@ -69,7 +73,6 @@ function form_add() {
                     '</table></td><td width=33%>'+
                     '<table width=100%>'+
                         '<tr><td valign=top>Anamnesis:</td><td><?= form_textarea('anamnesis', NULL, 'id=anamnesis cols=37 style="height: 30px"') ?></td></tr>'+
-                        '<tr><td valign=top>Pemeriksaan:</td><td><?= form_textarea('pemeriksaan', NULL, 'id=pemeriksaan cols=37 style="height: 30px"') ?></td></tr>'+
                         '<tr><td>Diagnosis:</td><td><?= form_input('diagnosis', NULL, 'id=diagnosis size=40') ?><?= form_hidden('id_diagnosis', NULL, 'id=id_diagnosis') ?></td></tr>'+
                         '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakan', NULL, 'id=id_tindakan') ?></td></tr>'+
                     '</table>'+
@@ -120,6 +123,7 @@ function form_add() {
                 } else {
                     $('#foto').html('');
                 }
+                $('#id_pendaftaran').val(msg.id);
             }
         });
         $('#dokter').focus();

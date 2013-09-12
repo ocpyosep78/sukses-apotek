@@ -4,6 +4,10 @@ function form_input($name, $value = NULL, $attr = NULL) {
     return '<input type=text name="'.$name.'" value="'.$value.'" '.$attr.' />';
 }
 
+function form_password($name, $value = NULL, $attr = NULL) {
+    return '<input type=password name="'.$name.'" value="'.$value.'" '.$attr.' />';
+}
+
 function form_hidden($name, $value = NULL, $attr = NULL) {
     return '<input type=hidden name="'.$name.'" value="'.$value.'" '.$attr.' />';
 }
@@ -144,14 +148,25 @@ function datefmysql($tgl) {
 }
 
 function datetimefmysql($dt, $time = NULL) {
-    $var = explode(" ", $dt);
-    $var1 = explode("-", $var[0]);
-    $var2 = "$var1[2]/$var1[1]/$var1[0]";
-    if ($time != NULL) {
-        return $var2 . ' ' . $var[1];
+    if ($dt !== NULL) {
+        $var = explode(" ", $dt);
+        $var1 = explode("-", $var[0]);
+        $var2 = "$var1[2]/$var1[1]/$var1[0]";
+        if ($time != NULL) {
+            return $var2 . ' ' . $var[1];
+        } else {
+            return $var2;
+        }
     } else {
-        return $var2;
+        return '';
     }
+}
+
+function datetime2mysql($dt) {
+    $var = explode(" ", $dt);
+    $var1 = explode("/", $var[0]);
+    $var2 = "$var1[2]-$var1[1]-$var1[0]";
+    return $var2 . ' ' . $var[1];
 }
 
 function rupiah($jml) {

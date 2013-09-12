@@ -8,11 +8,11 @@
 
 input.search { float: right; font-family: inherit; margin-right: 0; }
 .aksi { white-space: nowrap; }
-table.data-input input[type=text], table.data-input textarea { margin: 0.5px; max-width: 300px; text-transform: uppercase; }
+table.data-input input[type=text], table.data-input input[type=password], table.data-input textarea { margin: 0.5px; max-width: 300px; text-transform: uppercase; }
 .data-input { border: 1px solid #999; background: #f4f4f4; padding: 10px 5px; font-size: 11px; }
 .data-input .small-input { min-width: 92px; }
 .data-input label { margin-left: 0; margin-right: 10px; }
-.data-input input[type=text]:focus, .data-input textarea:focus, .data-input input[type=radio] { border: 1px solid blue; }
+.data-input input[type=text]:focus, .data-input input[type=password]:focus, .data-input textarea:focus, .data-input input[type=radio] { border: 1px solid blue; }
 .data-input select:focus { border: 1px solid blue; padding: 1px 1px 1px 2px; }
 .data-input select { margin-left: 0.5px; margin-top: 1px; margin-bottom: 1px; min-width: 155px; }
 .data-input input[type=radio] { margin-left: 0; margin-right: 2px; }
@@ -24,6 +24,7 @@ table.data-input input[type=text], table.data-input textarea { margin: 0.5px; ma
 .edition:hover { background: url(../../img/icons/edit.png) center no-repeat; width: 19px; height: 19px; cursor: pointer; }
 .deletion { background: url(../../img/icons/delete.png) center no-repeat; width: 19px; height: 19px; display: inline-block;}
 .deletion:hover { background: url(../../img/icons/delete.png) center no-repeat; width: 19px; height: 19px; cursor: pointer; }
+.planning { background: url(../../img/icons/cart.png) center no-repeat; width: 18px; height: 18px; display: inline-block; }
 .custom-combobox { position: relative; display: inline-block; }
 .custom-combobox-toggle { position: absolute; top: 0; bottom: 0; margin-left: -1px; padding: 0;
     /* support: IE7 */

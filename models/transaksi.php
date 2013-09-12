@@ -306,7 +306,8 @@ function pemeriksaan_load_data($param) {
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
     $sql = "select p.*, pl.nama as pasien, d.nama as dokter, py.topik, py.sub_kode, tr.id as id_tarif, tr.nama as tarif, t.nominal from pemeriksaan p
-        join pelanggan pl on (p.id_pelanggan = pl.id)
+        join pendaftaran pd on (p.id_pendaftaran = pd.id)
+        join pelanggan pl on (pd.id_pelanggan = pl.id)
         join dokter d on (p.id_dokter = d.id)
         left join diagnosis dg on (p.id = dg.id_pemeriksaan)
         left join penyakit py on (dg.id_penyakit = py.id)
@@ -323,5 +324,119 @@ function pemeriksaan_load_data($param) {
     $result['data'] = $data;
     $result['total']= $total;
     return $result;
+}
+
+function inkaso_load_data($param) {
+    $q = NULL;
+    if ($param['id'] !== '') {
+        $q.=" and i.id = '".$param['id']."'";
+    }
+    if ($param['search'] !== '') {
+        $q.=" and i.no_ref like ('%".$param['search']."%') or s.nama like ('%".$param['search']."%') or b.nama like ('%".$param['search']."%')";
+    }
+    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    $sql = "select i.*, s.nama supplier, b.nama as bank from inkaso i
+        join supplier s on (i.id_supplier = s.id)
+        left join bank b on (i.id_bank = b.id) where i.id is not NULL $q";
+    
+    //echo $sql.$limit;
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+function load_data_defecta($param) {
+    $q = NULL;
+    if ($param['id'] !== '') {
+        $q.=" and s.id = '".$param['id']."' ";
+    }
+    if ($param['search'] !== '') {
+        $q.=" and b.nama like ('%".$param['search']."%')";
+    }
+    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    $sql = "select s.*, b.kekuatan, b.id as id_barang, b.nama, b.stok_minimal, st.nama as satuan_kekuatan, sum(s.masuk) as masuk, 
+        sum(s.keluar) as keluar, (sum(s.masuk)-sum(s.keluar)) as sisa 
+        from stok s 
+        join barang b on (s.id_barang = b.id) 
+        left join satuan st on (b.satuan_kekuatan = st.id) 
+        where b.id not in (select id_barang from defecta where status = '0') $q
+        group by s.id_barang  
+        having sisa <= b.stok_minimal order by b.nama";
+    
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function get_distributor_by_barang($id_barang) {
+    $sql = mysql_query("select s.nama from supplier s
+        join penerimaan p on (s.id = p.id_supplier)
+        join detail_penerimaan dp on (p.id = dp.id_penerimaan)
+        join kemasan k on (k.id = dp.id_kemasan)
+        join barang b on (k.id_barang = b.id)
+        inner join (
+            select id_kemasan, max(id) as id_max from detail_penerimaan group by id_kemasan
+        ) dm on (dp.id_kemasan = dm.id_kemasan and dp.id = dm.id_max)
+        where b.id = '$id_barang'
+    ");
+    $row = mysql_fetch_object($sql);
+    return $row;
+}
+
+function pemesanan_plant_load_data($param = NULL) {
+    $limit = NULL;
+    if (isset($param['list'])) {
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
+    $sql = "select d.*, concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang from defecta d
+        join barang b on (d.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id) where status = '0' order by b.nama";
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function load_data_pendaftaran($param) {
+    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    $sql = "select p.*, pl.nama, s.nama as spesialisasi, d.nama as dokter from pendaftaran p
+        join pelanggan pl on (p.id_pelanggan = pl.id)
+        join spesialisasi s on (p.id_spesialisasi = s.id)
+        left join dokter d on (p.id_dokter = d.id)
+        where date(p.waktu) = '".date("Y-m-d")."' order by s.id, p.no_antri";
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function cetak_no_antri($id_daftar) {
+    $sql = "select p.*, pl.nama from pendaftaran p
+        join pelanggan pl on (p.id_pelanggan = pl.id)
+        where p.id = '$id_daftar'";
+    $result = mysql_query($sql);
+    $rows   = mysql_fetch_object($result);
+    return $rows;
 }
 ?>

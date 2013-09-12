@@ -51,7 +51,9 @@ if ($method === 'pasien') {
 }
 
 if ($method === 'get_photo_pemeriksaan') {
-    $sql = mysql_query("select * from pemeriksaan where id_pelanggan = '".$_GET['id_pelanggan']."' order by tanggal desc limit 1");
+    $sql = mysql_query("select pd.*, p.foto from pendaftaran pd
+        left join pemeriksaan p on (pd.id = p.id_pendaftaran) 
+        where pd.id_pelanggan = '".$_GET['id_pelanggan']."' order by pd.waktu desc limit 1");
     $row = mysql_fetch_object($sql);
     die(json_encode($row));
 }
@@ -225,10 +227,10 @@ if ($method === 'get_detail_harga_barang_resep') { // ambil data barang resep
     $qry= mysql_query("select is_harga_bertingkat from kemasan where id = '".$get->id_packing."'");
     $cek= mysql_fetch_object($qry);
     if ($cek->is_harga_bertingkat === '0') {
-        $sql = mysql_query("select b.*, k.id as id_packing, (b.hna+(b.hna*(b.margin_resep/100))) as harga_jual from kemasan k join barang b on (k.id_barang = b.id) where k.id = '".$get->id_packing."'");
+        $sql = mysql_query("select b.*, k.id as id_packing, k.isi_satuan, (b.hna+(b.hna*(b.margin_resep/100))) as harga_jual, (b.hna+(b.hna*(b.margin_non_resep/100))) as harga_jual_nr from kemasan k join barang b on (k.id_barang = b.id) where k.id = '".$get->id_packing."'");
         $rows= mysql_fetch_object($sql);
     } else {
-        $sql= mysql_query("select d.*, d.hj_resep as harga_jual, k.id as id_packing, d.hj_resep as harga_jual_resep, (k.isi*k.isi_satuan) as isi_satuan
+        $sql= mysql_query("select d.*, d.hj_resep as harga_jual, k.isi_satuan, d.hj_non_resep as harga_jual_nr, k.id as id_packing, d.hj_resep as harga_jual_resep, (k.isi*k.isi_satuan) as isi_satuan
             from dinamic_harga_jual d
             join kemasan k on (d.id_kemasan = k.id)
             where d.id_kemasan = '".$get->id_packing."' and $jml between d.jual_min and d.jual_max");
@@ -323,5 +325,59 @@ if ($method === 'generate_new_sp') {
         $result['sp'] = "SP.".str_pad((string)($row->id+1), 3, "0", STR_PAD_LEFT)."/".date("m/Y");
     }
     die(json_encode($result));
+}
+
+if ($method === 'create_ref_inkaso') {
+    $sql = mysql_query("select substr(no_ref, 4,3) as id  from inkaso order by id desc limit 1");
+    $row = mysql_fetch_object($sql);
+    if (!isset($row->id)) {
+        $result['in'] = "IN.001-".date("m/Y");
+    } else {
+        $result['in'] = "IN.".str_pad((string)($row->id+1), 3, "0", STR_PAD_LEFT)."-".date("m/Y");
+    }
+    die(json_encode($result));
+}
+
+if ($method === 'get_sisa_hutang_supplier') {
+    $id_supplier = $_GET['id_supplier'];
+    $sql = mysql_query("select sum(total) as total_hutang FROM penerimaan where id_supplier = '$id_supplier'");
+    $hutang = mysql_fetch_object($sql);
+    
+    $sql2= mysql_query("select sum(nominal) as terbayar from inkaso where id_supplier = '$id_supplier'");
+    $terbyr = mysql_fetch_object($sql2);
+    
+    $sisa = $hutang->total_hutang - $terbyr->terbayar;
+    die(json_encode(array('sisa' => $sisa)));
+}
+
+if ($method === 'spesialisasi') {
+    $sql = mysql_query("select * from spesialisasi where nama like ('%$q%') order by locate('$q',nama)");
+    $rows= array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'get_no_antri') {
+    $now = date("Y-m-d");
+    $id  = $_GET['id_spesialisasi'];
+    $sql = mysql_query("select no_antri as no from pendaftaran where date(waktu) = '$now' and id_spesialisasi = '$id'");
+    $row = mysql_fetch_object($sql);
+    if (isset($row->no)) {
+        $no = $row->no+1;
+    } else {
+        $no = 1;
+    }
+    die(json_encode($no));
+}
+
+if ($method === 'karyawan') {
+    $sql = mysql_query("select * from karyawan where nama like ('%$q%') order by locate ('$q',nama)");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
 }
 ?>

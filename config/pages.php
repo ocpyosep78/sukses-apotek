@@ -32,6 +32,8 @@ $pageTitles['golongan.php'] = "Golongan";
 $pageTitles['farmakoterapi.php'] = "Farmakoterapi";
 $pageTitles['kelas-terapi.php'] = "Kelas Terapi";
 $pageTitles['penyakit.php'] = "Penyakit";
+$pageTitles['user-account.php'] = "User Account";
+
 
 /*Transaksi*/
 $pageTitles['pemesanan.php'] = "Pemesanan";
@@ -42,6 +44,10 @@ $pageTitles['stok-opname.php'] = "Stok Opname";
 $pageTitles['resep.php'] = "Receipt";
 $pageTitles['retur-penerimaan.php'] = "Retur Penerimaan";
 $pageTitles['pemeriksaan.php'] = "Pemeriksaan";
+$pageTitles['inkaso.php'] = "Inkaso";
+$pageTitles['defecta.php'] = "Defecta";
+$pageTitles['rencana-pemesanan.php'] = "Rencana Pemesanan";
+$pageTitles['pendaftaran.php'] = "Pendaftaran";
 
 /*Laporan*/
 $pageTitles['arus-stok.php'] = "Arus Stok";

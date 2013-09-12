@@ -141,16 +141,18 @@ function load_data_supplier($param) {
 }
 
 function load_data_bank($param = null) {
-    $q = null;
-    if ($param['id'] !== '') {
+    $q = null; $limit = NULL;
+    if (isset($param['id']) and $param['id'] !== '') {
         $q = "and id = '".$param['id']."'";
     }
-    if ($param['search'] !== '') {
+    if (isset($param['search']) and $param['search'] !== '') {
         $q = " and nama like '%".$param['search']."%'";
     }
-    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    if (isset($param)) {
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
     $sql = "select * from bank where id is not NULL $q order by nama";
-    
+    //echo $sql.$limit;
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -495,6 +497,27 @@ function item_kit_load_data($param) {
         left join satuan s on (s.id = b.satuan_kekuatan)
         left join satuan st on (k.id_kemasan = st.id)
         where i.id is not NULL $q order by i.nama
+        ";
+    //echo $sql;
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function load_data_user_account($param) {
+    $q = null;
+    if ($param['id'] !== '') {
+        $q = " and id = '".$param['id']."'";
+    }
+    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    $sql = "select u.*, k.nama, k.email, k.telp, k.alamat from users u
+        join karyawan k on (u.id_karyawan = k.id)
         ";
     //echo $sql;
     $query = mysql_query($sql.$limit);

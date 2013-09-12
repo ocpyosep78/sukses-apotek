@@ -434,9 +434,9 @@ if ($method === 'delete_instansi') {
 }
 
 if ($method === 'save_bank') {
-    $nama       = $_POST['nama'];
+    $nama       = strtoupper($_POST['nama']);
     $charge     = $_POST['charge'];
-    $kodeakun   = $_POST['akun'];
+    $kodeakun   = ($_POST['akun'] !== '')?$_POST['akun']:'NULL';
     $id_bank    = $_POST['id_bank'];
     
     if ($id_bank === '') {
@@ -444,7 +444,7 @@ if ($method === 'save_bank') {
         insert into bank set
             nama = '$nama',
             charge = '$charge',
-            kode_akun = '$kodeakun'
+            kode_akun = $kodeakun
         ";
         mysql_query($sql);
         $id_sup = mysql_insert_id();
@@ -933,5 +933,45 @@ if ($method === 'save_item_kit') {
     $result['status'] = TRUE;
     $result['id'] = $id_item_kit;
     die(json_encode($result));
+}
+
+if ($method === 'save_user_account') {
+    $id_karyawan    = $_POST['id_karyawan'];
+    $username       = $_POST['username'];
+    $password       = md5($_POST['password']);
+    $hint           = $_POST['password'];
+    $level          = $_POST['level'];
+    $id             = $_POST['id_user_account'];
+    
+    if ($id === '') {
+        $sql = "insert into users set 
+            id_karyawan = '$id_karyawan',
+            username = '$username',
+            password = '$password',
+            hint = '$hint',
+            level = '$level'";
+        mysql_query($sql);
+        $result['status'] = TRUE;
+        $result['id'] = mysql_insert_id();
+    } else {
+        $sql = "update users set 
+            id_karyawan = '$id_karyawan',
+            username = '$username',
+            password = '$password',
+            hint = '$hint',
+            level = '$level'
+            where id = '$id'";
+        mysql_query($sql);
+        $result['status'] = TRUE;
+        $result['id'] = $id;
+        //echo $sql;
+    }
+    
+    die(json_encode($result));
+}
+
+if ($method === 'delete_user_account') {
+    $id = $_GET['id'];
+    mysql_query("delete from users where id = '$id'");
 }
 ?>
