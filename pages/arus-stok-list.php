@@ -8,9 +8,9 @@ include_once '../inc/functions.php';
     <th width="5%">No.</th>
     <th width="10%">Transaksi</th>
     <th width="10%">Waktu</th>
-    <th width="20%">Nama Barang</th>
-    <th width="10%">No. Batch</th>
-    <th width="10%">ED</th>
+    <th width="30%">Nama Barang</th>
+<!--    <th width="10%">No. Batch</th>
+    <th width="10%">ED</th>-->
     <th width="10%">Awal</th>
     <th width="10%">Masuk</th>
     <th width="10%">Keluar</th>
@@ -48,8 +48,8 @@ include_once '../inc/functions.php';
         <td><?= $data->transaksi ?></td>
         <td align="center"><?= datetimefmysql($data->waktu) ?></td>
         <td><?= $data->nama.' '.$data->kekuatan.' '.$data->satuan_kekuatan ?></td>
-        <td><?= $data->nobatch ?></td>
-        <td align="center"><?= datefmysql($data->ed) ?></td>
+<!--        <td><?= $data->nobatch ?></td>
+        <td align="center"><?= datefmysql($data->ed) ?></td>-->
         <td align="center"><?= isset($awalnya->awal)?$awalnya->awal:'0' ?></td>
         <td align="center"><?= $data->masuk ?></td>
         <td align="center"><?= $data->keluar ?></td>

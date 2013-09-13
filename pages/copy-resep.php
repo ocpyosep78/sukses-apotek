@@ -11,8 +11,8 @@ function refreshParent() {
     //window.opener.location.reload();
 }
 function cetak() {  		
-    //window.print();
-    //setTimeout(function(){ window.close();},300);
+    window.print();
+    setTimeout(function(){ window.close();},300);
 }
 </script>
 <body onload="cetak();" class="default-printing">
@@ -43,7 +43,7 @@ foreach ($attr_array['data'] as $rows);
     foreach ($attr_array['data'] as $key => $data) {
         if (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa)) { ?>
         <tr>
-            <td>ITER: <?= ($data->id_resep !== $id_resep)?$data->iter:NULL ?></td>
+            <td>ITER: <?= ($data->r_no !== $jasa)?$data->iter:NULL ?></td>
         </tr>
         <?php } ?>
         <tr class="<?= ($data->id_resep !== $id_resep)?'odd':'even' ?>">
@@ -65,7 +65,7 @@ foreach ($attr_array['data'] as $rows);
             }
             ?>
         <tr>
-            <td style="padding-left: 20px"><?= $then ?></td>
+            <td style="padding-left: 20px"><?= $then ?><br/></td>
         </tr>
         <?php } ?>
     <?php 

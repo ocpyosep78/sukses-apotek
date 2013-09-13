@@ -15,7 +15,6 @@ $(function() {
         <th width="10%">Awal</th>
         <th width="10%">Masuk</th>
         <th width="10%">Keluar</th>
-        <th width="10%">Sisa</th>
     </tr>
 </thead>
 <tbody>
@@ -35,11 +34,10 @@ $(function() {
         ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
             <td align="center"><?= (++$key) ?></td>
-            <td align="center"><?= $data->transaksi ?></td>
+            <td><?= $data->transaksi ?></td>
             <td align="right"><?= rupiah($awal->awal) ?></td>
             <td align="right"><?= rupiah($data->masuk) ?></td>
             <td align="right"><?= rupiah($data->keluar) ?></td>
-            <td align="right"><?= rupiah($sisa->sisa) ?></td>
             
         </tr>
     <?php 
@@ -53,6 +51,10 @@ $(function() {
         <td colspan="3" align="right"><b>TOTAL</b></td>
         <td align="right"><b><?= rupiah($total_masuk) ?></b></td>
         <td align="right"><b><?= rupiah($total_keluar) ?></b></td>
+    </tr>
+    <tr>
+        <td colspan="3" align="right"><b>SISA</b></td>
+        <td align="right"></td>
         <td align="right"><b><?= rupiah($total_masuk-$total_keluar) ?></b></td>
     </tr>
 </tfoot>

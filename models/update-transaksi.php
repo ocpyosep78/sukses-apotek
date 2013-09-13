@@ -588,6 +588,7 @@ if ($method === 'delete_pemeriksaan') {
 }
 
 if ($method === 'save_inkaso') {
+    session_start();
     $noref      = $_POST['noref'];
     $tanggal    = date2mysql($_POST['tanggal']);
     $id_penerimaan= $_POST['id_penerimaan'];
@@ -614,7 +615,7 @@ if ($method === 'save_inkaso') {
         transaksi = 'Inkaso',
         id_users = '$_SESSION[id_user]',
         waktu = '$tanggal ".date("H:i:s")."',
-        masuk = '$nominal'";
+        keluar = '$nominal'";
     mysql_query($query2);
     
     die(json_encode(array('status' => TRUE, 'id' => $id)));

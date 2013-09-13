@@ -35,7 +35,7 @@ $(function() {
         ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
             <td align="center"><?= (++$key) ?></td>
-            <td align="center"><?= $data->transaksi ?></td>
+            <td><?= $data->transaksi ?></td>
             <td align="right"><?= rupiah($awal->awal) ?></td>
             <td align="right"><?= rupiah($data->masuk) ?></td>
             <td align="right"><?= rupiah($data->keluar) ?></td>
