@@ -41,7 +41,7 @@ $(function() {
     );
     $penerimaan = penerimaan_load_data($param);
     $list_data = $penerimaan['data'];
-    $total_data= $penerimaan['total'];
+    //$total_data= $penerimaan['total'];
     foreach ($list_data as $key => $data) { ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
             <td align="center"><?= (++$key+$offset) ?></td>

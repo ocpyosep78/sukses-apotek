@@ -62,7 +62,7 @@ function penerimaan_load_data($param) {
     if (isset($param['id']) and $param['id'] !== '') {
         $q.="and p.id = '".$param['id']."' ";
     }
-    if ($param['id_supplier'] !== '') {
+    if (isset($param['id_supplier']) and $param['id_supplier'] !== '') {
         $q.=" and s.id = '".$param['id_supplier']."'";
     }
     if (isset($param['faktur']) and $param['faktur'] !== '') {
