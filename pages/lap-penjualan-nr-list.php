@@ -22,13 +22,11 @@ $(function() {
     <tr class="italic">
         <th width="3%">No.</th>
         <th width="5%">Tanggal</th>
-        <th width="5%">No. Resep</th>
-        <th width="15%">Pasien</th>
-        <th width="15%">Dokter</th>
-        <th width="5%">Diskon <br/>Rp.</th>
-        <th width="5%">Diskon <br/>%</th>
+        <th width="15%">Customer</th>
+        <th width="5%">Diskon Rp.</th>
+        <th width="5%">Diskon %</th>
         <th width="5%">PPN %</th>
-        <th width="5%">Tuslah <br/>RP.</th>
+        <th width="5%">Tuslah RP.</th>
         <th width="5%">Embalage RP.</th>
         <th width="5%">Total</th>
         <th width="5%">Terbayar</th>
@@ -55,26 +53,26 @@ $(function() {
         'pasien' => $_GET['pasien'],
         'dokter' => $_GET['dokter']
     );
-    $penjualan = penjualan_load_data($param);
+    $penjualan = penjualan_nr_load_data($param);
     $list_data = $penjualan['data'];
     $total_data= $penjualan['total'];
     $id = "";
     $no = 1;
-    $alert = "";
+    
     $total_nota = 0;
     $total_terbayar = 0;
     foreach ($list_data as $key => $data) { 
         //$str = $data->id.'#'.$data->id_resep.'#'.$data->customer.'#'.$data->id_customer;
         if ($data->total > $data->terbayar) {
             $alert="warning";
+        } else {
+            $alert="";
         }
         ?>
         <tr id="<?= $data->id ?>" class="detail <?= ($id !== $data->id)?'odd':NULL ?> <?= $alert ?>">
             <td align="center"><?= ($id !== $data->id)?($no+$offset):NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?datetimefmysql($data->waktu):NULL ?></td>
-            <td align="center"><?= ($id !== $data->id)?$data->id_resep:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->customer:NULL ?></td>
-            <td><?= ($id !== $data->id)?$data->dokter:NULL ?></td>
             <td align="right"><?= ($id !== $data->id)?rupiah($data->diskon_rupiah):NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?$data->diskon_persen:NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?$data->ppn:NULL ?></td>
@@ -94,8 +92,7 @@ $(function() {
     }
     ?>
         <tr>
-            <td colspan="10" align="right">TOTAL</td><td align="right"><b><?= rupiah($total_nota) ?></b></td><td align="right"><b><?= rupiah($total_terbayar) ?></b></td>
+            <td colspan="8" align="right">TOTAL</td><td align="right"><b><?= rupiah($total_nota) ?></b></td><td align="right"><b><?= rupiah($total_terbayar) ?></b></td>
         </tr>
 </tbody>
 </table>
-<?= paging_ajax($total_data, $limit, $page, '1', $_GET['search']) ?>

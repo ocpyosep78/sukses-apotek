@@ -135,7 +135,7 @@ function form_add() {
               '</form></div>';
     $('body').append(str);
     var wWidth = $(window).width();
-    var dWidth = wWidth * 0.7;
+    var dWidth = wWidth * 1;
     
     var wHeight= $(window).height();
     var dHeight= wHeight * 1;

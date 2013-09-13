@@ -205,13 +205,18 @@ function check_penjualan_availability($id_resep) {
 }
 
 function penjualan_nr_load_data($param) {
-    $q = NULL;
+    $q = NULL; $limit = NULL;
     if ($param['id'] !== '') {
         $q.="and p.id = '".$param['id']."' ";
     } else {
-        $q.="and date(p.waktu) between '".date("Y-m-d")."' and '".date("Y-m-d")."'";
+        if ($param['awal'] !== '' and $param['akhir'] !== '') {
+            $q.="and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
+            $q.=" group by p.id";
+        } else {
+            $q.="and date(p.waktu) between '".date("Y-m-d")."' and '".date("Y-m-d")."'";
+            $limit = " limit ".$param['start'].", ".$param['limit']."";
+        }
     }
-    $limit = " limit ".$param['start'].", ".$param['limit']."";
     $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, a.nama as asuransi,
         (select sum(bayar) from detail_bayar_penjualan where id_penjualan = p.id) as terbayar,
         concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, (dp.harga_jual*dp.qty) as subtotal
@@ -252,7 +257,7 @@ function penjualan_load_data($param) {
         $q.=" group by p.id";
     } else {
         $q.=" and date(p.waktu) between '".date("Y-m-d")."' and '".date("Y-m-d")."'";
-        $limit = " limit ".$param['start'].", ".$param['limit']."";
+        //$limit = " limit ".$param['start'].", ".$param['limit']."";
     }
     
     $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer, a.nama as asuransi, d.nama as dokter, 
@@ -269,7 +274,7 @@ function penjualan_load_data($param) {
         join resep r on (p.id_resep = r.id)
         left join dokter d on (r.id_dokter = d.id)
         where p.id_resep is not NULL $q order by p.waktu desc";
-    //echo $sql.$limit;
+    //echo "<pre>".$sql.$limit."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {

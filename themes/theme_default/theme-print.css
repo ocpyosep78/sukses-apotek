@@ -16,7 +16,7 @@ body, .default-printing table { font-size: 11px; }
 
 
 .list-data-print { text-transform: uppercase; border-top: 1px solid #6eb7ff; border-left: 1px solid #6eb7ff; margin: 10px 0; background: #fff; color: #000; font-size: inherit; }
-.list-data-print th { font-weight: bold; border-right: 1px solid #6eb7ff; height: 20px; border-bottom: 1px solid #ccc; background: #3399ff; border-bottom: #dfdfdf; height: 40px; color: #fff; cursor: pointer; }
+.list-data-print th { font-weight: bold; vertical-align: top; border-right: 1px solid #6eb7ff; height: 20px; border-bottom: 1px solid #6eb7ff; background: #3399ff; border-bottom: #dfdfdf; height: 40px; color: #fff; cursor: pointer; }
 .list-data-print td { border-right: 1px solid #ccc; height: 20px; border-bottom: 1px solid #ccc; height: 20px; padding: 2px; empty-cells: show; }
 .list-data-print .even { background: #fff; cursor: pointer; }
 .list-data-print .odd { background: #f4f4f4; cursor: pointer; }

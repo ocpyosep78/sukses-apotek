@@ -2,22 +2,21 @@
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
 ?>
+<link rel="stylesheet" href="../themes/theme_default/theme-print.css" />
 <script type="text/javascript">
-$(function() {
-    /*$('.detail').on('mouseover',function() {
-        $.ajax({
-            url: 'pages/tooltip-detail-transaksi.php',
-            data: 'id='+$(this).attr('id'),
-            cache: false,
-            success: function(msg) {
-                $('.list-data tbody tr.detail').attr('title',msg);
-                $( document ).tooltip();
-            }
-        });
-    });*/
-});
+function cetak() {
+    window.print();
+    if (confirm('Apakah menu print ini akan ditutup?')) {
+        window.close();
+    }
+    SCETAK.innerHTML = '<br /><input onClick=\'cetak()\' type=\'submit\' name=\'Submit\' value=\'Cetak\' class=\'tombol\'>';
+}
 </script>
-<table cellspacing="0" width="100%" class="list-data">
+<body onload="cetak()">
+<h1>
+    LAPORAN PENJUALAN <br /> TANGGAL <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?>
+</h1>
+<table cellspacing="0" width="100%" class="list-data-print">
 <thead>
     <tr class="italic">
         <th width="3%">No.</th>
@@ -36,28 +35,20 @@ $(function() {
 </thead>
 <tbody>
     <?php
-    $limit = 10;
-    $page  = $_GET['page'];
-    if ($_GET['page'] === '') {
-        $page = 1;
-        $offset = 0;
-    } else {
-        $offset = ($page-1)*$limit;
-    }
+    
     
     $param = array(
-        'id' => $_GET['id_penjualan'],
-        'limit' => $limit,
-        'start' => $offset,
+        'id' => '',
+        'limit' => '',
+        'start' => '',
+        'laporan' => '',
         'awal' => date2mysql($_GET['awal']),
         'akhir' => date2mysql($_GET['akhir']),
-        'laporan' => $_GET['hal'],
         'pasien' => $_GET['pasien'],
         'dokter' => $_GET['dokter']
     );
     $penjualan = penjualan_load_data($param);
     $list_data = $penjualan['data'];
-    $total_data= $penjualan['total'];
     $id = "";
     $no = 1;
     $alert = "";
@@ -70,7 +61,7 @@ $(function() {
         }
         ?>
         <tr id="<?= $data->id ?>" class="detail <?= ($id !== $data->id)?'odd':NULL ?> <?= $alert ?>">
-            <td align="center"><?= ($id !== $data->id)?($no+$offset):NULL ?></td>
+            <td align="center"><?= ++$key ?></td>
             <td align="center"><?= ($id !== $data->id)?datetimefmysql($data->waktu):NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?$data->id_resep:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->customer:NULL ?></td>
@@ -94,8 +85,8 @@ $(function() {
     }
     ?>
         <tr>
-            <td colspan="10" align="right">TOTAL</td><td align="right"><b><?= rupiah($total_nota) ?></b></td><td align="right"><b><?= rupiah($total_terbayar) ?></b></td>
+            <td colspan="9" align="right">TOTAL</td><td align="right"><b><?= rupiah($total_nota) ?></b></td><td align="right"><b><?= rupiah($total_terbayar) ?></b></td>
         </tr>
 </tbody>
 </table>
-<?= paging_ajax($total_data, $limit, $page, '1', $_GET['search']) ?>
+</body>

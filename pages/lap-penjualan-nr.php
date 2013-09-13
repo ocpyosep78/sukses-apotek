@@ -16,11 +16,6 @@ $(function() {
         changeYear: true,
         changeMonth: true
     });
-    $('#reset').click(function() {
-        $('input[type=text]').val('');
-        $('#awal,#akhir').val('<?= date("d/m/Y") ?>');
-        $('#result-info').html('');
-    });
     var lebar = $('#pasien').width();
     $('#pasien').autocomplete("models/autocomplete.php?method=pasien",
     {
@@ -76,20 +71,6 @@ $(function() {
         load_data_penjualan();
     });
 });
-
-function cetak() {
-    var awal    = $('#awal').val();
-    var akhir   = $('#akhir').val();
-    var pasien  = $('#id_pasien').val();
-    var dokter  = $('#id_dokter').val();
-    var wWidth = $(window).width();
-    var dWidth = wWidth * 0.9;
-    var wHeight= $(window).height();
-    var dHeight= wHeight * 1;
-    var x = screen.width/2 - dWidth/2;
-    var y = screen.height/2 - dHeight/2;
-    window.open('pages/penjualan-print.php?awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter, 'cetak penjualan', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
-}
 function load_data_penjualan(page, search, id) {
     pg = page; src = search; id_barg = id;
     if (page === undefined) { var pg = ''; }
@@ -100,7 +81,7 @@ function load_data_penjualan(page, search, id) {
     var pasien  = $('#id_pasien').val();
     var dokter  = $('#id_dokter').val();
     $.ajax({
-        url: 'pages/lap-penjualan-list.php',
+        url: 'pages/lap-penjualan-nr-list.php',
         cache: false,
         data: 'page='+pg+'&search='+src+'&id_penjualan='+id_barg+'&hal=laporan&awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter,
         success: function(data) {
@@ -109,7 +90,7 @@ function load_data_penjualan(page, search, id) {
     });
 }
 </script>
-<h1 class="margin-t-0">Laporan Penjualan Resep</h1>
+<h1 class="margin-t-0">Laporan Penjualan Non Resep</h1>
 <div class="input-parameter">
 <table width="100%">
     <tr><td width="10%">Range Tanggal:</td><td><?= form_input('awal', date("d/m/Y"), 'id=awal size=10') ?> s . d <?= form_input('akhir', date("d/m/Y"), 'id=akhir size=10') ?></td></tr>
