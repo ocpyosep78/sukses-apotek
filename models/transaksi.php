@@ -335,8 +335,9 @@ function inkaso_load_data($param) {
         $q.=" and i.no_ref like ('%".$param['search']."%') or s.nama like ('%".$param['search']."%') or b.nama like ('%".$param['search']."%')";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select i.*, s.nama supplier, b.nama as bank from inkaso i
-        join supplier s on (i.id_supplier = s.id)
+    $sql = "select i.*, p.faktur, s.nama supplier, b.nama as bank from inkaso i
+        join penerimaan p on (i.id_penerimaan = p.id)
+        join supplier s on (p.id_supplier = s.id)
         left join bank b on (i.id_bank = b.id) where i.id is not NULL $q";
     
     //echo $sql.$limit;
@@ -415,10 +416,11 @@ function pemesanan_plant_load_data($param = NULL) {
 
 function load_data_pendaftaran($param) {
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select p.*, pl.nama, s.nama as spesialisasi, d.nama as dokter from pendaftaran p
+    $sql = "select p.*, pl.nama, s.nama as spesialisasi, d.nama as dokter, pm.id as id_pemeriksaan from pendaftaran p
         join pelanggan pl on (p.id_pelanggan = pl.id)
         join spesialisasi s on (p.id_spesialisasi = s.id)
         left join dokter d on (p.id_dokter = d.id)
+        left join pemeriksaan pm on (p.id = pm.id_pendaftaran)
         where date(p.waktu) = '".date("Y-m-d")."' order by s.id, p.no_antri";
     $query = mysql_query($sql.$limit);
     $data = array();

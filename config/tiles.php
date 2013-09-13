@@ -8,11 +8,7 @@ $tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"b
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"pemesanan.php",
-	"img"=>"img/icons/pemesanan.png","desc"=>"Surat Pemesanan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
-	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
-
-$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"defecta.php",
-	"img"=>"img/icons/pemesanan.png","desc"=>"Defecta","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"img"=>"img/icons/pemesanan.png","desc"=>"Pemesanan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"inkaso.php",
@@ -23,7 +19,7 @@ $tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/pemesanan.png","desc"=>"Pemeriksaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>3,"y"=>0,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"pendaftaran.php",
+$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"pendaftaran.php",
 	"img"=>"img/icons/pendaftaran.png","desc"=>"Pendaftaran Antrian","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
@@ -43,12 +39,12 @@ $tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"b
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#009aff","url"=>"",
-	"img"=>"img/icons/retur-penjualan.png","desc"=>"Retur Penjualan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#9a0f0f","url"=>"retur-penerimaan.php",
+	"img"=>"img/icons/retur.png","desc"=>"Retur","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#ea882b","url"=>"retur-penerimaan.php",
-	"img"=>"img/icons/retur-penerimaan.png","desc"=>"Retur Penerimaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#ffa614","url"=>"retur-penerimaan.php",
+	"img"=>"img/icons/pemusnahan.png","desc"=>"Pemusnahan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 
@@ -147,6 +143,14 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"b
 
 $tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#3c17b7","url"=>"lap-resep.php",
 	"img"=>"img/icons/lap-resep.png","desc"=>"Resep","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
+$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-penerimaan.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Penerimaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
+$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-hutang.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Hutang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 

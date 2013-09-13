@@ -13,7 +13,7 @@ $kemasan  = satuan_load_data('0');
 ?>
 <script type="text/javascript">
 $(function() {
-    load_data_retur_penerimaan();
+    load_data_retur_penjualan();
     $(document).keydown(function(e) {
         if (e.keyCode === 120) {
             form_add();
@@ -41,7 +41,7 @@ function load_list_data() {
                     '<td><input type=text name=jumlah[] id=jumlah'+no+' value="'+jumlah+'" size=10 style="text-align: center;" /></td>'+
                     '<td align=center class=aksi><img src="img/icons/delete.png" align=left title="Klik untuk hapus" onclick="removeMe(this);" /></td>'+
                '</tr>';
-    $('#retur_penerimaan-list tbody').append(list);
+    $('#retur_penjualan-list tbody').append(list);
     $('input:text').on('keydown', function(e) {
         var n = $("input:text").length;
         if (e.keyCode === 13) {
@@ -62,13 +62,57 @@ function load_list_data() {
     });
 }
 
+function load_list_data_by_id_penjualan(id) {
+    $('#retur_penjualan-list tbody').html('');
+    $.getJSON('models/autocomplete.php?method=get_data_penjualan&id='+id, function(data){
+        $.each(data, function (index, val) {
+            //$('#kemasan').append("<option value='"+value.id_kemasan+"'>"+value.nama+"</option>");
+            var nama_barang = val.nama_barang;
+            var id_barang   = val.id_barang;
+            var kemasan     = val.kemasan;
+            var id_kemasan  = val.id_kemasan;
+            var ed          = '';
+            var jumlah      = val.qty;
+            var no   = $('.tr_rows').length+1;
+            var list = '<tr class=tr_rows>'+
+                            '<td align=center>'+no+'</td>'+
+                            '<td><input type=text name=barang value="'+nama_barang+'" id=barang'+no+' size=50 /> <input type=hidden name=id_barang[] id=id_barang'+no+' value="'+id_barang+'" /></td>'+
+                            '<td align=center id=kemasan'+no+'>'+kemasan+'<input type=hidden name=id_kemasan[] id=id_kemasan'+no+' value="'+id_kemasan+'" /></td>'+
+                            '<td><input type=text name=ed[] id=ed'+no+' value="'+ed+'" size=10 style="text-align: center;" /></td>'+
+                            '<td><input type=text name=jumlah[] id=jumlah'+no+' value="'+jumlah+'" size=10 style="text-align: center;" /></td>'+
+                            '<td align=center class=aksi><img src="img/icons/delete.png" align=left title="Klik untuk hapus" onclick="removeMe(this);" /></td>'+
+                       '</tr>';
+            $('#retur_penjualan-list tbody').append(list);
+            $('input:text').on('keydown', function(e) {
+                var n = $("input:text").length;
+                if (e.keyCode === 13) {
+                    var nextIndex = $('input:text').index(this) + 1;
+                    if (nextIndex < n) {
+                        $('input:text')[nextIndex].focus();
+                    } else {
+                        $('input:text')[nextIndex-n].focus();
+                    }
+                }
+            });
+            $('#barang,#id_barang,#ed,#pilih').val('');
+            $('#kemasan').html('').append('<option value="">Pilih ...</option>');
+            $('#barang').focus();
+            $('#ed'+no).datepicker({
+                changeMonth: true,
+                changeYear: true
+            });
+        });
+    });
+    
+}
+
 function form_add() {
-    var str = '<div id="retur_penerimaan"><form id="save_retur_penerimaan">'+
-                '<input type=hidden name=id_retur_penerimaan id=id_retur_penerimaan />'+
+    var str = '<div id="retur_penjualan"><form id="save_retur_penjualan">'+
+                '<input type=hidden name=id_retur_penjualan id=id_retur_penjualan />'+
                 '<table width=100% class=data-input><tr valign=top><td width=50%>'+
                     '<table width=100%>'+
                         '<tr><td>Tanggal:</td><td><input type=text value="<?= date("d/m/Y") ?>" name=tanggal id=tanggal size=10 /></td></tr>'+
-                        '<tr><td>Supplier:</td><td><input type=text name=supplier id=supplier size=40 /><input type=hidden name=id_supplier id=id_supplier /></td></tr>'+
+                        '<tr><td>Nomer Nota:</td><td><?= form_input('nonota', NULL, 'id=nonota size=40') ?></td></tr>'+
                         '<tr><td width=20%>Nama Barang:</td><td><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?></td></tr>'+
                         '<tr><td>Kemasan:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select></td></tr>'+
                         '<tr><td>Expired Date:</td><td><input type=text name=ed id=ed size=10 /><?= form_hidden(NULL, NULL, 'id=nobatch') ?></td></tr>'+
@@ -77,7 +121,7 @@ function form_add() {
                     '</td><td width=50%>'+
                     
                 '</td></tr></table>'+
-                '<table width=100% cellspacing="0" class="list-data-input" id="retur_penerimaan-list"><thead>'+
+                '<table width=100% cellspacing="0" class="list-data-input" id="retur_penjualan-list"><thead>'+
                     '<tr>'+
                         '<th width=8%>No.</th>'+
                         '<th width=60%>Nama Barang</th>'+
@@ -95,8 +139,8 @@ function form_add() {
     
     var wHeight= $(window).height();
     var dHeight= wHeight * 1;
-    $('#retur_penerimaan').dialog({
-        title: 'Retur Penerimaan',
+    $('#retur_penjualan').dialog({
+        title: 'Retur penjualan',
         autoOpen: true,
         modal: true,
         width: dWidth,
@@ -105,7 +149,7 @@ function form_add() {
         show: 'blind',
         buttons: {
             "Simpan": function() {
-                $('#save_retur_penerimaan').submit();
+                $('#save_retur_penjualan').submit();
             }, 
             "Cancel": function() {    
                 $(this).dialog().remove();
@@ -113,7 +157,7 @@ function form_add() {
         }, close: function() {
             $(this).dialog().remove();
         }, open: function() {
-            $('#supplier').focus();
+            $('#nonota').focus();
         }
     });
     
@@ -151,6 +195,30 @@ function form_add() {
         }
     }); 
     var lebar = $('#supplier').width();
+    $('#nonota').autocomplete("models/autocomplete.php?method=nonota",
+    {
+        parse: function(data){
+            var parsed = [];
+            for (var i=0; i < data.length; i++) {
+                parsed[i] = {
+                    data: data[i],
+                    value: data[i].nama // nama field yang dicari
+                };
+            }
+            return parsed;
+        },
+        formatItem: function(data,i,max){
+            var str = '<div class=result>'+data.id+' - '+((data.pelanggan !== null)?data.pelanggan:'')+'</div>';
+            return str;
+        },
+        width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
+        dataType: 'json', // tipe data yang diterima oleh library ini disetup sebagai JSON
+        cacheLength: 0
+    }).result(
+    function(event,data,formated){
+        $(this).val(data.id);
+        load_list_data_by_id_penjualan(data.id);
+    });
     $('#barang').autocomplete("models/autocomplete.php?method=barang",
     {
         parse: function(data){
@@ -218,26 +286,26 @@ function form_add() {
             $('#pilih').val('1').focus().select();
         }
     });
-    $('#save_retur_penerimaan').submit(function() {
+    $('#save_retur_penjualan').submit(function() {
         if ($('#id_supplier').val() === '') {
             alert_empty('Supplier','#supplier'); return false;
         }
         $.ajax({
-            url: 'models/update-transaksi.php?method=save_retur_penerimaan',
+            url: 'models/update-transaksi.php?method=save_retur_penjualan',
             type: 'POST',
             dataType: 'json',
-            data: $('#save_retur_penerimaan').serialize(),
+            data: $('#save_retur_penjualan').serialize(),
             cache: false,
             success: function(data) {
                 if (data.status === true) {
                     if (data.action === 'add') {
                         alert_tambah('#supplier');
                         $('#supplier, #id_supplier').val('');
-                        load_data_retur_penerimaan();
-                        $('#retur_penerimaan-list tbody').html('');
+                        load_data_retur_penjualan();
+                        $('#retur_penjualan-list tbody').html('');
                     } else {
                         alert_edit();
-                        load_data_retur_penerimaan();
+                        load_data_retur_penjualan();
                     }
                 }
             }
@@ -257,27 +325,27 @@ $('#reset').button({
         primary: 'ui-icon-refresh'
     }
 }).click(function() {
-    load_data_retur_penerimaan();
+    load_data_retur_penjualan();
 });
-function load_data_retur_penerimaan(page, search, id) {
+function load_data_retur_penjualan(page, search, id) {
     pg = page; src = search; id_barg = id;
     if (page === undefined) { var pg = ''; }
     if (search === undefined) { var src = ''; }
     if (id === undefined) { var id_barg = ''; }
     $.ajax({
-        url: 'pages/retur_penerimaan-list.php',
+        url: 'pages/retur_penjualan-list.php',
         cache: false,
-        data: 'page='+pg+'&search='+src+'&id_retur_penerimaan='+id_barg,
+        data: 'page='+pg+'&search='+src+'&id_retur_penjualan='+id_barg,
         success: function(data) {
-            $('#result-retur_penerimaan').html(data);
+            $('#result-retur_penjualan').html(data);
         }
     });
 }
 
 function paging(page, tab, search) {
-    load_data_retur_penerimaan(page, search);
+    load_data_retur_penjualan(page, search);
 }
-function delete_retur_penerimaan(id, page) {
+function delete_retur_penjualan(id, page) {
     $('<div id=alert>Anda yakin akan menghapus data ini?</div>').dialog({
         title: 'Konfirmasi Penghapusan',
         autoOpen: true,
@@ -286,10 +354,10 @@ function delete_retur_penerimaan(id, page) {
             "OK": function() {
                 
                 $.ajax({
-                    url: 'models/update-transaksi.php?method=delete_retur_penerimaan&id='+id,
+                    url: 'models/update-transaksi.php?method=delete_retur_penjualan&id='+id,
                     cache: false,
                     success: function() {
-                        load_data_retur_penerimaan(page);
+                        load_data_retur_penjualan(page);
                         $('#alert').dialog().remove();
                     }
                 });
@@ -301,10 +369,10 @@ function delete_retur_penerimaan(id, page) {
     });
 }
 </script>
-<h1 class="margin-t-0">Retur Penerimaan</h1>
+<h1 class="margin-t-0">Retur penjualan</h1>
 <hr>
 <button id="button">Tambah Retur (F9)</button>
 <button id="reset">Reset</button>
-<div id="result-retur_penerimaan">
+<div id="result-retur_penjualan">
     
 </div>

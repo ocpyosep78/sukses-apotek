@@ -10,11 +10,13 @@ include_once '../inc/functions.php';
 <tr class="italic">
     <th width="3%">No.</th>
     <th width="10%">Waktu</th>
-    <th width="30%">Pelanggan</th>
-    <th width="10%">No. Antri</th>
+    <th width="10%">No. RM</th>
+    <th width="25%">Customer</th>
+    <th width="5%">No. Antri</th>
     <th width="10%">Pelayanan</th>
     <th width="10%">Waktu Dilayani</th>
-    <th width="10%">Nama Dokter</th>
+    <th width="25%">Nama Dokter</th>
+    <th width="10%">Status</th>
 </tr>
 </thead>
 <tbody>
@@ -42,15 +44,19 @@ include_once '../inc/functions.php';
     <tr class="<?= ($key%2==0)?'even':'odd' ?>">
         <td align="center"><?= (++$key+$offset) ?></td>
         <td align="center"><?= datetimefmysql($data->waktu,'yes') ?></td>
+        <td align="center"><?= isset($data->id_pelanggan)?$data->id_pelanggan:NULL ?></td>
         <td><?= isset($data->nama)?$data->nama:NULL ?></td>
         <td align="center"><?= $data->no_antri ?></td>
         <td><?= $data->spesialisasi ?></td>
         <td align="center"><?= datetimefmysql($data->waktu_pelayanan,'yes') ?></td>
         <td><?= $data->dokter ?></td>
-        <!--<td class='aksi' align='center'>
-            <a class='edition' onclick="edit_stokopname('<?= $str ?>');" title="Klik untuk edit pendaftaran">&nbsp;</a>
-            <a class='deletion' onclick="delete_stokopname('<?= $data->id ?>', '<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
-        </td>-->
+        <td class='aksi' align='center'>
+            <?php if ($data->id_pemeriksaan === NULL) { ?>
+            <span style="cursor: pointer;" onclick="form_pemeriksaan('<?= $data->id ?>','<?= $data->id_pelanggan ?>','<?= $data->nama ?>')">BELUM PERIKSA</span>
+            <?php } else { ?>
+            <span style="cursor: pointer; color: green; font-weight: bold;">SUDAH PERIKSA</span>
+            <?php } ?>
+        </td>
     </tr>
     <?php } ?>
 </tbody>

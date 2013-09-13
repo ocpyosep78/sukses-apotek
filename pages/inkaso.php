@@ -36,21 +36,19 @@ $bank       = load_data_bank();
                         '<table width="100%" class=data-input>'+
                             '<tr><td>Tanggal:</td><td><?= form_input('tanggal', date("d/m/Y"), 'size=10 id=tanggal') ?></td></tr>'+
                             '<tr><td>Kode Ref:</td><td><?= form_input('noref', NULL, 'size=10 id=noref readonly') ?></td></tr>'+
-                            '<tr><td>Nama Supplier:</td><td><?= form_input('supplier', NULL, 'id=supplier size=40') ?> <?= form_hidden('id_supplier', NULL, 'id=id_supplier') ?></td></tr>'+
+                            '<tr><td>No. Faktur:</td><td><?= form_input('nofaktur', NULL, 'id=nofaktur size=40') ?><?= form_hidden('id_penerimaan', NULL, 'id=id_penerimaan') ?></td></tr>'+
                             '<tr><td>Sisa Hutang Rp.:</td><td><?= form_input('sisa', NULL, 'id=sisa disabled size=10') ?></td></tr>'+
-                            '<tr><td>Cara Pembayaran:</td><td><select name=cara_bayar id=cara_bayar><option value="">Pilih ...</option><?php foreach ($cara_bayar as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
+                            '<tr><td>Cara Pembayaran:</td><td><select name=cara_bayar id=cara_bayar><?php foreach ($cara_bayar as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
                             '<tr><td>Bank:</td><td><select name=bank id=bank><option value="">Pilih ...</option><?php foreach($bank['data'] as $data) { ?><option value="<?= $data->id ?>"><?= $data->nama ?></option><?php } ?></select></td></tr>'+
-                            '<tr><td>No. Kuitansi:</td><td><?= form_input('nokuitansi', NULL, 'id=nokuitansi size=40') ?></td></tr>'+
                             '<tr><td>No. Transaksi:</td><td><?= form_input('notransaksi', NULL, 'id=notransaksi size=40') ?></td></tr>'+
                             '<tr><td>Keterangan:</td><td><?= form_input('keterangan', NULL, 'id=keterangan size=40') ?></td></tr>'+
-                            
                             '<tr><td>Nominal Rp.:</td><td><?= form_input('nominal', NULL, 'size=10 id=nominal onkeyup="FormNum(this)"') ?></td></tr>'+
                         '</table>'+
                     '</form>'+
                   '</div>';
             $('body').append(str);
             var lebar = $('#supplier').width();
-            $('#supplier').autocomplete("models/autocomplete.php?method=supplier",
+            $('#nofaktur').autocomplete("models/autocomplete.php?method=get_nofaktur",
             {
                 parse: function(data){
                     var parsed = [];
@@ -63,19 +61,18 @@ $bank       = load_data_bank();
                     return parsed;
                 },
                 formatItem: function(data,i,max){
-                    var str = '<div class=result>'+data.nama+'<br/> '+data.alamat+'</div>';
+                    var str = '<div class=result>'+data.faktur+'<br/> '+data.supplier+'</div>';
                     return str;
                 },
                 width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
                 dataType: 'json' // tipe data yang diterima oleh library ini disetup sebagai JSON
             }).result(
             function(event,data,formated){
-                $(this).val(data.nama);
-                $('#id_supplier').val(data.id);
-                $('#barang').focus();
+                $(this).val(data.faktur);
+                $('#id_penerimaan').val(data.id);
                 $.ajax({
                     url: 'models/autocomplete.php?method=get_sisa_hutang_supplier',
-                    data: 'id_supplier='+data.id,
+                    data: 'id_supplier='+data.faktur,
                     dataType: 'json',
                     success: function(data) {
                         $('#sisa').val(numberToCurrency(data.sisa));
@@ -109,7 +106,7 @@ $bank       = load_data_bank();
                             $('#noref').val(data.in);
                         }
                     });
-                    $('#supplier').focus();
+                    $('#nofaktur').focus();
                 }
             });
             $('#save_inkaso').submit(function() {
@@ -124,14 +121,14 @@ $bank       = load_data_bank();
                 }
                 $.ajax({
                     url: 'models/update-transaksi.php?method=save_inkaso',
-                    data: $(this).serialize(),
-                    dataType: 'json',
                     type: 'POST',
-                    success: function(data) {
-                        if (data.status === true) {
-                            //alert_tambah();
-                            $(this).dialog().remove();
-                            load_data_inkaso();
+                    data: $('#save_inkaso').serialize(),
+                    dataType: 'json',
+                    cache: false,
+                    success: function(msg) {
+                        if (msg.status === true) {
+                            alert_refresh('Data berhasil disimpan !');
+                            //location.reload();
                         }
                     }
                 });

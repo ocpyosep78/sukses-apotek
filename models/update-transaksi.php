@@ -468,11 +468,10 @@ if ($method === 'save_penjualan') {
 }
 
 if ($method === 'save_pemeriksaan') {
+    $id_daftar  = $_POST['id_pendaftaran'];
     $id         = $_POST['nopemeriksaan'];
     $tanggal    = date2mysql($_POST['tanggal']);
     $anamnesis  = $_POST['anamnesis'];
-    $pemeriksaan= $_POST['pemeriksaan'];
-    $id_pasien  = $_POST['id_pasien'];
     $id_dokter  = $_POST['id_dokter'];
     
     $id_diagnosis = $_POST['id_diagnosis'];
@@ -528,8 +527,7 @@ if ($method === 'save_pemeriksaan') {
         id = '$id',
         tanggal = '$tanggal',
         anamnesis = '$anamnesis',
-        pemeriksaan = '$pemeriksaan',
-        id_pelanggan = '$id_pasien',
+        id_pendaftaran = '$id_daftar',
         id_dokter = '$id_dokter',
         foto = '$NewFileName'";
    mysql_query($sql);
@@ -562,8 +560,7 @@ if ($method === 'delete_pemeriksaan') {
 if ($method === 'save_inkaso') {
     $noref      = $_POST['noref'];
     $tanggal    = date2mysql($_POST['tanggal']);
-    $id_supplier= $_POST['id_supplier'];
-    $nokuitansi = $_POST['nokuitansi'];
+    $id_penerimaan= $_POST['id_penerimaan'];
     $cara_bayar = $_POST['cara_bayar'];
     $id_bank    = ($_POST['bank'] !== '')?$_POST['bank']:'NULL';
     $no_trans   = $_POST['notransaksi'];
@@ -573,16 +570,15 @@ if ($method === 'save_inkaso') {
     $sql = "insert into inkaso set
         no_ref = '$noref',
         tanggal = '$tanggal',
-        id_supplier = '$id_supplier',
-        no_kuitansi = '$nokuitansi',
+        id_penerimaan = '$id_penerimaan',
         cara_bayar = '$cara_bayar',
         id_bank = $id_bank,
         no_transaksi = '$no_trans',
         keterangan = '$keterangan',
         nominal = '$nominal'";
-    
     mysql_query($sql);
-    die(json_encode(array('status' => TRUE)));
+    $id = mysql_insert_id();
+    die(json_encode(array('status' => TRUE, 'id' => $id)));
 }
 
 if ($method === 'delete_inkaso') {

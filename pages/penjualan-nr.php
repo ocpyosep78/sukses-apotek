@@ -85,6 +85,7 @@ function hitung_total_penjualan() {
 function removeMe(el) {
     var parent = el.parentNode.parentNode;
     parent.parentNode.removeChild(parent);
+    hitung_total_penjualan();
 }
 
 function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {

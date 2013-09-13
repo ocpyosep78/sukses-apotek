@@ -1,7 +1,8 @@
 <?php
 $subNav = array(
+        "Pemesanan ; pemesanan.php ; #509601;",
 	"Defecta ; defecta.php ; #509601;",
-        "Rencana Pemesanan ; rencana-pemesanan.php ; #509601;"
+        "Rencana Pesan ; rencana-pemesanan.php ; #509601;"
 );
 set_include_path("../");
 include_once("inc/essentials.php");

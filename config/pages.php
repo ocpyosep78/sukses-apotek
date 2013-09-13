@@ -43,10 +43,11 @@ $pageTitles['penerimaan.php'] = "Penerimaan";
 $pageTitles['stok-opname.php'] = "Stok Opname";
 $pageTitles['resep.php'] = "Receipt";
 $pageTitles['retur-penerimaan.php'] = "Retur Penerimaan";
+$pageTitles['retur-penjualan.php'] = "Retur Penjualan";
 $pageTitles['pemeriksaan.php'] = "Pemeriksaan";
 $pageTitles['inkaso.php'] = "Inkaso";
 $pageTitles['defecta.php'] = "Defecta";
-$pageTitles['rencana-pemesanan.php'] = "Rencana Pemesanan";
+$pageTitles['rencana-pemesanan.php'] = "Rencana Order";
 $pageTitles['pendaftaran.php'] = "Pendaftaran";
 
 /*Laporan*/

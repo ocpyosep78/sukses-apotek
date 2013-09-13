@@ -40,7 +40,6 @@ $(function() {
         <th width="10%">Pasien</th>
         <th width="15%">Dokter</th>
         <th width="15%">Anamnesis</th>
-        <th width="15%">Pemeriksaan</th>
         <th width="15%">Diagnosis</th>
         <th width="15%">Tindakan</th>
         <th width="5%">#</th>
@@ -79,7 +78,6 @@ $(function() {
             <td title="<img src='img/pemeriksaan/<?= $data->foto ?>' width='200px' />"><?= ($id !== $data->id)?$data->pasien:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->dokter:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->anamnesis:NULL ?></td>
-            <td><?= ($id !== $data->id)?$data->pemeriksaan:NULL ?></td>
             <td><?= $data->topik ?></td>
             <td><?= ($tindakan !== $data->id_tarif)?$data->tarif:NULL ?></td>
             <td class='aksi' align='center'>

@@ -16,6 +16,21 @@ function alert_tambah(param) {
     });
 }
 
+function alert_refresh(content) {
+    $( "<div>"+content+"</div>" ).dialog({
+        modal: true,
+        title: 'Alert: informasi',
+        buttons: {
+          Ok: function() {
+            location.reload();
+          }
+        },
+        close: function() {
+            location.reload();
+        }
+    });
+}
+
 function alert_edit() {
     $( "#edit" ).dialog({
         modal: true,

@@ -340,10 +340,10 @@ if ($method === 'create_ref_inkaso') {
 
 if ($method === 'get_sisa_hutang_supplier') {
     $id_supplier = $_GET['id_supplier'];
-    $sql = mysql_query("select sum(total) as total_hutang FROM penerimaan where id_supplier = '$id_supplier'");
+    $sql = mysql_query("select sum(total) as total_hutang FROM penerimaan where faktur = '$id_supplier'");
     $hutang = mysql_fetch_object($sql);
     
-    $sql2= mysql_query("select sum(nominal) as terbayar from inkaso where id_supplier = '$id_supplier'");
+    $sql2= mysql_query("select sum(i.nominal) as terbayar from inkaso i join penerimaan p on (i.id_penerimaan = p.id) where p.faktur = '$id_supplier'");
     $terbyr = mysql_fetch_object($sql2);
     
     $sisa = $hutang->total_hutang - $terbyr->terbayar;
@@ -362,7 +362,7 @@ if ($method === 'spesialisasi') {
 if ($method === 'get_no_antri') {
     $now = date("Y-m-d");
     $id  = $_GET['id_spesialisasi'];
-    $sql = mysql_query("select no_antri as no from pendaftaran where date(waktu) = '$now' and id_spesialisasi = '$id'");
+    $sql = mysql_query("select max(no_antri) as no from pendaftaran where date(waktu) = '$now' and id_spesialisasi = '$id'");
     $row = mysql_fetch_object($sql);
     if (isset($row->no)) {
         $no = $row->no+1;
@@ -374,6 +374,55 @@ if ($method === 'get_no_antri') {
 
 if ($method === 'karyawan') {
     $sql = mysql_query("select * from karyawan where nama like ('%$q%') order by locate ('$q',nama)");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'nonota') {
+    $sql = mysql_query("select p.*, pl.nama as pelanggan, plg.nama as pasien 
+        from penjualan p 
+        left join resep r on (p.id_resep = r.id)
+        left join pelanggan pl on (p.id_pelanggan = pl.id)
+        left join pelanggan plg on (r.id_pasien = plg.id)
+        where p.id like ('%$q%') order by locate('$q',p.id)");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'get_data_penjualan') {
+    $id = $_GET['id'];
+    $sql = mysql_query("select p.*, date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer, a.nama as asuransi, d.nama as dokter, 
+        (select sum(bayar) from detail_bayar_penjualan where id_penjualan = p.id) as terbayar, dp.id_kemasan, b.id as id_barang,
+        concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, (dp.harga_jual*dp.qty) as subtotal
+        from penjualan p
+        join detail_penjualan dp on (p.id = dp.id_penjualan)
+        join kemasan k on (k.id = dp.id_kemasan)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
+        left join satuan st on (k.id_kemasan = st.id)
+        left join pelanggan pl on (p.id_pelanggan = pl.id)
+        left join asuransi a on (pl.id_asuransi = a.id) 
+        left join resep r on (p.id_resep = r.id)
+        left join dokter d on (r.id_dokter = d.id)
+        where p.id = '$id' order by p.waktu desc");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'get_nofaktur') {
+    $sql = mysql_query("select p.*, s.nama as supplier, sum(i.nominal) as terbayar from penerimaan p
+        join supplier s on (p.id_supplier = s.id) 
+        left join inkaso i on (i.id_penerimaan = p.id)
+        where p.faktur like ('%$q%') group by p.id having p.total > terbayar ");
     $rows = array();
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;

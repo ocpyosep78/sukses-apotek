@@ -8,9 +8,9 @@ include_once '../inc/functions.php';
     <tr class="italic">
         <th width="3%">No.</th>
         <th width="7%">No. Ref</th>
+        <th width="7%">No. Faktur</th>
         <th width="5%">Tanggal</th>
         <th width="20%">Supplier</th>
-        <th width="10%">No. Kuitansi</th>
         <th width="7%">Cara Bayar</th>
         <th width="10%">Nama Bank</th>
         <th width="10%">No. Transaksi</th>
@@ -44,9 +44,9 @@ include_once '../inc/functions.php';
     <tr class="<?= ($key%2==0)?'even':'odd' ?>">
         <td align="center"><?= ++$key ?></td>
         <td align="center"><?= $data->no_ref ?></td>
+        <td align="center"><?= $data->faktur ?></td>
         <td align="center"><?= datefmysql($data->tanggal) ?></td>
         <td><?= $data->supplier ?></td>
-        <td align="center"><?= $data->no_kuitansi ?></td>
         <td align="center"><?= $data->cara_bayar ?></td>
         <td><?= $data->bank ?></td>
         <td align="center"><?= $data->no_transaksi ?></td>
