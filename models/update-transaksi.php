@@ -198,6 +198,7 @@ if ($method === 'delete_stokopname') {
 }
 
 if ($method === 'save_penjualannr') {
+    session_start();
     $tanggal    = date2mysql($_POST['tanggal']).' '.date("H:i:s");
     $customer   = ($_POST['id_customer'] !== '')?$_POST['id_customer']:"NULL";
     $diskon_pr  = $_POST['diskon_pr'];
@@ -229,6 +230,14 @@ if ($method === 'save_penjualannr') {
         id_penjualan = '$id_penjualan',
         bayar = '$pembayaran'";
     mysql_query($query); // insert ke tabel detail pembayaran
+    
+    $query2= "insert into arus_kas set
+        id_transaksi = '$id_penjualan',
+        transaksi = 'Penjualan Non Resep',
+        id_users = '$_SESSION[id_user]',
+        waktu = '$tanggal',
+        masuk = '$pembayaran'";
+    mysql_query($query2);
     
     $id_barang  = $_POST['id_barang'];
     $kemasan    = $_POST['kemasan'];
@@ -397,6 +406,7 @@ if ($method === 'delete_resep') {
 }
 
 if ($method === 'save_penjualan') {
+    session_start();
     $tanggal    = date2mysql($_POST['tanggal']).' '.date("H:i:s");
     $customer   = ($_POST['id_customer'] !== '')?$_POST['id_customer']:"NULL";
     $diskon_pr  = $_POST['diskon_pr'];
@@ -434,6 +444,14 @@ if ($method === 'save_penjualan') {
             id_penjualan = '$id_penjualan',
             bayar = '$pembayaran'";
         mysql_query($query);
+        
+        $query2= "insert into arus_kas set
+            id_transaksi = '$id_penjualan',
+            transaksi = 'Penjualan Resep',
+            id_users = '$_SESSION[id_user]',
+            waktu = '$tanggal',
+            masuk = '$pembayaran'";
+        mysql_query($query2);
         
     $id_barang  = $_POST['id_barang'];
     $kemasan    = $_POST['kemasan'];
@@ -590,6 +608,15 @@ if ($method === 'save_inkaso') {
         nominal = '$nominal'";
     mysql_query($sql);
     $id = mysql_insert_id();
+    
+    $query2= "insert into arus_kas set
+        id_transaksi = '$id',
+        transaksi = 'Inkaso',
+        id_users = '$_SESSION[id_user]',
+        waktu = '$tanggal ".date("H:i:s")."',
+        masuk = '$nominal'";
+    mysql_query($query2);
+    
     die(json_encode(array('status' => TRUE, 'id' => $id)));
 }
 

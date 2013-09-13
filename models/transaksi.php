@@ -232,8 +232,8 @@ function load_data_resep($param) {
     if (isset($param['start'])) {
         $limit = " limit ".$param['start'].", ".$param['limit']."";
     }
-    $sql   = "select r.*, rr.id_resep, rr.id_barang, rr.id_tarif, rr.r_no, concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, 
-        rr.dosis_racik, rr.jumlah_pakai, rr.jual_harga, d.nama as dokter, k.nama as apoteker, t.nama as tarif, p.nama as pasien, 
+    $sql   = "select r.*, rr.id as id_rr, rr.id_resep, rr.id_barang, rr.id_tarif, rr.r_no, concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, 
+        rr.dosis_racik, rr.jumlah_pakai, rr.jual_harga, d.nama as dokter, k.nama as apoteker, t.nama as tarif, p.nama as pasien, p.tanggal_lahir,
         rr.resep_r_jumlah, 
         rr.tebus_r_jumlah, rr.pakai, rr.aturan, rr.iter, rr.nominal from resep r
         join resep_r rr on (r.id = rr.id_resep)
@@ -245,7 +245,7 @@ function load_data_resep($param) {
         left join karyawan k on (k.id = rr.id_karyawan)
         where r.id is not NULL $q
     ";
-    //echo $sql;
+    //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -508,4 +508,109 @@ function cetak_no_antri($id_daftar) {
     $rows   = mysql_fetch_object($result);
     return $rows;
 }
+
+function arus_kas_harian_load_data($param) {
+    $q = NULL;
+    if (isset($param['awal'])) {
+        $q.=" and date(waktu) between '".$param['awal']."' and '".$param['akhir']."'";
+    }
+    if ($param['transaksi'] !== '') {
+        if ($param['transaksi'] === 'Total Penjualan') {
+            $q.=" and transaksi like '%Penjualan%'";
+        }
+        else {
+            $q.=" and transaksi = '".$param['transaksi']."'";
+        }
+    }
+    $sql = "select * from arus_kas where id is not NULL $q";
+    //echo $sql;
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function arus_kas_bulanan_load_data($param) {
+    $q = NULL;
+    if (isset($param['bulan'])) {
+        $q.=" and date(waktu) like ('%".$param['bulan']."%')";
+    }
+    if ($param['transaksi'] !== '') {
+        if ($param['transaksi'] === 'Total Penjualan') {
+            $q.=" and transaksi like '%Penjualan%'";
+        }
+        else {
+            $q.=" and transaksi = '".$param['transaksi']."'";
+        }
+    }
+    $sql = "select waktu, transaksi, sum(masuk) as masuk, sum(keluar) as keluar from arus_kas where id is not NULL $q group by transaksi";
+    //echo $sql;
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function arus_kas_tahunan_load_data($param) {
+    $q = NULL;
+    if (isset($param['tahun'])) {
+        $q.=" and year(waktu) = '".$param['tahun']."'";
+    }
+    if ($param['transaksi'] !== '') {
+        if ($param['transaksi'] === 'Total Penjualan') {
+            $q.=" and transaksi like '%Penjualan%'";
+        }
+        else {
+            $q.=" and transaksi = '".$param['transaksi']."'";
+        }
+    }
+    $sql = "select waktu, transaksi, sum(masuk) as masuk, sum(keluar) as keluar from arus_kas where id is not NULL $q group by transaksi";
+    //echo $sql;
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function retur_penjualan_load_data($param) {
+    $q = NULL;
+    if ($param['id'] !== '') {
+        $q.="and rp.id = '".$param['id']."' ";
+    }
+    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    $sql = "select rp.waktu, st.nama as kemasan, b.nama as barang, b.kekuatan, 
+        stn.nama as satuan, dp.* from retur_penjualan rp
+        join detail_retur_penjualan dp on (rp.id = dp.id_retur_penjualan)
+        join kemasan k on (k.id = dp.id_kemasan)
+        join barang b on (b.id = k.id_barang)
+        join satuan st on (st.id = k.id_kemasan)
+        left join satuan stn on (stn.id = b.satuan_kekuatan)
+        where rp.id is not NULL $q order by rp.id";
+    //echo $sql;
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
 ?>

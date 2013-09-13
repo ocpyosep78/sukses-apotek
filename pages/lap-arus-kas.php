@@ -8,6 +8,7 @@ $jenis_laporan   = array('Harian','Bulanan','Tahunan');
 ?>
 <script type="text/javascript">
     function get_parameter(jenis) {
+        $('#result-info').html('');
         if (jenis === 'Bulanan') {
             var str = '<option value="01">Januari</option>'+
                     '<option value="02">Februari</option>'+
@@ -37,6 +38,10 @@ $jenis_laporan   = array('Harian','Bulanan','Tahunan');
         }
         if (jenis === 'Harian') {
             $('#jenis_attr').html('<td width="10%">Range Tanggal:</td><td><?= form_input('awal', date("d/m/Y"), 'id=awal size=10') ?> s . d <?= form_input('akhir', date("d/m/Y"), 'id=akhir size=10') ?></td>');
+            $('#awal, #akhir').datepicker({
+                changeYear: true,
+                changeMonth: true
+            });
         }
     }
     function get_result_arus_kas() {
@@ -89,9 +94,15 @@ $jenis_laporan   = array('Harian','Bulanan','Tahunan');
             if ($('#jenis').val() === '') {
                 alert_empty('Jenis laporan','#jenis'); return false;
             }
+            get_result_arus_kas();
+        });
+        $('#reset').click(function() {
+            $('input[type=text], select').val('');
+            $('#jenis_attr').html('');
         });
     });
 </script>
+
 <h1 class="margin-t-0">Lap. Arus Kas</h1>
 <div class="input-parameter">
 <table width="100%">

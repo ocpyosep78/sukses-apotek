@@ -199,6 +199,16 @@ function hitung_jml_pakai() {
     $('#jmlpakai').val(jml_pakai);
 }
 
+function cetak_copy_resep(id_resep) {
+    var wWidth = $(window).width();
+    var dWidth = wWidth * 0.3;
+    var wHeight= $(window).height();
+    var dHeight= wHeight * 1;
+    var x = screen.width/2 - dWidth/2;
+    var y = screen.height/2 - dHeight/2;
+    window.open('pages/copy-resep.php?id='+id_resep,'Resep Cetak','width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
+}
+
 function form_receipt() {
     var str = '<div id=form_resep>'+
                 '<form id=resep_save>'+
@@ -399,11 +409,12 @@ function form_receipt() {
             success: function(data) {
                 if (data.status === true) {
                     if (data.action === 'add') {
-                        alert_tambah('#dokter');
+                        cetak_copy_resep(data.id);
+                        alert_refresh('Data berhasil disimpan');
                         $('input:text,select').val('');
                         $('#resep-list tbody, #total').html('');
                         //load_data_resep();
-                        location.reload();
+                        //location.reload();
                     } else {
                         alert_edit();
                         load_data_resep($('.noblock').html());

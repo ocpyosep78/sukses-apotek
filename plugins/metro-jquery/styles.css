@@ -22,6 +22,8 @@ table.data-input input[type=text], table.data-input input[type=password], table.
 .data-input textarea { max-width: 300px; height: 20px; text-transform: uppercase; }
 .edition { background: url(../../img/icons/edit.png) center no-repeat; width: 19px; height: 19px; text-align: center; display: inline-block; }
 .edition:hover { background: url(../../img/icons/edit.png) center no-repeat; width: 19px; height: 19px; cursor: pointer; }
+.printing { background: url(../../img/icons/print.png) center no-repeat; width: 19px; height: 19px; text-align: center; display: inline-block; }
+.printing:hover { background: url(../../img/icons/print.png) center no-repeat; width: 19px; height: 19px; cursor: pointer; }
 .deletion { background: url(../../img/icons/delete.png) center no-repeat; width: 19px; height: 19px; display: inline-block;}
 .deletion:hover { background: url(../../img/icons/delete.png) center no-repeat; width: 19px; height: 19px; cursor: pointer; }
 .planning { background: url(../../img/icons/cart.png) center no-repeat; width: 18px; height: 18px; display: inline-block; }

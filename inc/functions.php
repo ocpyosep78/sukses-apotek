@@ -225,4 +225,43 @@ function get_list_bulan() {
         array('01' => 'Januari')
     );
 }
+
+function hitungUmur($tgl) {
+    $tanggal = explode("-", $tgl);
+    $tahun = $tanggal[0];
+    $bulan = $tanggal[1];
+    $hari = $tanggal[2];
+
+    $day = date('d');
+    $month = date('m');
+    $year = date('Y');
+
+    $tahun = $year - $tahun;
+    $bulan = $month - $bulan;
+    $hari = $day - $hari;
+
+    $jumlahHari = 0;
+    $bulanTemp = ($month == 1) ? 12 : $month - 1;
+    if ($bulanTemp == 1 || $bulanTemp == 3 || $bulanTemp == 5 || $bulanTemp == 7 || $bulanTemp == 8 || $bulanTemp == 10 || $bulanTemp == 12) {
+        $jumlahHari = 31;
+    } else if ($bulanTemp == 2) {
+        if ($tahun % 4 == 0)
+            $jumlahHari = 29;
+        else
+            $jumlahHari = 28;
+    }else {
+        $jumlahHari = 30;
+    }
+
+    if ($hari <= 0) {
+        $hari+=$jumlahHari;
+        $bulan--;
+    }
+    if ($bulan < 0 || ($bulan == 0 && $tahun != 0)) {
+        $bulan+=12;
+        $tahun--;
+    }
+
+    return $tahun . " Tahun " . $bulan . " Bulan " . $hari . " Hari";
+}
 ?>
