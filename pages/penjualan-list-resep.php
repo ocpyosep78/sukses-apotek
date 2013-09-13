@@ -81,9 +81,15 @@ $.ajax({
 <script type="text/javascript">
 $('#biaya-apt').html('<?= $jasa ?>');
 <?php
-    if (isset($cek->id)) { ?>    
+    if (isset($cek->id)) { 
+        if ($cek->sisa < 0) {
+            $kekurangan = '0';
+        } else {
+            $kekurangan = $cek->sisa;
+        }
+        ?>    
         var str = '<tr class=adding><td>Total Terbayar:</td><td>Rp <?= rupiah($cek->terbayar) ?>, 00</td></tr>'+
-                  '<tr class=adding><td>Kekurangan:</td><td>Rp <span id=kekurangan><?= rupiah($cek->sisa) ?></span>, 00</td></tr>';
+                  '<tr class=adding><td>Kekurangan:</td><td>Rp <span id=kekurangan><?= rupiah($kekurangan) ?></span>, 00</td></tr>';
         $('#detail_harga_jual').append(str);
 
 <?php } ?>

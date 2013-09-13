@@ -262,10 +262,12 @@ if ($method === 'get_detail_harga_barang') {
 }
 
 if ($method === 'get_data_noresep') {
-    $sql = "select r.*, p.nama, p.id_asuransi, a.diskon as reimburse from resep r 
+    $sql = "select r.*, pj.total, IFNULL(sum(dp.bayar),'0') as terbayar, p.nama, p.id_asuransi, a.diskon as reimburse from resep r 
         join pelanggan p on (r.id_pasien = p.id)
+        left join penjualan pj on (r.id = pj.id_resep)
+        left join detail_bayar_penjualan dp on (pj.id = dp.id_penjualan)
         left join asuransi a on (p.id_asuransi = a.id)
-        where r.id like ('%$q%') or p.nama like ('%$q%') order by locate('$q', r.id)";
+        where r.id like ('%$q%') group by pj.id having terbayar < pj.total";
     $result = mysql_query($sql);
     $rows = array();
     while ($data = mysql_fetch_object($result)) {
