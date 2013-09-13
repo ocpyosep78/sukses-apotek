@@ -281,7 +281,7 @@ if ($method === 'get_data_noresep') {
 }
 
 if ($method === 'get_no_resep') {
-    $sql = mysql_query("select count(*) as jumlah from resep where date(waktu) like '%".date("Y-m")."%'");
+    $sql = mysql_query("select substr(id, 1, 3) as jumlah from resep where date(waktu) like '%".date("Y-m")."%' order by waktu desc limit 1");
     $row = mysql_fetch_object($sql);
     if (!isset($row->jumlah)) {
         $str = "001-".date("m")."/".date("Y");

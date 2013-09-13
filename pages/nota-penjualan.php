@@ -24,10 +24,13 @@ function cetak() {
     <table style="border-bottom: 1px solid #000;" width="100%">
         <tr><td align="center" style="text-transform: uppercase; font-size: 12px;"><?= $apt->nama ?></td> </tr>
         <tr><td align="center" style="font-size: 12px;"><?= $apt->alamat ?></td> </tr>
-        <tr><td align="center" style="font-size: 12px;">Telp. <?= $apt->telp ?>,  Fax. <?= $apt->fax ?>, Email <?= $apt->email ?></td> </tr>
+        <tr><td align="center" style="font-size: 12px;">Telp. <?= $apt->telp ?></td> </tr>
     </table>
     <table width="100%" style="border-bottom: 1px solid #000;">
         <tr><td width="40%">Nomor:</td><td width="60%"><?= $_GET['id'] ?></td></tr>
+        <?php if ($rows->id_resep !== NULL) { ?>
+        <tr><td>No. Resep:</td><td><?= $rows->id_resep ?></td></tr>
+        <?php } ?>
         <tr><td>Tanggal:</td><td><?= datetimefmysql($rows->waktu) ?></td></tr>
         <tr><td>Pelanggan:</td><td style="white-space: nowrap"><?= $rows->pelanggan ?></td></tr>
     </table>
