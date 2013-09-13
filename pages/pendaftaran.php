@@ -342,6 +342,9 @@ function displayTime() {
     setTimeout(displayTime, 1000);               // Run again in 1 second
 }
 
+function paging(page, tab, search) {
+    load_data_pendaftaran(page, search);
+}
 
 function load_data_pendaftaran(page, search, id) {
     pg = page; src = search; id_barg = id;

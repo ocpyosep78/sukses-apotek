@@ -3,7 +3,7 @@
 include_once '../config/database.php';
 
 function get_jenis_transaksi() {
-    return array('Penjualan Resep','Penjualan Non Resep','Inkaso', 'Lain-lain');
+    return array('Total Penjualan','Penjualan Resep','Penjualan Non Resep','Inkaso', 'Lain-lain');
 }
 
 function header_surat() {

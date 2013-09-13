@@ -219,4 +219,10 @@ function indo_tgl($tgl) {
 
     return $new;
 }
+
+function get_list_bulan() {
+    return array(
+        array('01' => 'Januari')
+    );
+}
 ?>
