@@ -156,7 +156,11 @@ if ($method === 'get_kemasan_barang') {
 }
 
 if ($method === 'get_nomor_sp') {
-    $sql = mysql_query("select p.*, s.nama as supplier FROM pemesanan p join supplier s on (p.id_supplier = s.id) where p.id like ('%$q%') order by locate('$q',p.id)");
+    $sql = mysql_query("select p.*, s.nama as supplier 
+        FROM pemesanan p 
+        join supplier s on (p.id_supplier = s.id) 
+        where p.id not in (select id_pemesanan from penerimaan) and p.id like ('%$q%') order by locate('$q',p.id)");
+    $rows = array();
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;
     }
@@ -167,11 +171,11 @@ if ($method === 'get_attr_penerimaan') {
     $query= mysql_query("select penerimaan from config_autonumber");
     $auto = mysql_fetch_object($query);
     
-    $sql  = mysql_query("select faktur from penerimaan order by id desc limit 1");
+    $sql  = mysql_query("select substr(faktur, 4, 6) as id from penerimaan order by id desc limit 1");
     $row  = mysql_fetch_object($sql);
     
     
-    if (isset($row->faktur)) {
+    if (isset($row->id)) {
         $last_faktur = $auto->penerimaan.str_pad((string)($row->id+1), 6, "0", STR_PAD_LEFT);
     } else {
         $last_faktur = $auto->penerimaan.'000001';
@@ -262,12 +266,12 @@ if ($method === 'get_detail_harga_barang') {
 }
 
 if ($method === 'get_data_noresep') {
-    $sql = "select r.*, pj.total, IFNULL(sum(dp.bayar),'0') as terbayar, p.nama, p.id_asuransi, a.diskon as reimburse from resep r 
+    $sql = "select r.*, IFNULL(pj.total,'0') as total_tagihan, IFNULL(sum(dp.bayar),'0') as terbayar, p.nama, p.id_asuransi, a.diskon as reimburse from resep r 
         join pelanggan p on (r.id_pasien = p.id)
         left join penjualan pj on (r.id = pj.id_resep)
         left join detail_bayar_penjualan dp on (pj.id = dp.id_penjualan)
         left join asuransi a on (p.id_asuransi = a.id)
-        where r.id like ('%$q%') group by pj.id having terbayar < pj.total";
+        where r.id like ('%$q%') group by pj.id having terbayar = '0' or terbayar < total_tagihan";
     $result = mysql_query($sql);
     $rows = array();
     while ($data = mysql_fetch_object($result)) {

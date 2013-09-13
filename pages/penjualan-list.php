@@ -60,11 +60,13 @@ $(function() {
     $total_data= $penjualan['total'];
     $id = "";
     $no = 1;
-    $alert = "";
+    
     foreach ($list_data as $key => $data) { 
         $str = $data->id.'#'.$data->id_resep.'#'.$data->customer.'#'.$data->id_customer;
         if ($data->total > $data->terbayar) {
             $alert="warning";
+        } else {
+            $alert = "";
         }
         ?>
         <tr id="<?= $data->id ?>" class="detail <?= ($id !== $data->id)?'odd':NULL ?> <?= $alert ?>">

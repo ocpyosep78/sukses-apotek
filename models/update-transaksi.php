@@ -266,6 +266,12 @@ if ($method === 'delete_penjualannr') {
     mysql_query("delete from stok where transaksi = 'Penjualan' and id_transaksi = '$id'");
 }
 
+if ($method === 'delete_penjualan') {
+    $id     = $_GET['id'];
+    mysql_query("delete from penjualan where id = '$id'");
+    mysql_query("delete from stok where transaksi = 'Penjualan' and id_transaksi = '$id'");
+}
+
 if ($method === 'save_retur_penerimaan') {
     $tanggal        = date2mysql($_POST['tanggal']);
     $id_supplier    = $_POST['id_supplier'];

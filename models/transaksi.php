@@ -160,6 +160,9 @@ function load_data_resep($param) {
     if (isset($param['awal'])) {
         $q.=" and date(r.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
     }
+    if (!isset($param['awal'])) {
+        $q.=" and date(r.waktu) between '".date("Y-m-d")."' and '".date("Y-m-d")."'";
+    }
     if (isset($param['dokter']) and $param['dokter'] !== '') {
         $q.=" and r.id_dokter = '".$param['dokter']."'";
     }
@@ -209,7 +212,7 @@ function penjualan_nr_load_data($param) {
     if ($param['id'] !== '') {
         $q.="and p.id = '".$param['id']."' ";
     } else {
-        if ($param['awal'] !== '' and $param['akhir'] !== '') {
+        if (isset($param['awal']) and $param['awal'] !== '' and $param['akhir'] !== '') {
             $q.="and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
             $q.=" group by p.id";
         } else {

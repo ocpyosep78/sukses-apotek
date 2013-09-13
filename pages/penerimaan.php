@@ -189,7 +189,8 @@ function form_add() {
             return str;
         },
         width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
-        dataType: 'json' // tipe data yang diterima oleh library ini disetup sebagai JSON
+        dataType: 'json', // tipe data yang diterima oleh library ini disetup sebagai JSON
+        cacheLength: 0
     }).result(
     function(event,data,formated){
         $(this).val(data.id);

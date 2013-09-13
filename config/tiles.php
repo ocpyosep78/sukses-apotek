@@ -16,11 +16,11 @@ $tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"b
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#009fb0","url"=>"pemeriksaan.php",
-	"img"=>"img/icons/pemesanan.png","desc"=>"Pemeriksaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"img"=>"img/icons/pendaftaran.png","desc"=>"Pemeriksaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"pendaftaran.php",
-	"img"=>"img/icons/pendaftaran.png","desc"=>"Pendaftaran Antrian","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#ff0084","url"=>"pendaftaran.php",
+	"img"=>"img/icons/pendaftaran2.png","desc"=>"Pendaftaran Antrian","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 /*SLIDESHOW TILE - only in full version 
@@ -34,7 +34,7 @@ $tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/penerimaan.png","desc"=>"Penerimaan Produk","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#6b6b6b","url"=>"stok-opname.php",
+$tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#15aa64","url"=>"stok-opname.php",
 	"img"=>"img/icons/resep.png","desc"=>"Stok Opname","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
@@ -76,8 +76,8 @@ $tile[] = array("type"=>"img","group"=>1,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/user.png","desc"=>"Pelanggan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#6950AB","url"=>"golongan.php",
-	"img"=>"img/icons/golongan.png","desc"=>"Golongan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#eb6796","url"=>"golongan.php",
+	"img"=>"img/icons/golongan.png","desc"=>"Golongan Harga","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 
@@ -89,12 +89,12 @@ $tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"b
 //"title"=>"Bank","text"=>"Manajemen data bank.
 //");
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#00709f","url"=>"farmakoterapi.php",
-	"img"=>"img/icons/farmakoterapi.png","desc"=>"Farmakoterapi","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#e8641b","url"=>"farmakoterapi.php",
+	"img"=>"img/icons/kategori-produk.png","desc"=>"Kategori Produk","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>1,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#00709f","url"=>"penyakit.php",
-	"img"=>"img/icons/kelas-terapi.png","desc"=>"Penyakit ICD X","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"img"=>"img/icons/farmakoterapi.png","desc"=>"Penyakit ICD X","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>1,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"pabrik.php",
@@ -102,7 +102,7 @@ $tile[] = array("type"=>"img","group"=>1,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"b
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#be1e4a","url"=>"karyawan.php",
-	"img"=>"img/icons/karyawan.png","desc"=>"Karyawan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"img"=>"img/icons/karyawan.png","desc"=>"Karyawan & Dokter","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>1,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"layanan.php",

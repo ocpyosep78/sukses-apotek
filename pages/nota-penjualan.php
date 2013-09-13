@@ -27,9 +27,9 @@ function cetak() {
         <tr><td align="center" style="font-size: 12px;">Telp. <?= $apt->telp ?>,  Fax. <?= $apt->fax ?>, Email <?= $apt->email ?></td> </tr>
     </table>
     <table width="100%" style="border-bottom: 1px solid #000;">
-        <tr><td width="10%">Nomor:</td><td><?= $_GET['id'] ?></td></tr>
+        <tr><td width="40%">Nomor:</td><td width="60%"><?= $_GET['id'] ?></td></tr>
         <tr><td>Tanggal:</td><td><?= datetimefmysql($rows->waktu) ?></td></tr>
-        <tr><td>Pelanggan:</td><td><?= $rows->pelanggan ?></td></tr>
+        <tr><td>Pelanggan:</td><td style="white-space: nowrap"><?= $rows->pelanggan ?></td></tr>
     </table>
     <table width="100%" style="border-bottom: 1px solid #000;">
         <tr>
@@ -55,13 +55,20 @@ function cetak() {
     $ppn = ($total_brg*($rows->ppn/100));
     $tusem = $rows->tuslah+$rows->embalage;
     $total= $total_brg+$ppn+$tusem;
+    $biaya_apoteker = 0;
     ?>
     <table width="100%">
         <tr><td>Subtotal:</td><td align="right"><?= rupiah($total_brg) ?></td></tr>
         <tr><td>Diskon:</td><td align="right"><?= rupiah($rows->diskon_rupiah) ?></td></tr>
         <tr><td>PPN <?= $rows->ppn ?> %:</td><td align="right"><?= rupiah($ppn) ?></td></tr>
         <tr><td>Tuslah & Embalage:</td><td align="right"><?= rupiah($tusem) ?></td></tr>
-        <tr><td>Total:</td><td align="right"><?= rupiah($total) ?></td></tr>
+        <?php if ($rows->id_resep !== NULL) { 
+        $biaya_apt = mysql_fetch_object(mysql_query("select sum(nominal) as total from resep_r where id_resep = '".$rows->id_resep."'"));    
+        $biaya_apoteker = $biaya_apt->total;
+        ?>
+        <tr><td>Biaya Apoteker:</td><td align="right"><?= rupiah($biaya_apt->total) ?></td></tr>
+        <?php } ?>
+        <tr><td>Total:</td><td align="right"><?= rupiah($total+$biaya_apoteker) ?></td></tr>
     </table>
     <br/>
     <center style="border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;">
