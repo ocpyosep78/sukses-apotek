@@ -153,5 +153,9 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/lap-resep.png","desc"=>"Hutang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
+$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-arus-kas.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Arus Kas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
 
 ?> 

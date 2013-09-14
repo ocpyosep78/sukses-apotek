@@ -303,7 +303,7 @@ function delete_pemeriksaan(id, page) {
 </script>
 <h1>Pemeriksaan</h1>
 <hr>
-<button id="button">Pemeriksaan (F9)</button>
+<!--<button id="button">Pemeriksaan (F9)</button>-->
 <button id="reset">Reset</button>
 <div id="result-pemeriksaan">
     

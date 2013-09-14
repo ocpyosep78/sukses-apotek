@@ -56,5 +56,8 @@ $pageTitles['lap-sp.php'] = "Laporan Pemesanan";
 $pageTitles['lap-resep.php'] = "Laporan Resep";
 $pageTitles['lap-penjualan.php'] = "Laporan Penjualan";
 $pageTitles['lap-penjualan-nr.php'] = "Laporan Penjualan Non Resep";
+$pageTitles['lap-penerimaan.php'] = "Laporan Penerimaan";
+$pageTitles['lap-hutang.php'] = "Laporan Hutang";
+$pageTitles['lap-arus-kas.php'] = "Laporan Arus Kas";
 
 ?>

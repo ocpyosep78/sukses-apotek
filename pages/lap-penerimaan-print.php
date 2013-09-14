@@ -2,12 +2,21 @@
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
 ?>
+<link rel="stylesheet" href="../themes/theme_default/theme-print.css" />
 <script type="text/javascript">
-$(function() {
-    $( document ).tooltip();
-});
+function cetak() {
+    window.print();
+    if (confirm('Apakah menu print ini akan ditutup?')) {
+        window.close();
+    }
+    //SCETAK.innerHTML = '<br /><input onClick=\'cetak()\' type=\'submit\' name=\'Submit\' value=\'Cetak\' class=\'tombol\'>';
+}
 </script>
-<table cellspacing="0" width="100%" class="list-data">
+<body onload="cetak()">
+<h1>
+    LAPORAN PENERIMAAN BARANG <br /> TANGGAL <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?>
+</h1>
+<table cellspacing="0" width="100%" class="list-data-print">
 <thead>
     <tr class="italic">
         <th width="5%">No.</th>
@@ -19,32 +28,22 @@ $(function() {
         <th width="5%">Jatuh<br/> Tempo</th>
         <th width="5%">Diskon (%)</th>
         <th width="10%">Total RP.</th>
-        <th width="5%">#</th>
     </tr>
 </thead>
 <tbody>
     <?php
-    $limit = 10;
-    $page  = $_GET['page'];
-    if ($_GET['page'] === '') {
-        $page = 1;
-        $offset = 0;
-    } else {
-        $offset = ($page-1)*$limit;
-    }
-    
     $param = array(
-        'id' => $_GET['id_penerimaan'],
-        'limit' => $limit,
-        'start' => $offset,
-        'search' => $_GET['search']
+        'awal' => date2mysql($_GET['awal']),
+        'akhir' => date2mysql($_GET['akhir']),
+        'id_supplier' => $_GET['supplier'],
+        'faktur' => $_GET['faktur']
     );
     $penerimaan = penerimaan_load_data($param);
     $list_data = $penerimaan['data'];
-    $total_data= $penerimaan['total'];
+    $total = 0;
     foreach ($list_data as $key => $data) { ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
-            <td align="center"><?= (++$key+$offset) ?></td>
+            <td align="center"><?= (++$key) ?></td>
             <td align="center"><?= datefmysql($data->tanggal) ?></td>
             <td align="center"><?= $data->faktur ?></td>
             <td><?= $data->supplier ?></td>
@@ -53,13 +52,17 @@ $(function() {
             <td align="center"><?= datefmysql($data->jatuh_tempo) ?></td>
             <td align="center"><?= $data->diskon_persen ?></td>
             <td align="right"><?= rupiah($data->total) ?></td>
-            <td class='aksi' align='center'>
-                <!--<a class='edition' onclick="edit_penerimaan('<?= $str ?>');" title="Klik untuk edit penerimaan">&nbsp;</a>-->
-                <a class='deletion' onclick="delete_penerimaan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus penerimaan">&nbsp;</a>
-            </td>
         </tr>
-    <?php }
+    <?php 
+    $total = $total + $data->total;
+    }
     ?>
+    <tfoot>
+        <tr>
+            <td align="right" colspan="8">TOTAL</td>
+            <td align="right"><?= rupiah($total) ?></td>
+        </tr>
+    </tfoot>
 </tbody>
 </table>
-<?= paging_ajax($total_data, $limit, $page, '1', '') ?>
+</body>

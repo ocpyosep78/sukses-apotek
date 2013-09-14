@@ -538,7 +538,13 @@ if ($method === 'save_pemeriksaan') {
         foto = '$NewFileName'";
    mysql_query($sql);
    $id_pemeriksaan = $id;
-
+   
+   $sql2= "update pendaftaran set 
+        waktu_pelayanan = NOW(),
+        id_dokter = '$id_dokter'
+        where id = '$id_daftar'";
+   mysql_query($sql2);
+   
    foreach ($id_diagnosis as $key => $data) {
        $query = "insert into diagnosis set
             id_pemeriksaan = '$id_pemeriksaan',

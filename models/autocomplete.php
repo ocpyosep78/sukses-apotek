@@ -435,4 +435,16 @@ if ($method === 'get_nofaktur') {
     }
     die(json_encode($rows));
 }
+
+if ($method === 'get_faktur') {
+    $sql = mysql_query("select p.*, s.nama as supplier, sum(i.nominal) as terbayar from penerimaan p
+        join supplier s on (p.id_supplier = s.id) 
+        left join inkaso i on (i.id_penerimaan = p.id)
+        where p.faktur like ('%$q%') group by p.id");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
 ?>

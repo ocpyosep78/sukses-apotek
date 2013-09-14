@@ -322,7 +322,7 @@ $(function() {
             dataType: 'json',
             success: function(data) {
                 if (data.status === true) {
-                    alert_tambah('#pasien');
+                    alert_refresh('Data berhasil di simpan');
                     $('#pasien, #id_pasien, #spesialisasi, #id_spesialisasi').val('');
                     $('#noantri').html('');
                     window.open('pages/cetak-antrian.php?id_daftar='+data.id,'Print Antri','width=300px, height=300px');

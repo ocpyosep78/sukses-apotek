@@ -16,10 +16,10 @@ $(function() {
         <th width="20%">Nama Supplier</th>
         <th width="5%">PPN</th>
         <th width="5%">Materai</th>
-        <th width="5%">Jatuh<br/> Tempo</th>
+        <th width="5%">Tempo</th>
         <th width="5%">Diskon (%)</th>
+        <th width="5%">Diskon Rp.</th>
         <th width="10%">Total RP.</th>
-        <th width="5%">#</th>
     </tr>
 </thead>
 <tbody>
@@ -34,10 +34,10 @@ $(function() {
     }
     
     $param = array(
-        'id' => $_GET['id_penerimaan'],
-        'limit' => $limit,
-        'start' => $offset,
-        'search' => $_GET['search']
+        'awal' => date2mysql($_GET['awal']),
+        'akhir' => date2mysql($_GET['akhir']),
+        'faktur' => $_GET['faktur'],
+        'id_supplier' => $_GET['id_supplier']
     );
     $penerimaan = penerimaan_load_data($param);
     $list_data = $penerimaan['data'];
@@ -52,14 +52,11 @@ $(function() {
             <td align="center"><?= rupiah($data->materai) ?></td>
             <td align="center"><?= datefmysql($data->jatuh_tempo) ?></td>
             <td align="center"><?= $data->diskon_persen ?></td>
+            <td align="right"><?= rupiah($data->diskon_rupiah) ?></td>
             <td align="right"><?= rupiah($data->total) ?></td>
-            <td class='aksi' align='center'>
-                <!--<a class='edition' onclick="edit_penerimaan('<?= $str ?>');" title="Klik untuk edit penerimaan">&nbsp;</a>-->
-                <a class='deletion' onclick="delete_penerimaan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus penerimaan">&nbsp;</a>
-            </td>
+            
         </tr>
     <?php }
     ?>
 </tbody>
 </table>
-<?= paging_ajax($total_data, $limit, $page, '1', '') ?>

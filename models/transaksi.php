@@ -2,6 +2,10 @@
 
 include_once '../config/database.php';
 
+function get_jenis_transaksi() {
+    return array('Penjualan Resep','Penjualan Non Resep','Inkaso', 'Lain-lain');
+}
+
 function header_surat() {
     $sql = "select * from apotek";
     $result = mysql_query($sql);
@@ -54,17 +58,72 @@ function pemesanan_load_data($param) {
 }
 
 function penerimaan_load_data($param) {
-    $q = NULL;
-    if ($param['id'] !== NULL) {
+    $q = NULL; $limit = NULL;
+    if (isset($param['id']) and $param['id'] !== '') {
         $q.="and p.id = '".$param['id']."' ";
     }
-    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    if ($param['id_supplier'] !== '') {
+        $q.=" and s.id = '".$param['id_supplier']."'";
+    }
+    if (isset($param['faktur']) and $param['faktur'] !== '') {
+        $q.=" and p.faktur = '".$param['faktur']."'";
+    }
+    if (isset($param['awal'])) {
+        $q.=" and p.tanggal between '".$param['awal']."' and '".$param['akhir']."'";
+    }
+    if (isset($param['start'])) {
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
+    
     $sql = "select p.*, k.nama as karyawan, s.nama as supplier from penerimaan p
         left join pemesanan ps on (p.id_pemesanan = ps.id)
         join supplier s on (ps.id_supplier = s.id)
         left join users u on (p.id_users = u.id)
         left join karyawan k on (u.id_karyawan = k.id)
-        where p.id is not NULL";
+        where p.id is not NULL $q";
+    //echo $sql.$limit;
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function hutang_load_data($param) {
+    $q = NULL; $limit = NULL; $having = NULL;
+    if ($param['id_supplier'] !== '') {
+        $q.=" and s.id = '".$param['id_supplier']."'";
+    }
+    if (isset($param['awal_faktur']) and $param['awal_faktur'] !== '') {
+        $q.=" and p.tanggal between '".$param['awal_faktur']."' and '".$param['akhir_faktur']."'";
+    }
+    if (isset($param['awal']) and $param['awal'] !== '') {
+        $q.=" and p.jatuh_tempo between '".$param['awal']."' and '".$param['akhir']."'";
+    }
+    if ($param['status'] !== 'undefined') {
+        if ($param['status'] === 'Lunas') {
+            $having.=" having terbayar = p.total ";
+        }
+        if ($param['status'] === 'Hutang') {
+            $having.=" having terbayar < p.total ";
+        }
+    }
+    if (isset($param['start'])) {
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
+    
+    $sql = "select p.*, k.nama as karyawan, s.nama as supplier, IFNULL(sum(i.nominal),'0') as terbayar from penerimaan p
+        left join pemesanan ps on (p.id_pemesanan = ps.id)
+        left join inkaso i on (p.id = i.id_penerimaan)
+        join supplier s on (ps.id_supplier = s.id)
+        left join users u on (p.id_users = u.id)
+        left join karyawan k on (u.id_karyawan = k.id)
+        where p.id is not NULL $q group by p.id $having";
+    //echo $sql.$limit;
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
