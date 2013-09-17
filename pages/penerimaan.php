@@ -52,6 +52,9 @@ function check_perubahan_hna(i) {
             }
         });
     }
+    if (hna < new_hna) {
+        $('#hna'+i).val(new_hna);
+    }
 }
 function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi, isi_satuan) {
     var no   = $('.tr_rows').length+1;

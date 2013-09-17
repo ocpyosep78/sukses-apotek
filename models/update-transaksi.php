@@ -91,6 +91,8 @@ if ($method === 'save_penerimaan') {
             //$hna_ttl= $harga_a+($harga_a*($ppn/100));
             //$hna    = $hna_ttl/($rows->isi*$rows->isi_satuan);
             
+            //mysql_query("update barang set hna = '$hna' where id = '$data'"); // update HNA baru
+            
             $sql = "insert into detail_penerimaan set
                 id_penerimaan = '$id',
                 id_kemasan = '".$rows->id."',
@@ -104,7 +106,7 @@ if ($method === 'save_penerimaan') {
             mysql_query($sql);
             
             mysql_query("update barang set hna = '".$hna[$key]."' where id = '$data'");
-            //echo "update barang set hna = '".$hna[$key]."' where id = '$data'<br/>";
+            
             
             $stok= "insert into stok set
                 waktu = '$tanggal ".date("H:i:s")."',
