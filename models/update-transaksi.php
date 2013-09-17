@@ -58,6 +58,7 @@ if ($method === 'save_penerimaan') {
     $disc_rp        = currencyToNumber($_POST['disc_rp']);
     $total          = currencyToNumber($_POST['total']);
     $id_penerimaan  = $_POST['id_penerimaan'];
+    $hna            = $_POST['hna'];
     
     if ($id_penerimaan === '') {
         $sql = "insert into penerimaan set
@@ -87,10 +88,8 @@ if ($method === 'save_penerimaan') {
             $rows   = mysql_fetch_object($query);
             
             $harga_a= currencyToNumber($harga[$key]);
-            $hna_ttl= $harga_a+($harga_a*($ppn/100));
-            $hna    = $hna_ttl/($rows->isi*$rows->isi_satuan);
-            
-            mysql_query("update barang set hna = '$hna' where id = '$data'"); // update HNA baru
+            //$hna_ttl= $harga_a+($harga_a*($ppn/100));
+            //$hna    = $hna_ttl/($rows->isi*$rows->isi_satuan);
             
             $sql = "insert into detail_penerimaan set
                 id_penerimaan = '$id',
@@ -103,6 +102,9 @@ if ($method === 'save_penerimaan') {
                 disc_rp = '".currencyToNumber($diskon_rp[$key])."'
                 ";
             mysql_query($sql);
+            
+            mysql_query("update barang set hna = '".$hna[$key]."' where id = '$data'");
+            //echo "update barang set hna = '".$hna[$key]."' where id = '$data'<br/>";
             
             $stok= "insert into stok set
                 waktu = '$tanggal ".date("H:i:s")."',

@@ -188,7 +188,8 @@ if ($method === 'get_attr_penerimaan') {
 
 if ($method === 'get_data_pemesanan_penerimaan') {
     $id = $_GET['id'];
-    $sql = "select b.id as id_barang, b.nama, b.kekuatan, st.nama as satuan_kekuatan, s.id as id_kemasan, s.nama as kemasan, k.id, dp.jumlah 
+    $sql = "select b.id as id_barang, b.nama, b.hna, b.kekuatan, st.nama as satuan_kekuatan, 
+        s.id as id_kemasan, s.nama as kemasan, k.id, dp.jumlah, k.isi, k.isi_satuan 
         from detail_pemesanan dp
         join kemasan k on (k.id = dp.id_kemasan)
         join barang b on (b.id = k.id_barang)
@@ -243,6 +244,30 @@ if ($method === 'get_detail_harga_barang_resep') { // ambil data barang resep
     die(json_encode($rows));
 }
 
+if ($method === 'get_detail_harga_barang_penerimaan') { // ambil data barang
+    $id_kemasan = $_GET['id_kemasan']; // id barang
+    $id_barang  = $_GET['id_barang'];
+    $jml= $_GET['jumlah'];
+    $query = mysql_query("select b.*, k.id as id_packing from barang b
+        join kemasan k on (b.id = k.id_barang)
+        where b.id = '$id_barang' and k.id_kemasan = '$id_kemasan'");
+    $get = mysql_fetch_object($query);
+    
+    $qry= mysql_query("select is_harga_bertingkat from kemasan where id = '".$get->id_packing."'");
+    $cek= mysql_fetch_object($qry);
+    if ($cek->is_harga_bertingkat === '0') {
+        $sql = mysql_query("select b.*, k.id as id_packing, k.isi, k.isi_satuan, k.isi_satuan as isi_sat, (b.hna+(b.hna*(b.margin_resep/100))) as harga_jual, (b.hna+(b.hna*(b.margin_non_resep/100))) as harga_jual_nr from kemasan k join barang b on (k.id_barang = b.id) where k.id = '".$get->id_packing."'");
+        $rows= mysql_fetch_object($sql);
+    } else {
+        $sql= mysql_query("select d.*, d.hj_resep as harga_jual, k.isi, k.isi_satuan, k.isi_satuan as isi_sat, d.hj_non_resep as harga_jual_nr, k.id as id_packing, d.hj_resep as harga_jual_resep, (k.isi*k.isi_satuan) as isi_satuan
+            from dinamic_harga_jual d
+            join kemasan k on (d.id_kemasan = k.id)
+            where d.id_kemasan = '".$get->id_packing."' and $jml between d.jual_min and d.jual_max");
+        $rows= mysql_fetch_object($sql);
+    }
+    die(json_encode($rows));
+}
+
 if ($method === 'get_detail_harga_barang') {
     $id = $_GET['id']; // id packing
     $jml= $_GET['jumlah'];
@@ -250,13 +275,13 @@ if ($method === 'get_detail_harga_barang') {
     $cek= mysql_fetch_object($qry);
     if ($cek->is_harga_bertingkat === '0') {
         $sql = mysql_query("select b.*, (b.hna+(b.hna*(b.margin_non_resep/100))) as harga_jual, 
-            (b.hna+(b.hna*(b.margin_resep/100))) as harga_jual_resep, (k.isi*k.isi_satuan) as isi_satuan
+            (b.hna+(b.hna*(b.margin_resep/100))) as harga_jual_resep, k.isi, k.isi_satuan as isi_sat, (k.isi*k.isi_satuan) as isi_satuan
             from kemasan k 
             join barang b on (k.id_barang = b.id) 
             where k.id = '$id'");
         $rows= mysql_fetch_object($sql);
     } else {
-        $sql= mysql_query("select d.*, d.hj_non_resep as harga_jual, d.hj_resep as harga_jual_resep, (k.isi*k.isi_satuan) as isi_satuan
+        $sql= mysql_query("select d.*, d.hj_non_resep as harga_jual, d.hj_resep as harga_jual_resep, k.isi, k.isi_satuan as isi_sat, (k.isi*k.isi_satuan) as isi_satuan
             from dinamic_harga_jual d
             join kemasan k on (d.id_kemasan = k.id)
             where d.id_kemasan = '$id' and $jml between d.jual_min and d.jual_max");
@@ -425,7 +450,7 @@ if ($method === 'get_data_penjualan') {
 }
 
 if ($method === 'get_nofaktur') {
-    $sql = mysql_query("select p.*, s.nama as supplier, sum(i.nominal) as terbayar from penerimaan p
+    $sql = mysql_query("select p.*, s.nama as supplier, IFNULL(sum(i.nominal),'0') as terbayar from penerimaan p
         join supplier s on (p.id_supplier = s.id) 
         left join inkaso i on (i.id_penerimaan = p.id)
         where p.faktur like ('%$q%') group by p.id having p.total > terbayar ");

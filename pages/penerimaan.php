@@ -21,7 +21,39 @@ function removeMe(el) {
     var parent = el.parentNode.parentNode;
     parent.parentNode.removeChild(parent);
 }
-function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah) {
+
+function check_perubahan_hna(i) {
+    var barang      = $('#barang'+i).val();
+    var ppn         = $('#ppn').val()/100;
+    var isi         = $('#isi'+i).val();
+    var isi_satuan  = $('#isi_satuan'+i).val();
+    var hna         = $('#existing_hna'+i).val(); // existing HNA
+    var hrg_beli    = parseInt(currencyToNumber($('#harga'+i).val()));
+    var new_var     = hrg_beli/(isi*isi_satuan); // pengali
+    var new_hna     = (ppn*new_var)+new_var;
+    if (hna > new_hna) {
+        $('<div>HNA untuk barang '+barang+' mengalami perubahan dari Rp. '+numberToCurrency(hna)+' menjadi Rp. '+numberToCurrency(new_hna)+'</br> Apakah anda akan melakukan perubahan?</div>').dialog({
+            title: 'Konfirmasi Perubahan HNA',
+            autoOpen: true,
+            modal: true,
+            width: 400,
+            buttons: {
+                "Ya": function() {
+                    $('#hna'+i).val(new_hna);
+                    $(this).dialog().remove();
+                },
+                "Tidak": function() {
+                    $('#hna'+i).val(hna);
+                    $(this).dialog().remove();
+                }
+            }, close: function() {
+                $('#hna'+i).val(hna);
+                $(this).dialog().remove();
+            }
+        });
+    }
+}
+function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi, isi_satuan) {
     var no   = $('.tr_rows').length+1;
     var list = '<tr class=tr_rows>'+
                     '<td align=center>'+no+'</td>'+
@@ -30,13 +62,21 @@ function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah) {
                     '<td><input type=text name=jumlah[] id=jumlah'+no+' value="'+jumlah+'" size=10 /></td>'+
                     '<td><input type=text name=nobatch[] id=nobatch'+no+' size=10 /></td>'+
                     '<td><input type=text name=ed[] id=ed'+no+' size=10 /></td>'+
-                    '<td><input type=text name=harga[] id=harga'+no+' onblur=FormNum(this); onfocus=javascript:this.value=currencyToNumber(this.value); size=10 /></td>'+
+                    '<td><input type=text name=harga[] id=harga'+no+' onfocus=javascript:this.value=currencyToNumber(this.value); size=10 /></td>'+
                     '<td><input type=text name=diskon_pr[] id=diskon_pr'+no+' value="0" onblur="hitung_sub_total('+no+');" size=10 maxlength=5 /></td>'+
                     '<td><input type=text name=diskon_rp[] id=diskon_rp'+no+' value="0" onblur=FormNum(this); size=10 onfocus=javascript:this.value=currencyToNumber(this.value); /></td>'+
-                    '<td><input type=text name=subtotal[] id=subtotal'+no+' size=10 /></td>'+
+                    '<td><input type=text name=subtotal[] id=subtotal'+no+' size=10 />'+
+                    '<input type=hidden name=existing_hna[] id=existing_hna'+no+' value="'+hna+'" />'+
+                    '<input type=hidden name=hna[] id=hna'+no+' value="'+hna+'" />'+
+                    '<input type=hidden name=isi[] id=isi'+no+' value="'+isi+'" />'+
+                    '<input type=hidden name=isi_satuan[] id=isi_satuan'+no+' value="'+isi_satuan+'" /></td>'+
                     '<td align=center class=aksi><img src="img/icons/delete.png" align=left title="Klik untuk hapus" onclick="removeMe(this);" /></td>'+
                '</tr>';
     $('#penerimaan-list tbody').append(list);
+    $('#harga'+no).blur(function() {
+        FormNum(this);
+        check_perubahan_hna(no);
+    });
     $('#ed'+no).datepicker({
         changeMonth: true,
         changeYear: true,
@@ -44,6 +84,20 @@ function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah) {
     });
     $('#harga'+no+', #diskon_rp'+no+', #subtotal'+no+', #diskon_pr'+no+', #jumlah'+no+', #disc_pr, #disc_rp, #materai').keyup(function() {
         hitung_sub_total(no);
+    });
+    $('#satuan'+no).change(function() {
+        var id        = $(this).val(); // id_satuan
+        var id_barang = $('#id_barang'+no).val();
+        var jum       = $('#jumlah'+no).val();
+        $.ajax({
+            url: 'models/autocomplete.php?method=get_detail_harga_barang_penerimaan&id_kemasan='+id+'&id_barang='+id_barang+'&jumlah='+jum,
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+                $('#isi'+no).val(data.isi);
+                $('#isi_satuan'+no).val(data.isi_sat);
+            }
+        });
     });
     $('#harga'+no+', #diskon_rp'+no+', #subtotal'+no).css('text-align','right');
     $('#diskon_pr'+no+', #jumlah'+no).css('text-align','center');
@@ -210,7 +264,7 @@ function form_add() {
         $.getJSON('models/autocomplete.php?method=get_data_pemesanan_penerimaan&id='+data.id, function(data){
             $.each(data, function (index, value) {
                 // function here
-                load_list_data(value.id_barang, value.nama+' '+value.kekuatan+' '+value.satuan_kekuatan, value.id_kemasan, value.jumlah);
+                load_list_data(value.id_barang, value.nama+' '+value.kekuatan+' '+value.satuan_kekuatan, value.id_kemasan, value.jumlah, value.hna, value.isi, value.isi_satuan);
             });
         });
     });
@@ -267,7 +321,7 @@ function form_add() {
             success: function(data) {
                 if (data.status === true) {
                     if (data.action === 'add') {
-                        alert_tambah();
+                        alert_refresh('Data berhasil disimpan');
                         $('#penerimaan').dialog().remove();
                         load_data_penerimaan();
                     } else {
