@@ -168,13 +168,16 @@ function form_add() {
                         '<tr><td>Tanggal:</td><td><input type=text value="<?= date("d/m/Y") ?>" name=tanggal id=tanggal size=10 /></td></tr>'+
                         '<tr><td>Supplier:</td><td><input type=text name=supplier id=supplier size=40 /><input type=hidden name=id_supplier id=id_supplier /></td></tr>'+
                         '<tr><td>Jatuh Tempo:</td><td><input type=text name=tempo id=tempo size=10 /></td></tr>'+
+                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn size=10 value="0" /> %</td></tr>'+
                     '</table>'+
                     '</td><td width=50%>'+
                     '<table width=100%>'+
-                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn size=10 value="0" /> %</td></tr>'+
                         '<tr><td>Diskon:</td><td><input type=text name=disc_pr id=disc_pr value="0" size=10 /> %, Rp. <input type=text name=disc_rp id=disc_rp onblur=FormNum(this); onfocus=javascript:this.value=currencyToNumber(this.value); size=10 value="0" /></td></tr>'+
                         '<tr><td>Materai (Rp.):</td><td><input type=text name=materai onblur=FormNum(this); id=materai size=10 value="0" /></td></tr>'+
                         '<tr><td>Total (Rp.):</td><td><input type=text name=total id=total size=10 /></td></tr>'+
+                        '<tr><td width=20%>Nama Barang:</td><td width=50%><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?></td></tr>'+
+                        '<tr><td>Kemasan:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select></td></tr>'+
+                        '<tr><td>Jumlah:</td><td><?= form_input('jumlah', NULL, 'id=jumlah size=10') ?></td></tr>'+
                     '</table>'+
                 '</td></tr></table>'+
                 '<table width=100% cellspacing="0" class="list-data-input" id="penerimaan-list"><thead>'+
@@ -198,6 +201,45 @@ function form_add() {
     $('#tempo,#tanggal').datepicker({
         changeYear: true,
         changeMonth: true
+    });
+    $('#jumlah').keydown(function(e) {
+        if (e.keyCode === 13) {
+            
+        }
+    });
+    $('#barang').autocomplete("models/autocomplete.php?method=barang",
+    {
+        parse: function(data){
+            var parsed = [];
+            for (var i=0; i < data.length; i++) {
+                parsed[i] = {
+                    data: data[i],
+                    value: data[i].nama // nama field yang dicari
+                };
+            }
+            return parsed;
+        },
+        formatItem: function(data,i,max){
+            var str = '<div class=result>'+data.nama_barang+'</div>';
+            return str;
+        },
+        width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
+        dataType: 'json', // tipe data yang diterima oleh library ini disetup sebagai JSON
+        cacheLength: 0
+    }).result(
+    function(event,data,formated){
+        $(this).val(data.nama_barang);
+        $('#id_barang').val(data.id);
+        $('#kemasan').html('');
+        $.getJSON('models/autocomplete.php?method=get_kemasan_barang&id='+data.id, function(data){
+            if (data === null) {
+                alert('Kemasan tidak barang tidak tersedia !');
+            } else {
+                $.each(data, function (index, value) {
+                    $('#kemasan').append("<option value='"+value.id_kemasan+"'>"+value.nama+"</option>");
+                });
+            }
+        });
     });
     var wWidth = $(window).width();
     var dWidth = wWidth * 1;
