@@ -693,4 +693,38 @@ if ($method === 'save_pendaftaran') {
     $result['status'] = TRUE;
     die(json_encode($result));
 }
+
+if ($method === 'save_in_out_uang') {
+    session_start();
+    $tanggal = date2mysql($_POST['waktu']).' '.date("H:i:s");
+    $jenis   = $_POST['jenis'];
+    $nominal = currencyToNumber($_POST['nominal']);
+    $keterangan = $_POST['keterangan'];
+    
+    if ($jenis === 'masuk') {
+        $sql = "insert into arus_kas set
+        transaksi = 'Lain-lain',
+        id_users = '$_SESSION[id_user]',
+        waktu = '$tanggal',
+        masuk = '$nominal',
+        keterangan = '$keterangan'
+        ";
+    } else {
+        $sql = "insert into arus_kas set
+        transaksi = 'Lain-lain',
+        id_users = '$_SESSION[id_user]',
+        waktu = '$tanggal',
+        keluar = '$nominal',
+        keterangan = '$keterangan'
+        ";
+    }
+    mysql_query($sql);
+    $result['status'] = TRUE;
+    die(json_encode($result));
+}
+
+if ($method === 'delete_in_out_uang') {
+    $id = $_GET['id'];
+    mysql_query("delete from arus_kas where id = '$id'");
+}
 ?>

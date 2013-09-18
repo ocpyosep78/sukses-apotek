@@ -5,7 +5,7 @@
     Description:
         Purpose of the stylesheet follows.
 */
-html{
+html, table{
 	font-family: Arial; font-size: 10px;
 }
 @page 

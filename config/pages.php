@@ -49,6 +49,7 @@ $pageTitles['inkaso.php'] = "Inkaso";
 $pageTitles['defecta.php'] = "Defecta";
 $pageTitles['rencana-pemesanan.php'] = "Rencana Order";
 $pageTitles['pendaftaran.php'] = "Pendaftaran";
+$pageTitles['uang-in-out.php'] = "Pemasukkan Pengeluaran Uang";
 
 /*Laporan*/
 $pageTitles['arus-stok.php'] = "Arus Stok";
@@ -59,5 +60,8 @@ $pageTitles['lap-penjualan-nr.php'] = "Laporan Penjualan Non Resep";
 $pageTitles['lap-penerimaan.php'] = "Laporan Penerimaan";
 $pageTitles['lap-hutang.php'] = "Laporan Hutang";
 $pageTitles['lap-arus-kas.php'] = "Laporan Arus Kas";
+$pageTitles['lap-statistik-obat.php'] = "Laporan Statistik Pemakaian Obat";
+$pageTitles['lap-analisis-abc.php'] = "Laporan Analisa ABC";
+
 
 ?>

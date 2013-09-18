@@ -5,15 +5,11 @@ include_once '../inc/functions.php';
 <link rel="stylesheet" href="../themes/theme_default/theme-print.css" />
 <script type="text/javascript">
 function cetak() {  		
-    SCETAK.innerHTML = '';
     window.print();
-    if (confirm('Apakah menu print ini akan ditutup?')) {
-        window.close();
-    }
-    SCETAK.innerHTML = '<br /><input onClick=\'cetak()\' type=\'submit\' name=\'Submit\' value=\'Cetak\' class=\'tombol\'>';
+    setTimeout(function(){ window.close();},300);
 }
 </script>
-<body>
+<body onload="cetak();">
 <h1>
     LAPORAN ARUS STOK <br /> TANGGAL <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?>
 </h1>
@@ -43,7 +39,8 @@ function cetak() {
         'limit' => $limit,
         'start' => $offset,
         'awal' => date2mysql($_GET['awal']),
-        'akhir' => date2mysql($_GET['akhir'])
+        'akhir' => date2mysql($_GET['akhir']),
+        'perundangan' => $_GET['perundangan']
     );
     $list_data = load_data_arus_stok($param);
     $master_arus_stok = $list_data['data'];
@@ -71,5 +68,4 @@ function cetak() {
     <?php } ?>
 </tbody>
 </table>
-<center><span id="SCETAK"><input type="button" value="Cetak" onclick="cetak()" /></span></center>
 </body>

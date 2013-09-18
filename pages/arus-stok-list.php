@@ -34,7 +34,8 @@ include_once '../inc/functions.php';
         'limit' => $limit,
         'start' => $offset,
         'awal' => date2mysql($_GET['awal']),
-        'akhir' => date2mysql($_GET['akhir'])
+        'akhir' => date2mysql($_GET['akhir']),
+        'perundangan' => $_GET['perundangan']
     );
     $list_data = load_data_arus_stok($param);
     $master_arus_stok = $list_data['data'];

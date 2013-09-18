@@ -261,7 +261,10 @@ function hitungUmur($tgl) {
         $bulan+=12;
         $tahun--;
     }
-
-    return $tahun . " Tahun " . $bulan . " Bulan " . $hari . " Hari";
+    if ($tgl !== '0000-00-00') {
+        return $tahun . " Tahun " . $bulan . " Bulan " . $hari . " Hari";
+    } else {
+        return '-';
+    }
 }
 ?>

@@ -2,6 +2,10 @@
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
 ?>
+<script>
+$(document).tooltip();
+
+</script>
 <table cellspacing="0" width="100%" class="list-data">
 <thead>
 <tr class="italic">
@@ -54,7 +58,7 @@ include_once '../inc/functions.php';
         <td align="center"><?= ($data->id_resep !== $id_resep)?$data->id_pasien:NULL ?></td>
         <td><?= ($data->id_resep !== $id_resep)?$data->pasien:NULL ?></td>
         <td><?= ($data->id_resep !== $id_resep)?$data->dokter:NULL ?></td>
-        <td align="center"><?= (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa))?$data->r_no:NULL ?></td>
+        <td align="center"><?= (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa))?'<div title="Cetak Etiket" class="etiket" onclick=print_etiket("'.$data->id_resep.'","'.$data->r_no.'");>'.$data->r_no.'</div>':NULL ?></td>
         <td><?= (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa))?$data->apoteker:NULL ?></td>
         <td align="right"><?= (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa))?rupiah($data->nominal):NULL ?></td>
         <td><?= $data->nama_barang ?></td>

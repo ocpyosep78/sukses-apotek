@@ -209,6 +209,16 @@ function cetak_copy_resep(id_resep) {
     window.open('pages/copy-resep.php?id='+id_resep,'Resep Cetak','width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
 }
 
+function print_etiket(id_resep, no_r) {
+    var wWidth = $(window).width();
+    var dWidth = wWidth * 0.3;
+    var wHeight= $(window).height();
+    var dHeight= wHeight * 1;
+    var x = screen.width/2 - dWidth/2;
+    var y = screen.height/2 - dHeight/2;
+    window.open('pages/etiket.php?id_resep='+id_resep+'&no_r='+no_r,'Etiket','width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
+}
+
 function form_receipt() {
     var str = '<div id=form_resep>'+
                 '<form id=resep_save>'+
@@ -379,14 +389,15 @@ function form_receipt() {
             return parsed;
         },
         formatItem: function(data,i,max){
-            var str = '<div class=result>'+data.nama+'<br/> '+data.alamat+'</div>';
+            var str = '<div class=result>'+data.id+' '+data.nama+'<br/> '+data.alamat+'</div>';
             return str;
         },
         width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
-        dataType: 'json' // tipe data yang diterima oleh library ini disetup sebagai JSON
+        dataType: 'json', // tipe data yang diterima oleh library ini disetup sebagai JSON
+        cacheLength: 0
     }).result(
     function(event,data,formated){
-        $(this).val(data.nama);
+        $(this).val(data.id+' '+data.nama);
         $('#id_pasien').val(data.id);
         $('#keterangan').focus().select();
     });

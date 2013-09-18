@@ -41,18 +41,7 @@ foreach ($attr_array['data'] as $rows);
     
     $no = 1;
     foreach ($attr_array['data'] as $key => $data) {
-        if (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa)) { ?>
-        <tr>
-            <td>ITER: <?= ($data->r_no !== $jasa)?$data->iter:NULL ?></td>
-        </tr>
-        <?php } ?>
-        <tr class="<?= ($data->id_resep !== $id_resep)?'odd':'even' ?>">
-            <td style="padding-left: 20px"><?= $data->nama_barang ?></td>
-        </tr>
-        <tr>
-            <td style="padding-left: 20px"><?= $data->aturan ?> x <?= $data->pakai ?></td>
-        </tr>
-        <?php if ($jasa !== $data->r_no) { 
+        if ($jasa !== $data->r_no) { 
             $then = NULL;
             if (($data->resep_r_jumlah - $data->tebus_r_jumlah) === 0) {
                 $then = "Detur Originale";
@@ -64,10 +53,25 @@ foreach ($attr_array['data'] as $rows);
                 $then = "Det ".$data->tebus_r_jumlah;
             }
             ?>
+        <?php }
+        if (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa)) { ?>
         <tr>
-            <td style="padding-left: 20px"><?= $then ?><br/></td>
+            <td>ITER: <?= ($data->r_no !== $jasa)?$data->iter:NULL ?></td>
+        </tr>
+        <?php }
+        if (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa)) { ?>
+        <tr>
+            <td style="padding-left: 20px">No. <?= $data->resep_r_jumlah ?> <?= $then ?><br/></td>
         </tr>
         <?php } ?>
+        <tr class="<?= ($data->id_resep !== $id_resep)?'odd':'even' ?>">
+            <td style="padding-left: 20px"><?= $data->nama_barang ?></td>
+        </tr>
+        <tr>
+            <td style="padding-left: 20px"><?= $data->aturan ?> x <?= $data->pakai ?></td>
+        </tr>
+        
+        
     <?php 
     $jasa = $data->r_no;
     if ($data->id_resep !== $id_resep) {

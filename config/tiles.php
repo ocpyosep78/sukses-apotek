@@ -47,6 +47,10 @@ $tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/pemusnahan.png","desc"=>"Pemusnahan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
+$tile[] = array("type"=>"img","group"=>0,"x"=>3,"y"=>0,'width'=>1,'height'=>1,"background"=>"#b44528","url"=>"uang-in-out.php",
+	"img"=>"img/icons/trans.png","desc"=>"Pemasukan / Pengeluaran Uang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
 
 /* GROUP 2*/
 /*<br />
@@ -155,6 +159,14 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"b
 
 $tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-arus-kas.php",
 	"img"=>"img/icons/lap-resep.png","desc"=>"Arus Kas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
+$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-statistik-obat.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa Probabilitas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
+$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-analisis-abc.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa ABC","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 

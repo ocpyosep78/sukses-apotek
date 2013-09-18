@@ -165,14 +165,16 @@ function load_data_bank($param = null) {
 }
 
 function load_data_customer($param) {
-    $q = null;
-    if ($param['id'] !== '') {
+    $q = null; $limit = NULL;
+    if (isset($param['id']) and $param['id'] !== '') {
         $q = "and p.id = '".$param['id']."'";
     }
-    if ($param['search'] !== '') {
+    if (isset($param['search']) and $param['search'] !== '') {
         $q = "and p.nama like '%".$param['search']."%'";
     }
-    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    if (!isset($param['print'])) {
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
     $sql = "select p.*, a.nama as asuransi from pelanggan p
         left join asuransi a on (p.id_asuransi = a.id) where p.id is not NULL $q 
         order by p.nama";

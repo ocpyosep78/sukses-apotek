@@ -1,6 +1,7 @@
 <?php
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
+include_once '../pages/message.php';
 ?>
 <script type="text/javascript">
 function paging(page, tab, search) {
@@ -25,9 +26,23 @@ function load_data_resep(page, search, id) {
     });
 }
 $(function() {
+    //$('#pmr').hide();
     $('#awal,#akhir').datepicker({
         changeYear: true,
         changeMonth: true
+    });
+    $('#pmr').button().click(function() {
+        var id_pasien = $('#id_pasien').val();
+        if (id_pasien === '') {
+            alert_dinamic('Nama pasien harus dipilih !','#pasien'); return false;
+        }
+        var wWidth = $(window).width();
+        var dWidth = wWidth * 0.8;
+        var wHeight= $(window).height();
+        var dHeight= wHeight * 1;
+        var x = screen.width/2 - dWidth/2;
+        var y = screen.height/2 - dHeight/2;
+        window.open('pages/pmr-print.php?id_pasien='+id_pasien, 'Stok', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
     });
     $('#search').button().click(function() {
         load_data_resep();
@@ -82,7 +97,7 @@ $(function() {
             return parsed;
         },
         formatItem: function(data,i,max){
-            var str = '<div class=result>'+data.nama+'<br/> '+data.alamat+'</div>';
+            var str = '<div class=result>'+data.id+' '+data.nama+'<br/> '+data.alamat+'</div>';
             return str;
         },
         width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
@@ -90,7 +105,7 @@ $(function() {
         cacheLength: 0
     }).result(
     function(event,data,formated){
-        $(this).val(data.nama);
+        $(this).val(data.id+' '+data.nama);
         $('#id_pasien').val(data.id);
         $('#keterangan').focus().select();
     });
@@ -102,7 +117,12 @@ $(function() {
     <tr><td width="10%">Range Tanggal:</td><td><?= form_input('awal', date("d/m/Y"), 'id=awal size=10') ?> s . d <?= form_input('akhir', date("d/m/Y"), 'id=akhir size=10') ?></td></tr>
     <tr><td>Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>
     <tr><td>Nama Dokter:</td><td><?= form_input('dokter', NULL, 'id=dokter size=40') ?><?= form_hidden('id_dokter', NULL, 'id=id_dokter') ?></td></tr>
-    <tr><td></td><td><?= form_button('Tampilkan', 'id=search') ?> <?= form_button('Reset', 'id=reset') ?> <?= form_button('Cetak', 'id=cetak') ?></td></tr>
+    <tr><td></td><td>
+        <?= form_button('Tampilkan', 'id=search') ?> 
+        <?= form_button('Reset', 'id=reset') ?> 
+        <?= form_button('Cetak Laporan', 'id=cetak') ?>
+        <?= form_button('Cetak PMR', 'id=pmr') ?>
+    </td></tr>
 </table>
 </div>
 <div id="result-info">
