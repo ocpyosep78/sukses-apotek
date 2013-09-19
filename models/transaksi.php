@@ -614,6 +614,7 @@ function load_data_pendaftaran($param) {
         left join dokter d on (p.id_dokter = d.id)
         left join pemeriksaan pm on (p.id = pm.id_pendaftaran)
         where date(p.waktu) = '".date("Y-m-d")."' order by s.id, p.no_antri";
+    //echo $sql;
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
