@@ -71,7 +71,7 @@ function cetak() {
         ?>
         <tr><td>Biaya Apoteker:</td><td align="right"><?= rupiah($biaya_apt->total) ?></td></tr>
         <?php } ?>
-        <tr><td>Total:</td><td align="right"><?= rupiah($total+$biaya_apoteker) ?></td></tr>
+        <tr><td>Total:</td><td align="right"><?= rupiah(($total+$biaya_apoteker)-$rows->diskon_rupiah) ?></td></tr>
     </table>
     <br/>
     <center style="border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;">

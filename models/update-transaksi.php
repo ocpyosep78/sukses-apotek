@@ -428,7 +428,7 @@ if ($method === 'save_penjualan') {
     $tanggal    = date2mysql($_POST['tanggal']).' '.date("H:i:s");
     $customer   = ($_POST['id_customer'] !== '')?$_POST['id_customer']:"NULL";
     $diskon_pr  = $_POST['diskon_pr'];
-    $diskon_rp  = currencyToNumber($_POST['diskon_pr']);
+    $diskon_rp  = currencyToNumber($_POST['diskon_rp']);
     $ppn        = $_POST['ppn'];
     $total      = $_POST['total_penjualan'];
     $tuslah     = currencyToNumber($_POST['tuslah']);
@@ -453,7 +453,6 @@ if ($method === 'save_penjualan') {
             embalage = '$embalage',
             id_asuransi = $asuransi,
             reimburse = '$reimburse'";
-
         mysql_query($sql);
         $id_penjualan = mysql_insert_id();
     

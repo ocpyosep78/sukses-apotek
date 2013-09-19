@@ -62,7 +62,7 @@ function hitung_total_penjualan() {
     }
     var totallica = total + jasa_apt;
     var diskon_pr = ($('#diskon_pr').val()/100); // diskon penjualan %
-    var diskon_rp = $('#diskon_rp').val(); // diskon penjualan Rp.
+    var diskon_rp = parseInt(currencyToNumber($('#diskon_rp').val())); // diskon penjualan Rp.
     var ppn_jual  = ($('#ppn').val()/100);
     var tuslah    = parseInt(currencyToNumber($('#tuslah').val()));
     var embalage  = parseInt(currencyToNumber($('#embalage').val()));
@@ -323,7 +323,7 @@ function form_add() {
                 '<tr><td width=20%>Tanggal:</td><td><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
                 '<tr><td width=20%>No. Resep:</td><td><?= form_input('noresep', NULL, 'id=noresep size=40') ?> <?= form_hidden('id_resep', NULL, 'id=id_resep') ?></td></tr>'+
                 '<tr><td>Pasien:</td><td><?= form_input('customer', NULL, 'id=customer size=40') ?> <?= form_hidden('id_customer', NULL, 'id=id_customer') ?> <?= form_hidden('asuransi', NULL, 'id=asuransi') ?></td></tr>'+
-                '<tr><td>Diskon:</td><td><?= form_input('diskon_pr', '0', 'id=diskon_pr maxlength=3 onblur="hitung_total_penjualan();" size=10') ?> %, Rp. <?= form_input('diskon_rp', '0', 'id=diskon_rp onblur="hitung_total_penjualan();" size=10') ?></td></tr>'+
+                '<tr><td>Diskon:</td><td><?= form_input('diskon_pr', '0', 'id=diskon_pr maxlength=3 onblur="hitung_total_penjualan();" size=10') ?> %, Rp. <?= form_input('diskon_rp', '0', 'id=diskon_rp onblur="hitung_total_penjualan();" onkeyup="FormNum(this)" size=10') ?></td></tr>'+
                 '<tr><td>PPN:</td><td><?= form_input('ppn', '0', 'id=ppn size=10 maxlength=5 onblur="hitung_total_penjualan();"') ?> %</td></tr>'+
                 '<tr><td>Tuslah Rp.:</td><td><?= form_input('tuslah', '0', 'id=tuslah onblur=FormNum(this) onkeyup="hitung_total_penjualan();" size=10') ?></td></tr>'+
                 '<tr><td>Embalage Rp.:</td><td><?= form_input('embalage', '0', 'id=embalage size=10 onblur=FormNum(this) onkeyup="hitung_total_penjualan();"') ?></td></tr>'+
