@@ -62,6 +62,7 @@ $pageTitles['lap-hutang.php'] = "Laporan Hutang";
 $pageTitles['lap-arus-kas.php'] = "Laporan Arus Kas";
 $pageTitles['lap-statistik-obat.php'] = "Laporan Statistik Pemakaian Obat";
 $pageTitles['lap-analisis-abc.php'] = "Laporan Analisa ABC";
+$pageTitles['expired-date.php'] = "Laporan Expired Date";
 
 
 ?>

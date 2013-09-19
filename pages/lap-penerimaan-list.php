@@ -10,16 +10,21 @@ $(function() {
 <table cellspacing="0" width="100%" class="list-data">
 <thead>
     <tr class="italic">
-        <th width="5%">No.</th>
-        <th width="10%">Tanggal</th>
-        <th width="10%">No. Faktur</th>
-        <th width="20%">Nama Supplier</th>
-        <th width="5%">PPN</th>
+        <th width="3%">No.</th>
+        <th width="5%">Tanggal</th>
+        <th width="5%">No. Faktur</th>
+        <th width="15%">Nama Supplier</th>
+        <th width="3%">PPN</th>
         <th width="5%">Materai</th>
         <th width="5%">Tempo</th>
-        <th width="5%">Diskon (%)</th>
-        <th width="5%">Diskon Rp.</th>
-        <th width="10%">Total RP.</th>
+        <th width="3%">Diskon<br/> (%)</th>
+        <th width="5%">Diskon<br/> Rp.</th>
+        <th width="5%">Total RP.</th>
+        <th width="15%">Nama Barang</th>
+        <th width="5%">Jumlah</th>
+        <th width="5%">ED</th>
+        <th width="5%">No. Batch</th>
+        <th width="5%">Harga RP.</th>
     </tr>
 </thead>
 <tbody>
@@ -42,21 +47,32 @@ $(function() {
     $penerimaan = penerimaan_load_data($param);
     $list_data = $penerimaan['data'];
     //$total_data= $penerimaan['total'];
+    $id = "";
+    $no = 1;
     foreach ($list_data as $key => $data) { ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
-            <td align="center"><?= (++$key+$offset) ?></td>
-            <td align="center"><?= datefmysql($data->tanggal) ?></td>
-            <td align="center"><?= $data->faktur ?></td>
-            <td><?= $data->supplier ?></td>
-            <td align="center"><?= $data->ppn ?></td>
-            <td align="center"><?= rupiah($data->materai) ?></td>
-            <td align="center"><?= datefmysql($data->jatuh_tempo) ?></td>
-            <td align="center"><?= $data->diskon_persen ?></td>
-            <td align="right"><?= rupiah($data->diskon_rupiah) ?></td>
-            <td align="right"><?= rupiah($data->total) ?></td>
-            
+            <td align="center"><?= ($id !== $data->id)?(++$key+$offset):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?datefmysql($data->tanggal):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?$data->faktur:NULL ?></td>
+            <td><?= ($id !== $data->id)?$data->supplier:NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?$data->ppn:NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?rupiah($data->materai):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?datefmysql($data->jatuh_tempo):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?$data->diskon_persen:NULL ?></td>
+            <td align="right"><?= ($id !== $data->id)?rupiah($data->diskon_rupiah):NULL ?></td>
+            <td align="right"><?= ($id !== $data->id)?rupiah($data->total):NULL ?></td>
+            <td><?= $data->nama_barang ?></td>
+            <td align="center"><?= $data->jumlah ?></td>
+            <td align="center"><?= datefmysql($data->expired) ?></td>
+            <td align="center"><?= $data->nobatch ?></td>
+            <td align="right"><?= rupiah($data->harga) ?></td>
         </tr>
-    <?php }
+    <?php 
+    if ($id !== $data->id) {
+        $no++;
+    }
+    $id = $data->id;
+    }
     ?>
 </tbody>
 </table>

@@ -75,8 +75,14 @@ function penerimaan_load_data($param) {
         $limit = " limit ".$param['start'].", ".$param['limit']."";
     }
     
-    $sql = "select p.*, k.nama as karyawan, s.nama as supplier from penerimaan p
+    $sql = "select p.*, k.nama as karyawan, s.nama as supplier, concat_ws(' ',b.nama, b.kekuatan, st.nama) as nama_barang, 
+        dp.jumlah, dp.expired, dp.nobatch, dp.harga, dp.disc_pr, dp.disc_rp
+        from penerimaan p
         left join pemesanan ps on (p.id_pemesanan = ps.id)
+        join detail_penerimaan dp on (dp.id_penerimaan = p.id)
+        join kemasan km on (dp.id_kemasan = km.id)
+        join barang b on (km.id_barang = b.id)
+        join satuan st on (b.satuan_kekuatan = st.id)
         join supplier s on (ps.id_supplier = s.id)
         left join users u on (p.id_users = u.id)
         left join karyawan k on (u.id_karyawan = k.id)
@@ -172,6 +178,32 @@ function load_data_stok_opname($param) {
         join barang b on (s.id_barang = b.id)
         left join satuan st on (b.satuan_kekuatan = st.id)
         where s.id is not NULL $q group by s.id_barang";
+    //echo $sql;
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function load_data_expired_date($param) {
+    $sekarang = date("Y-m-d");
+    $var1     = mktime(0, 0, 0, date("m")+3, date("d"), date("Y"));
+    $tiga_bln = date("Y-m-d", $var1);
+    $var2     = mktime(0, 0, 0, date("m")+6, date("d"), date("Y"));
+    $enam_bln = date("Y-m-d", $var2);
+    
+    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    $sql = "select s.*, b.kekuatan, b.nama, st.nama as satuan_kekuatan, sum(s.masuk) as masuk, sum(s.keluar) as keluar, 
+        (sum(s.masuk)-sum(s.keluar)) as sisa 
+        from stok s 
+        join barang b on (s.id_barang = b.id)
+        left join satuan st on (b.satuan_kekuatan = st.id)
+        where (s.ed between '$sekarang' and '$tiga_bln') or (s.ed between '$sekarang' and '$enam_bln') group by s.id_barang, s.ed order by b.nama";
     //echo $sql;
     $query = mysql_query($sql.$limit);
     $data = array();

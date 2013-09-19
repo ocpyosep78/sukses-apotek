@@ -245,8 +245,8 @@ if ($method === 'get_detail_harga_barang_resep') { // ambil data barang resep
 }
 
 if ($method === 'get_detail_harga_barang_penerimaan') { // ambil data barang
-    $id_kemasan = $_GET['id_kemasan']; // id barang
-    $id_barang  = $_GET['id_barang'];
+    $id_kemasan = $_GET['id_kemasan']; // kemasan
+    $id_barang  = $_GET['id_barang']; // id barang
     $jml= $_GET['jumlah'];
     $query = mysql_query("select b.*, k.id as id_packing from barang b
         join kemasan k on (b.id = k.id_barang)
@@ -466,6 +466,17 @@ if ($method === 'get_faktur') {
         join supplier s on (p.id_supplier = s.id) 
         left join inkaso i on (i.id_penerimaan = p.id)
         where p.faktur like ('%$q%') group by p.id");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'get_expiry_barang') {
+    $id_barang = $_GET['id'];
+    $sql = mysql_query("SELECT id_barang, ed, IFNULL((sum(masuk)-sum(keluar)),'0') as sisa 
+        FROM `stok` WHERE id_barang = '$id_barang' and ed > '".date("Y-m-d")."' group by ed having sisa > 0 order by ed");
     $rows = array();
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;

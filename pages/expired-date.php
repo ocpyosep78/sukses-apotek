@@ -8,7 +8,7 @@ include_once("pages/message.php");
 
 <script type="text/javascript">
 $(document).tooltip();
-load_data_stokopname();
+load_data_expired();
 function removeMe(el) {
     var parent = el.parentNode.parentNode;
     parent.parentNode.removeChild(parent);
@@ -49,8 +49,8 @@ function add_new_rows(id_brg, nama_brg, batch, ed, masuk, keluar) {
 }
 
 function form_add() {
-    var str = '<div id="form_stokopname">'+
-            '<form id="save_stokopname">'+
+    var str = '<div id="form_expired">'+
+            '<form id="save_expired">'+
             '<table width=100% class=data-input><tr valign=top><td width=50%><table width=100%>'+
                 '<tr><td>Tanggal:</td><td><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
                 '<tr><td>Alasan:</td><td><?= form_input('alasan', NULL, 'id=alasan size=40') ?></td></tr>'+
@@ -149,7 +149,7 @@ function form_add() {
     
     var wHeight= $(window).height();
     var dHeight= wHeight * 1;
-    $('#form_stokopname').dialog({
+    $('#form_expired').dialog({
         title: 'Stok Opname',
         autoOpen: true,
         modal: true,
@@ -159,7 +159,7 @@ function form_add() {
         show: 'blind',
         buttons: {
             "Simpan": function() {
-                $('#save_stokopname').submit();
+                $('#save_expired').submit();
             }, 
             "Cancel": function() {    
                 $(this).dialog().remove();
@@ -174,7 +174,7 @@ function form_add() {
         changeYear: true,
         changeMonth: true
     });
-    $('#save_stokopname').submit(function() {
+    $('#save_expired').submit(function() {
         var jumlah = $('.tr_rows').length;
         
         if (jumlah === 0) {
@@ -202,14 +202,14 @@ function form_add() {
             }
         }
         $.ajax({
-            url: 'models/update-transaksi.php?method=save_stokopname',
+            url: 'models/update-transaksi.php?method=save_expired',
             data: $(this).serialize(),
             dataType: 'json',
             type: 'POST',
             success: function(data) {
                 if (data.status === true) {
                     alert_tambah();
-                    load_data_stokopname();
+                    load_data_expired();
                     $('#pesanan-list tbody').html('');
                 }
             }
@@ -232,38 +232,38 @@ $('#reset').button({
         primary: 'ui-icon-refresh'
     }
 }).click(function() {
-    load_data_stokopname();
+    load_data_expired();
 });
 $.plugin($afterSubPageShow,{ // <-- event is here
     showAlert:function(){ // <-- random function name is here (choose whatever you want)
     /* The code that will be executed */
     }
 });
-function load_data_stokopname(page, search, id) {
+function load_data_expired(page, search, id) {
     pg = page; src = search; id_barg = id;
     if (page === undefined) { var pg = ''; }
     if (search === undefined) { var src = ''; }
     if (id === undefined) { var id_barg = ''; }
     $.ajax({
-        url: 'pages/stokopname-list.php',
+        url: 'pages/expired-list.php',
         cache: false,
-        data: 'page='+pg+'&search='+src+'&id_stokopname='+id_barg,
+        data: 'page='+pg+'&search='+src+'&id_expired='+id_barg,
         success: function(data) {
-            $('#result-stokopname').html(data);
+            $('#result-expired').html(data);
         }
     });
 }
 
 function paging(page, tab, search) {
-    load_data_stokopname(page, search);
+    load_data_expired(page, search);
 }
 
-function edit_stokopname(str) {
+function edit_expired(str) {
     
     var arr = str.split('#');
     form_add();
-    $('#form_add').dialog({ title: 'Edit stokopname' });
-    $('#id_stokopname').val(arr[0]);
+    $('#form_add').dialog({ title: 'Edit expired' });
+    $('#id_expired').val(arr[0]);
     $('#nama').val(arr[1]);
     if (arr[2] === 'P') { $('#prm').attr('checked','checked'); }
     if (arr[2] === 'L') { $('#l').attr('checked','checked'); }
@@ -276,7 +276,7 @@ function edit_stokopname(str) {
     
 }
 
-function delete_stokopname(id, page) {
+function delete_expired(id, page) {
     $('<div id=alert>Anda yakin akan menghapus data ini?</div>').dialog({
         title: 'Konfirmasi Penghapusan',
         autoOpen: true,
@@ -284,10 +284,10 @@ function delete_stokopname(id, page) {
         buttons: {
             "OK": function() {
                 $.ajax({
-                    url: 'models/update-transaksi.php?method=delete_stokopname&id='+id,
+                    url: 'models/update-transaksi.php?method=delete_expired&id='+id,
                     cache: false,
                     success: function() {
-                        load_data_stokopname(page);
+                        load_data_expired(page);
                         $('#alert').dialog().remove();
                     }
                 });
@@ -299,10 +299,9 @@ function delete_stokopname(id, page) {
     });
 }
 </script>
-<h1 class="margin-t-0">Stok Opname</h1>
+<h1 class="margin-t-0">Laporan Expiry Date Barang</h1>
 <hr>
-<button id="button">Tambah Data</button>
-<button id="reset">Reset</button>
-<div id="result-stokopname">
+
+<div id="result-expired">
     
 </div>

@@ -29,7 +29,7 @@ $(function() {
         get_result_penerimaan();
     });
     $('#reset').button().click(function() {
-        $('input[type=text]').val('');
+        $('input[type=text],input[type=hidden]').val('');
         $('#awal,#akhir').val('<?= date("d/m/Y") ?>');
         $('#result-info').html('');
     });

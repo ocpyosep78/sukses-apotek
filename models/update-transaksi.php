@@ -88,20 +88,21 @@ if ($method === 'save_penerimaan') {
             $rows   = mysql_fetch_object($query);
             
             $harga_a= currencyToNumber($harga[$key]);
-            //$hna_ttl= $harga_a+($harga_a*($ppn/100));
-            //$hna    = $hna_ttl/($rows->isi*$rows->isi_satuan);
             
-            //mysql_query("update barang set hna = '$hna' where id = '$data'"); // update HNA baru
+            $base_hpp 	= ((currencyToNumber($harga[$key])*$jumlah[$key]) - ((currencyToNumber($harga[$key])*$jumlah[$key]) * ($diskon_pr[$key]/100))) / ($jumlah[$key]);
+            $hpp_ppn	= ($ppn/100)*$base_hpp;
+            $hpp 	= $base_hpp+$hpp_ppn;
             
             $sql = "insert into detail_penerimaan set
                 id_penerimaan = '$id',
                 id_kemasan = '".$rows->id."',
                 nobatch = '$no_batch[$key]',
-                expired = '$ed[$key]',
+                expired = '".date2mysql($ed[$key])."',
                 harga = '$harga_a',
                 jumlah = '$jumlah[$key]',
                 disc_pr = '$diskon_pr[$key]',
-                disc_rp = '".currencyToNumber($diskon_rp[$key])."'
+                disc_rp = '".currencyToNumber($diskon_rp[$key])."',
+                hpp = '$hpp'
                 ";
             mysql_query($sql);
             
@@ -147,15 +148,21 @@ if ($method === 'save_penerimaan') {
         foreach ($id_barang as $key => $data) {
             $query = mysql_query("select * from kemasan where id_barang = '$data' and id_kemasan = '$id_kemasan[$key]'");
             $rows  = mysql_fetch_object($query);
+            
+            $base_hpp 	= ((currencyToNumber($harga[$key])*$jumlah[$key]) - ((currencyToNumber($harga[$key])*$jumlah[$key]) * ($diskon_pr[$key]/100))) / ($jumlah[$key]);
+            $hpp_ppn	= ($ppn/100)*$base_hpp;
+            $hpp 	= $base_hpp+$hpp_ppn;
+            
             $sql = "insert into detail_penerimaan set
                 id_penerimaan = '$id',
                 id_kemasan = '".$rows->id."',
                 nobatch = '$no_batch[$key]',
-                expired = '$ed[$key]',
+                expired = '".date2mysql($ed[$key])."',
                 harga = '$harga_a',
                 jumlah = '$jumlah[$key]',
                 disc_pr = '$diskon_pr[$key]',
-                disc_rp = '".currencyToNumber($diskon_rp[$key])."'
+                disc_rp = '".currencyToNumber($diskon_rp[$key])."',
+                hpp = '$hpp'
                 ";
             mysql_query($sql);
         }
@@ -247,10 +254,12 @@ if ($method === 'save_penjualannr') {
     $kemasan    = $_POST['kemasan'];
     $jumlah     = $_POST['jumlah'];
     $harga_jual = $_POST['harga_jual'];
+    $ed         = $_POST['ed'];
         foreach ($id_barang as $key => $data) {
             $query = mysql_query("select * from kemasan where id = '$kemasan[$key]'");
             $rows  = mysql_fetch_object($query);
             $isi   = $rows->isi*$rows->isi_satuan;
+            
             $sql = "insert into detail_penjualan set
                 id_penjualan = '$id_penjualan',
                 id_kemasan = '$kemasan[$key]',
@@ -261,14 +270,19 @@ if ($method === 'save_penjualannr') {
             
             $last = mysql_fetch_object(mysql_query("select * from stok where id_barang = '$data' order by id desc limit 1"));
             
-            $stok = "insert into stok set
-                waktu = '$tanggal',
-                id_transaksi = '$id_penjualan',
-                transaksi = 'Penjualan',
-                id_barang = '$data',
-                keluar = '".($jumlah[$key]*$isi)."'";
-            //echo $stok;
-            mysql_query($stok);
+            //$fefo  = mysql_query("SELECT id_barang, ed, (sum(masuk)-sum(keluar)) as sisa FROM `stok` WHERE id_barang = '$data' and ed > '".date("Y-m-d")."' group by ed order by ed");
+            //while ($val = mysql_fetch_object($fefo)) {
+                
+                $stok = "insert into stok set
+                    waktu = '$tanggal',
+                    id_transaksi = '$id_penjualan',
+                    transaksi = 'Penjualan',
+                    id_barang = '$data',
+                    ed = '$ed[$key]',
+                    keluar = '".($jumlah[$key]*$isi)."'";
+                //echo $stok;
+                mysql_query($stok);
+            //}
         }
     die(json_encode(array('status' => TRUE, 'id' => $id_penjualan)));
 }
@@ -475,11 +489,14 @@ if ($method === 'save_penjualan') {
             
             $last = mysql_fetch_object(mysql_query("select * from stok where id_barang = '$data' order by id desc limit 1"));
             
+            $fefo  = mysql_query("SELECT id_barang, ed, IFNULL((sum(masuk)-sum(keluar)),'0') as sisa FROM `stok` WHERE id_barang = '$data' and ed > '".date("Y-m-d")."' group by ed HAVING sisa > 0 order by ed limit 1");
+            $ed    = mysql_fetch_object($fefo);
             $stok = "insert into stok set
                 waktu = '$tanggal',
                 id_transaksi = '$id_penjualan',
                 transaksi = 'Penjualan',
                 id_barang = '$data',
+                ed = '".$ed->ed."',
                 keluar = '".($jumlah[$key]*$isi)."'";
             //echo $stok;
             mysql_query($stok);

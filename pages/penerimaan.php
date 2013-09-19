@@ -122,6 +122,8 @@ function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi
         });
         $('#satuan'+no).val(id_satuan_beli);
     });
+    $('#barang,#id_barang,#jumlah,#hna,#isi,#isi_satuan').val('');
+    $('#kemasan').html(''); $('#barang').focus();
 }
 
 function hitung_sub_total(i) {
@@ -175,7 +177,7 @@ function form_add() {
                         '<tr><td>Diskon:</td><td><input type=text name=disc_pr id=disc_pr value="0" size=10 /> %, Rp. <input type=text name=disc_rp id=disc_rp onblur=FormNum(this); onfocus=javascript:this.value=currencyToNumber(this.value); size=10 value="0" /></td></tr>'+
                         '<tr><td>Materai (Rp.):</td><td><input type=text name=materai onblur=FormNum(this); id=materai size=10 value="0" /></td></tr>'+
                         '<tr><td>Total (Rp.):</td><td><input type=text name=total id=total size=10 /></td></tr>'+
-                        '<tr><td width=20%>Nama Barang:</td><td width=50%><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?></td></tr>'+
+                        '<tr><td width=20%>Nama Barang:</td><td width=50%><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?><?= form_hidden(NULL, NULL, 'id=hna') ?><?= form_hidden(NULL, NULL, 'id=isi') ?><?= form_hidden(NULL, NULL, 'id=isi_satuan') ?></td></tr>'+
                         '<tr><td>Kemasan:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select></td></tr>'+
                         '<tr><td>Jumlah:</td><td><?= form_input('jumlah', NULL, 'id=jumlah size=10') ?></td></tr>'+
                     '</table>'+
@@ -204,8 +206,29 @@ function form_add() {
     });
     $('#jumlah').keydown(function(e) {
         if (e.keyCode === 13) {
-            
+            var id_barang       = $('#id_barang').val();
+            var nama_barang     = $('#barang').val();
+            var id_satuan_beli  = $('#kemasan').val();
+            var jumlah          = $('#jumlah').val();
+            var hna             = $('#hna').val();
+            var isi             = $('#isi').val();
+            var isi_satuan      = $('#isi_satuan').val();
+            load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi, isi_satuan);
         }
+    });
+    $('#kemasan').change(function() {
+        var id        = $(this).val(); // id_satuan
+        var id_barang = $('#id_barang').val();
+        var jum       = $('#jumlah').val();
+        $.ajax({
+            url: 'models/autocomplete.php?method=get_detail_harga_barang_penerimaan&id_kemasan='+id+'&id_barang='+id_barang+'&jumlah='+jum,
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+                $('#isi').val(data.isi);
+                $('#isi_satuan').val(data.isi_sat);
+            }
+        });
     });
     $('#barang').autocomplete("models/autocomplete.php?method=barang",
     {
@@ -230,10 +253,11 @@ function form_add() {
     function(event,data,formated){
         $(this).val(data.nama_barang);
         $('#id_barang').val(data.id);
-        $('#kemasan').html('');
+        $('#hna').val(data.hna);
+        $('#kemasan').html('').focus();
         $.getJSON('models/autocomplete.php?method=get_kemasan_barang&id='+data.id, function(data){
             if (data === null) {
-                alert('Kemasan tidak barang tidak tersedia !');
+                alert('Kemasan barang tidak tersedia !');
             } else {
                 $.each(data, function (index, value) {
                     $('#kemasan').append("<option value='"+value.id_kemasan+"'>"+value.nama+"</option>");

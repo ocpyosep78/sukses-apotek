@@ -305,7 +305,13 @@ function form_pembayaran() {
 }
 
 function cetak_struk(id_penjualan) {
-    window.open('pages/nota-penjualan.php?id='+id_penjualan, 'Penjualan Cetak', 'width=400px, height=500px, scrollabars=1, resizable=1');
+    var wWidth = $(window).width();
+    var dWidth = wWidth * 0.3;
+    var wHeight= $(window).height();
+    var dHeight= wHeight * 1;
+    var x = screen.width/2 - dWidth/2;
+    var y = screen.height/2 - dHeight/2;
+    window.open('pages/nota-penjualan.php?id='+id_penjualan, 'Penjualan Cetak', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
 }
 
 function form_add() {

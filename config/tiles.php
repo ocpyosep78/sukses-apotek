@@ -169,5 +169,9 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa ABC","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
+$tile[] = array("type"=>"img","group"=>2,"x"=>3,"y"=>0,'width'=>1,'height'=>1,"background"=>"#4c4344","url"=>"expired-date.php",
+	"img"=>"img/icons/expiry.png","desc"=>"Expiry Date","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
 
 ?> 
