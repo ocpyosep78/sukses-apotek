@@ -41,14 +41,17 @@ function check_perubahan_hna(i) {
                 "Ya": function() {
                     $('#hna'+i).val(new_hna);
                     $(this).dialog().remove();
+                    $('#diskon_pr'+i).focus().select();
                 },
                 "Tidak": function() {
                     $('#hna'+i).val(hna);
                     $(this).dialog().remove();
+                    $('#diskon_pr'+i).focus().select();
                 }
             }, close: function() {
                 $('#hna'+i).val(hna);
                 $(this).dialog().remove();
+                $('#diskon_pr'+i).focus().select();
             }
         });
     }
@@ -123,7 +126,7 @@ function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi
         $('#satuan'+no).val(id_satuan_beli);
     });
     $('#barang,#id_barang,#jumlah,#hna,#isi,#isi_satuan').val('');
-    $('#kemasan').html(''); $('#barang').focus();
+    $('#kemasan').html(''); $('#faktur').focus().select();
 }
 
 function hitung_sub_total(i) {
