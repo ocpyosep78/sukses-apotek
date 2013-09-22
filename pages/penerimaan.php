@@ -146,18 +146,17 @@ function hitung_sub_total(i) {
     var ppn         = $('#ppn').val()/100;
     var materai     = parseInt(currencyToNumber($('#materai').val()));
     
-    var ppn_total   = total+(total*ppn); // total PPN faktur setelah ditambah dengan total barang
-    
     var disc_percent= $('#disc_pr').val()/100; // persentase diskon per faktur
     if (disc_percent !== 0) {
-        var dp_total    = ppn_total*disc_percent;
+        var dp_total    = total*disc_percent;
         $('#disc_rp').val(numberToCurrency(parseInt(Math.ceil(dp_total))));
-        var diskon_ttl  = parseInt(currencyToNumber($('#disc_rp').val()));
+        diskon_ttl  = parseInt(currencyToNumber($('#disc_rp').val()));
     }
     else {
-        var diskon_ttl  = parseInt(currencyToNumber($('#disc_rp').val()));
+        diskon_ttl  = parseInt(currencyToNumber($('#disc_rp').val()));
     }
-    var disc_ppn_ttl= ppn_total-diskon_ttl;
+    var ppn_total   = (total-diskon_ttl)+((total-diskon_ttl)*ppn); // total PPN faktur setelah ditambah dengan total barang
+    var disc_ppn_ttl= ppn_total;
     var general_ttl = disc_ppn_ttl+materai;
     
     $('#total').val(numberToCurrency(parseInt(general_ttl)));
