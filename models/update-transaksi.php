@@ -19,6 +19,7 @@ if ($method === 'save_pemesanan') {
         tgl_datang = '$tgl_datang',
         id_supplier = '$id_supplier',
         id_users = '".$_SESSION['id_user']."'";
+    //echo $sql;
     mysql_query($sql);
     $id_pemesanan = $id;
     
@@ -37,7 +38,7 @@ if ($method === 'save_pemesanan') {
     $result['status'] = TRUE;
     $result['id_pemesanan'] = get_last_pemesanan();
     $result['id'] = $id_pemesanan;
-    die(json_encode($result));
+    //die(json_encode($result));
 }
 
 if ($method === 'delete_pemesanan') {
@@ -287,10 +288,61 @@ if ($method === 'save_penjualannr') {
     die(json_encode(array('status' => TRUE, 'id' => $id_penjualan)));
 }
 
+
+
 if ($method === 'delete_penjualannr') {
     $id     = $_GET['id'];
     mysql_query("delete from penjualan where id = '$id'");
     mysql_query("delete from stok where transaksi = 'Penjualan' and id_transaksi = '$id'");
+}
+
+if ($method === 'save_pemusnahan') {
+    $tanggal    = date2mysql($_POST['tanggal']);
+    $apoteker   = $_POST['id_apoteker'];
+    $bpom       = strtoupper($_POST['bpom']);
+    
+    $sql = "insert into pemusnahan set
+        tanggal = '$tanggal',
+        saksi_apotek = '$apoteker',
+        saksi_bpom = '$bpom'";
+    mysql_query($sql);
+    $id_pemusnahan = mysql_insert_id();
+    
+    $id_barang  = $_POST['id_barang'];
+    $kemasan    = $_POST['kemasan'];
+    $jumlah     = $_POST['jumlah'];
+    $ed         = $_POST['ed'];
+    $hpp        = $_POST['hpp'];
+    
+    foreach ($id_barang as $key => $data) {
+        $query = mysql_query("select * from kemasan where id_barang = '$data' and id_kemasan = '$kemasan[$key]'");
+        $rows  = mysql_fetch_object($query);
+        $isi   = $rows->isi*$rows->isi_satuan;
+        $qwe   = "insert into detail_pemusnahan set 
+            id_pemusnahan = '$id_pemusnahan',
+            id_kemasan = '".$rows->id."',
+            ed = '$ed[$key]',
+            jumlah = '".$jumlah[$key]."',
+            hpp = '".$hpp[$key]."'";
+        mysql_query($qwe);
+        
+        $stok = "insert into stok set
+            waktu = '$tanggal',
+            id_transaksi = '$id_pemusnahan',
+            transaksi = 'Pemusnahan',
+            id_barang = '$data',
+            ed = '$ed[$key]',
+            keluar = '".($jumlah[$key]*$isi)."'";
+        //echo $stok;
+        mysql_query($stok);
+    }
+    die(json_encode(array('status' => TRUE, 'id' => $id_pemusnahan)));
+}
+
+if ($method === 'delete_pemusnahan') {
+    $id     = $_GET['id'];
+    mysql_query("delete from pemusnahan where id = '$id'");
+    mysql_query("delete from stok where transaksi = 'Pemusnahan' and id_transaksi = '$id'");
 }
 
 if ($method === 'delete_penjualan') {

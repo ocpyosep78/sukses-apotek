@@ -246,6 +246,80 @@ function load_data_arus_stok($param) {
     return $result;
 }
 
+function load_data_statistik($param) {
+    $q = NULL; $limit = NULL;
+    if ($param['id'] !== '') {
+        $q.=" and s.id_barang = '".$param['id']."' ";
+    }
+    if ($param['awal'] !== '' and $param['akhir'] !== '') {
+        $q.=" and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
+    }
+    if (isset($param['perundangan']) and $param['perundangan'] != '') {
+        $q.=" and b.perundangan = '".$param['perundangan']."'";
+    }
+    if (isset($param['sediaan']) and $param['sediaan'] != '') {
+        $q.=" and b.id_sediaan = '".$param['sediaan']."'";
+    }
+    if (isset($param['golongan']) and $param['golongan'] != '') {
+        $q.=" and b.id_golongan = '".$param['golongan']."'";
+    }
+    if (isset($param['formularium']) and $param['formularium'] != '') {
+        if ($param['formularium'] === '1') {
+            $val = "Ya";
+            $q.=" and b.formularium = '$val'";
+        } else if ($param['formularium'] === '2') {
+            $val = "Tidak";
+            $q.=" and b.formularium = '$val'";
+        }
+    }
+    if (isset($param['generik']) and $param['generik'] != '') {
+        $q.=" and b.generik = '".$param['generik']."'";
+    }
+    if ($param['limit'] !== '') {
+        //$limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
+    $sql = "select concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, b.hna+(b.hna*(b.margin_non_resep/100)) as harga, sum(dp.qty) as jumlah, 
+        date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer, a.nama as asuransi
+        from penjualan p
+        join detail_penjualan dp on (p.id = dp.id_penjualan)
+        join kemasan k on (k.id = dp.id_kemasan)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
+        left join satuan st on (k.id_kemasan = st.id)
+        left join pelanggan pl on (p.id_pelanggan = pl.id)
+        left join asuransi a on (pl.id_asuransi = a.id) 
+        where b.id is not NULL $q group by b.id order by jumlah desc ";
+    
+    $sql_jml = "select concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, date(p.waktu) as tanggal, sum(dp.qty) as jumlah,
+        pl.nama as customer, pl.id as id_customer, a.nama as asuransi
+        from penjualan p
+        join detail_penjualan dp on (p.id = dp.id_penjualan)
+        join kemasan k on (k.id = dp.id_kemasan)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
+        left join satuan st on (k.id_kemasan = st.id)
+        left join pelanggan pl on (p.id_pelanggan = pl.id)
+        left join asuransi a on (pl.id_asuransi = a.id)
+        where b.id is not NULL $q";
+    //echo "<pre>".$sql.$limit."</pre>";
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    
+    $result['data'] = $data;
+    
+    $return = mysql_query($sql_jml);
+    $total = array();
+    while ($rows = mysql_fetch_object($return)) {
+        $total[] = $rows;
+    }
+    $result['total']= $total;
+    $result['total']= $total;
+    return $result;
+}
+
 function load_data_resep($param) {
     $q = NULL;
     if ($param['id'] !== '') {
@@ -384,6 +458,38 @@ function penjualan_load_data($param) {
     return $result;
 }
 
+function pemusnahan_load_data($param) {
+    $q = NULL; $limit = NULL;
+    if (isset($param['laporan'])) {
+        $q.=" and p.tanggal between '".$param['awal']."' and '".$param['akhir']."'";
+        $q.=" group by p.id";
+    } else {
+        $q.=" and p.tanggal between '".date("Y-m-d")."' and '".date("Y-m-d")."'";
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
+    $sql = "select p.*, ky.nama as apoteker, dp.ed,
+        (select sum(bayar) from detail_bayar_penjualan where id_penjualan = p.id) as terbayar,
+        concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.jumlah, dp.hpp as subtotal
+        from pemusnahan p
+        join detail_pemusnahan dp on (p.id = dp.id_pemusnahan)
+        join karyawan ky on (ky.id = p.saksi_apotek)
+        join kemasan k on (k.id = dp.id_kemasan)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
+        left join satuan st on (k.id_kemasan = st.id)
+        where p.id is not NULL $q order by p.id";
+    //echo "<pre>".$sql.$limit."</pre>";
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
 function statistik_penjualan_load_data($param) {
     $q = NULL; $limit = NULL;
     if (isset($param['awal']) and $param['awal'] !== '') {
@@ -393,7 +499,7 @@ function statistik_penjualan_load_data($param) {
         $q.=" and b.perundangan = '".$param['perundangan']."'"; 
     }
     
-    $sql = "select concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, b.hna+(b.hna*(b.margin_non_resep/100)) as harga, count(*) as jumlah, 
+    $sql = "select concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, b.hna+(b.hna*(b.margin_non_resep/100)) as harga, sum(dp.qty) as jumlah, 
         date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer, a.nama as asuransi
         from penjualan p
         join detail_penjualan dp on (p.id = dp.id_penjualan)
@@ -405,7 +511,7 @@ function statistik_penjualan_load_data($param) {
         left join asuransi a on (pl.id_asuransi = a.id) 
         where b.id is not NULL $q group by b.id order by jumlah desc ";
     
-    $sql_jml = "select concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, date(p.waktu) as tanggal, 
+    $sql_jml = "select concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, date(p.waktu) as tanggal, sum(dp.qty) as jumlah, 
         pl.nama as customer, pl.id as id_customer, a.nama as asuransi
         from penjualan p
         join detail_penjualan dp on (p.id = dp.id_penjualan)
@@ -422,8 +528,13 @@ function statistik_penjualan_load_data($param) {
     while ($row = mysql_fetch_object($query)) {
         $data[] = $row;
     }
-    $total = mysql_num_rows(mysql_query($sql_jml));
     $result['data'] = $data;
+    
+    $return = mysql_query($sql_jml);
+    $total = array();
+    while ($rows = mysql_fetch_object($return)) {
+        $total[] = $rows;
+    }
     $result['total']= $total;
     return $result;
 }
@@ -739,7 +850,7 @@ function retur_penjualan_load_data($param) {
     $limit = " limit ".$param['start'].", ".$param['limit']."";
     $sql = "select rp.waktu, st.nama as kemasan, b.nama as barang, b.kekuatan, 
         stn.nama as satuan, dp.* from retur_penjualan rp
-        join detail_retur_penjualan dp on (rp.id = dp.id_retur_penjualan)
+        join detail_retur_penjualan dp on (rp.id = dp.id_penjualan)
         join kemasan k on (k.id = dp.id_kemasan)
         join barang b on (b.id = k.id_barang)
         join satuan st on (st.id = k.id_kemasan)
@@ -755,6 +866,63 @@ function retur_penjualan_load_data($param) {
     $result['data'] = $data;
     $result['total']= $total;
     return $result;
+}
+
+/*Laba Rugi*/
+function pendapatan_penjualan_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(masuk),'0') as penjualan_barang from arus_kas where transaksi like ('Penjualan%') and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function pendapatan_jasa_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(rr.nominal),'0') as jasa from resep_r rr join resep r on (r.id = rr.id_resep) where date(r.waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function penerimaan_kas_load_data($awal, $akhir) {
+    $sql = "select masuk as penerimaan, keterangan as penerimaan_pengeluaran_nama from arus_kas where transaksi = 'Lain-lain' and keluar = '0' and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    return $data;
+}
+
+function total_penerimaan_kas_load_data($awal, $akhir) {
+    $sql = "select sum(masuk) as penerimaan_total from arus_kas where date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function pendapatan_lain_lain_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(masuk),'0') as penerimaan_lain from arus_kas where transaksi = 'Lain-lain' and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function hna_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(b.hna*s.keluar),'0') as total_hna from stok s join barang b on (s.id_barang = b.id) where transaksi like ('Penjualan%') and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function pengeluaran_kas_load_data($awal, $akhir) {
+    $sql = "select IFNULL(keluar,'0') as pengeluaran, keterangan as penerimaan_pengeluaran_nama from arus_kas where transaksi = 'Lain-lain' and masuk = '0' and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    return $data;
+}
+function total_pengeluaran_kas_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(keluar),'0') as pengeluaran_total from arus_kas where transaksi = 'Lain-lain' and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
 }
 
 ?>

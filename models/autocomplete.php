@@ -483,4 +483,30 @@ if ($method === 'get_expiry_barang') {
     }
     die(json_encode($rows));
 }
+
+if ($method === 'apoteker') {
+    $sql = mysql_query("select * from karyawan where nama like ('%$q%') order by locate('$q',nama)");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'bpom') {
+    $sql = mysql_query("select * from pemusnahan where saksi_bpom like ('%$q%') group by saksi_bpom order by locate('$q',saksi_bpom) ");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'get_detail_hpp') {
+    $cek = mysql_fetch_object(mysql_query("select id, isi, isi_satuan from kemasan where id_barang = '$_GET[id]' and id_kemasan = '$_GET[id_kemasan]'"));
+    $row = mysql_fetch_object(mysql_query("select * from detail_penerimaan where id_kemasan = '".$cek->id."' order by id desc limit 1"));
+    $hpp = isset($row->hpp)?$row->hpp:'0';
+    $total_hpp = $cek->isi_satuan*$hpp;
+    die(json_encode(array('total_hpp' => $total_hpp)));
+}
 ?>

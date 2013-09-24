@@ -24,10 +24,15 @@ function form_button($value, $attr) {
     return '<input type=button value="'.$value.'" '.$attr.' />';
 }
 
-function form_radio($name, $value, $id, $label = null, $checked = FALSE) {
-    $attr = "";
-    if ($checked == TRUE) {
-        $attr = "checked";
+function form_radio($name, $value, $id, $label = null, $checked = null) {
+    if ($checked !== NULL) {
+        if ($checked == 'TRUE') {
+            $attr = "checked";
+        } else if ($checked == 'FALSE') {
+            $attr = "";
+        } else {
+            $attr = $checked;
+        }
     }
     return '<input type=radio name="'.$name.'" value="'.$value.'" id="'.$id.'" '.$attr.' /><label for="'.$id.'">'.$label.'</label>';
 }

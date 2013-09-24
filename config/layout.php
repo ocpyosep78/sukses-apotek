@@ -30,11 +30,11 @@ $hideSpeed = 300; // hide speed of page transitions
 
 /* Background */
 $bgColor = "#0F6D32"; // background color
-$bgImage = "img/bg/metro_green.jpg"; // background image, leave blank if you dont want one. It is recommend to keep the filesize to a minimum and also, if possible, use a low resolution
+$bgImage = "img/bg/win8-metro.jpg"; // background image, leave blank if you dont want one. It is recommend to keep the filesize to a minimum and also, if possible, use a low resolution
 
 // Settings below are only needed when $bgScrollType is parallax
 $bgMaxScroll = 130; //set to 0 for no background scrolling
-$bgWidth = 115; // in procent, in comparison to the screen width, so 125% is a quarter bigger than screen ,needed for scrolling, how bigger, how more scrolling
+$bgWidth = 125; // in procent, in comparison to the screen width, so 125% is a quarter bigger than screen ,needed for scrolling, how bigger, how more scrolling
 $bgScrollSpeed = 390; // in ms (recommend to set this to $scrollSpeed-10) 
 
 /* Some behavior */

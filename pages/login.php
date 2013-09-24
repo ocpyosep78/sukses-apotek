@@ -11,7 +11,7 @@ $(function() {
     });
     $(document).click(function() {
         open_login();
-        $('#username').focus();
+        //$('#username').focus();
     });
     $('#login').click(function() {
         $('#formlogin').submit();
@@ -79,8 +79,8 @@ window.onload = displayTime;
         <div class="wrapper">
             <img src="../img/icons/user-login.png" align="left" />
             <h1>Login Apotek <img src="../themes/theme_default/img/primary/loader.gif" align="right" id="loader" /></h1>
-            <input type="text" name="username" id="username" placeholder="Username ..." size="50" />
-            <input type="password" name="password" id="password" placeholder="Password ..." size="50" /><br/>
+            <input type="text" name="username" id="username" placeholder="Username ..." size="50" autocomplete="off" />
+            <input type="password" name="password" id="password" placeholder="Password ..." size="50" autocomplete="off" /><br/>
             <input type="button" value="Submit" class="button" id="login" /><span id="result"></span>
         </div>
     </form>

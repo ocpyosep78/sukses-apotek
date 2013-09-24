@@ -387,11 +387,13 @@ function dinamic_load_data($id_kemasan) {
 }
 
 function load_data_golongan($param) {
-    $q = null;
-    if ($param['id'] !== '') {
+    $q = null; $limit = NULL;
+    if (isset($param['id']) and $param['id'] !== '') {
         $q = " and id = '".$param['id']."'";
     }
-    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    if (isset($param['list'])) {
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
     $sql = "select * from golongan where id is not NULL $q order by nama";
     
     $query = mysql_query($sql.$limit);

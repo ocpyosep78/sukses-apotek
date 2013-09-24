@@ -28,7 +28,8 @@ include_once '../inc/functions.php';
         'id' => $_GET['id_golongan'],
         'limit' => $limit,
         'start' => $offset,
-        'search' => $_GET['search']
+        'search' => $_GET['search'],
+        'list' => TRUE
     );
     $data_list = load_data_golongan($param);
     $list_data = $data_list['data'];

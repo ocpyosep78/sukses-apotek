@@ -34,10 +34,11 @@ table.data-input input[type=text], table.data-input input[type=password], table.
     *top: 0.1em;
 }
 .custom-combobox-input { margin: 0; }
-.input-parameter { background-color: rgba(60, 60, 60, 0.3); border: 1px solid #999; font-size: 12px; }
+.input-parameter { background-color: rgba(60, 60, 60, 0.3); border: 1px solid #999; font-size: 12px; border-spacing: 0; }
 .input-parameter label { margin: 0; }
 .input-parameter table { margin: 10px; border-spacing: 0; }
-.input-parameter table tr {  }
+.input-parameter table input[type=text] { margin: 1px; border: 1px solid #ccc; font-size: inherit; }
+.input-parameter table select { margin: 1px; border: 1px solid #ccc; font-size: inherit; padding: 1px; }
 .input-parameter input[type=text] { font-size: inherit; border: 1px solid #f4f4f4; padding: 1px; }
 .input-parameter input[type=text]:focus { border: 1px solid #ccc; }
 .input-parameter select { min-width: 200px; }
