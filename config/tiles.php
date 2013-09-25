@@ -161,25 +161,27 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/lap-resep.png","desc"=>"Arus Kas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-statistik-obat.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa Probabilitas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
-	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-analisis-abc.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa ABC","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
-	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>3,"y"=>0,'width'=>1,'height'=>1,"background"=>"#4c4344","url"=>"expired-date.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#4c4344","url"=>"expired-date.php",
 	"img"=>"img/icons/expiry.png","desc"=>"Expiry Date","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>3,"y"=>1,'width'=>1,'height'=>1,"background"=>"#c17e0f","url"=>"statistik.php",
+
+
+$tile[] = array("type"=>"img","group"=>3,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-statistik-obat.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa Probabilitas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
+$tile[] = array("type"=>"img","group"=>3,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-analisis-abc.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa ABC","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
+$tile[] = array("type"=>"img","group"=>3,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#c17e0f","url"=>"statistik.php",
 	"img"=>"img/icons/statistik.png","desc"=>"Statistika Obat","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>3,"y"=>2,'width'=>1,'height'=>1,"background"=>"#6b6b6b","url"=>"laba-rugi.php",
+$tile[] = array("type"=>"img","group"=>3,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#6b6b6b","url"=>"laba-rugi.php",
 	"img"=>"img/icons/laba-rugi.png","desc"=>"Laba-rugi","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
-
-
 ?> 

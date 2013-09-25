@@ -1,6 +1,7 @@
 <?php
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
+header_surat();
 ?>
 <link rel="stylesheet" href="../themes/theme_default/theme-print.css" />
 <script type="text/javascript">

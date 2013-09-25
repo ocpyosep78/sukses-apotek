@@ -1,13 +1,20 @@
 <?php
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
+header_surat();
 ?>
+<link rel="stylesheet" href="../themes/theme_default/theme-print.css" />
 <script type="text/javascript">
-$(function() {
-    $( document ).tooltip();
-});
+function cetak() {  		
+    window.print();
+    setTimeout(function(){ window.close();},300);
+}
 </script>
-<table cellspacing="0" width="100%" class="list-data">
+<body onload="cetak();">
+<h1>
+    LAPORAN PEMESANAN <br /> TANGGAL <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?>
+</h1>
+<table cellspacing="0" width="100%" class="list-data-print">
 <thead>
     <tr class="italic">
         <th width="5%">No.</th>
@@ -22,19 +29,8 @@ $(function() {
 </thead>
 <tbody>
     <?php
-    $limit = 10;
-    $page  = $_GET['page'];
-    if ($_GET['page'] === '') {
-        $page = 1;
-        $offset = 0;
-    } else {
-        $offset = ($page-1)*$limit;
-    }
-    
     $param = array(
         'id' => '',
-        'limit' => $limit,
-        'start' => $offset,
         'id_supplier' => $_GET['id_supplier']
     );
     $pemesanan = pemesanan_load_data($param);
@@ -44,7 +40,7 @@ $(function() {
     $no = 1;
     foreach ($list_data as $key => $data) { ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
-            <td align="center"><?= ($nomor_sp !== $data->id)?($no+$offset):NULL ?></td>
+            <td align="center"><?= ($nomor_sp !== $data->id)?($no):NULL ?></td>
             <td><?= ($nomor_sp !== $data->id)?$data->id:NULL ?></td>
             <td align="center"><?= ($nomor_sp !== $data->id)?datetimefmysql($data->tanggal):NULL ?></td>
             <td><?= ($nomor_sp !== $data->id)?$data->supplier:NULL ?></td>
@@ -62,4 +58,4 @@ $(function() {
     ?>
 </tbody>
 </table>
-<?= paging_ajax($total_data, $limit, $page, '1', '') ?>
+</body>

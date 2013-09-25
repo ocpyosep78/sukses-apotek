@@ -11,7 +11,12 @@
 	Laporan
 </a>
 
-<a rel="group3" onclick="location.href='pages/logout.php'">
+<a rel="group3">
+	<img src="img/icons/laporan2.png" alt="Laporan"/>
+	Analisa
+</a>
+
+<a rel="group4" onclick="location.href='pages/logout.php'">
         <img src="img/icons/logout.png" alt="Logout" align="center"/>
         Logout
 </a>

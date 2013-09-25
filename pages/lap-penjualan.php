@@ -1,7 +1,7 @@
 <?php
 $subNav = array(
 	"Lap. Penjualan Resep ; lap-penjualan.php ; #509601;",
-        "lap. Penjualan Bebas; lap-penjualan-nr.php ; #509601;",
+        "Lap. Penjualan Bebas; lap-penjualan-nr.php ; #509601;",
 );
 
 set_include_path("../");
@@ -99,14 +99,26 @@ function load_data_penjualan(page, search, id) {
     var akhir   = $('#akhir').val();
     var pasien  = $('#id_pasien').val();
     var dokter  = $('#id_dokter').val();
-    $.ajax({
-        url: 'pages/lap-penjualan-list.php',
-        cache: false,
-        data: 'page='+pg+'&search='+src+'&id_penjualan='+id_barg+'&hal=laporan&awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter,
-        success: function(data) {
-            $('#result-info').html(data);
-        }
-    });
+    var status  = $('input:checked').val();
+    if (status === 'group') {
+        $.ajax({
+            url: 'pages/lap-penjualan-list.php',
+            cache: false,
+            data: 'page='+pg+'&search='+src+'&id_penjualan='+id_barg+'&hal=laporan&awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter,
+            success: function(data) {
+                $('#result-info').html(data);
+            }
+        });
+    } else {
+        $.ajax({
+            url: 'pages/lap-penjualan-detail.php',
+            cache: false,
+            data: 'page='+pg+'&search='+src+'&id_penjualan='+id_barg+'&awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter,
+            success: function(data) {
+                $('#result-info').html(data);
+            }
+        });
+    }
 }
 </script>
 <h1 class="margin-t-0">Laporan Penjualan Resep</h1>
@@ -115,6 +127,7 @@ function load_data_penjualan(page, search, id) {
     <tr><td width="10%">Range Tanggal:</td><td><?= form_input('awal', date("d/m/Y"), 'id=awal size=10') ?> s . d <?= form_input('akhir', date("d/m/Y"), 'id=akhir size=10') ?></td></tr>
     <tr><td>Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>  
     <tr><td>Dokter:</td><td><?= form_input('dokter', NULL, 'id=dokter size=40') ?><?= form_hidden('id_dokter', NULL, 'id=id_dokter') ?></td></tr>
+    <tr><td></td><td><?= form_radio('ket', 'group', 'group', 'Group', TRUE) ?> <?= form_radio('ket', 'detail', 'detail', 'Detail', FALSE) ?></td></tr>
     <tr><td></td><td><?= form_button('Tampilkan', 'id=search') ?> <?= form_button('Reset', 'id=reset') ?> <?= form_button('Cetak', 'id=cetak onclick=cetak();') ?></td></tr>
 </table>
 </div>

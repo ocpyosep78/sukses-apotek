@@ -28,14 +28,16 @@ function get_apa_from_karyawan() {
 }
 
 function pemesanan_load_data($param) {
-    $q = NULL;
+    $q = NULL; $limit = NULL;
     if ($param['id'] !== '') {
         $q.="and p.id = '".$param['id']."' ";
     }
     if ($param['id_supplier'] !== '') {
         $q.=" and s.id = '".$param['id_supplier']."'";
     }
-    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    if (isset($param['start']) and isset($param['limit'])) {
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
     $sql = "select p.*, k.nama as karyawan, dp.jumlah, concat_ws(' ',b.nama, b.kekuatan, st.nama) as nama_barang, st.nama as kemasan, s.nama as supplier from pemesanan p
         join supplier s on (p.id_supplier = s.id)
         join detail_pemesanan dp on (dp.id_pemesanan = p.id)
