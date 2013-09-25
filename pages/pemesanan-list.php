@@ -44,9 +44,11 @@ $(function() {
     $total_data= $pemesanan['total'];
     $no = 1;
     $sp = "";
-    foreach ($list_data as $key => $data) { ?>
+    foreach ($list_data as $key => $data) { 
+        
+        ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
-            <td align="center"><?= ($sp !== $data->id)?($no+$offset):NULL ?></td>
+            <td align="center"><?= ($sp !== $data->id)?($no):NULL ?></td>
             <td><?= ($sp !== $data->id)?$data->id:NULL ?></td>
             <td align="center"><?= ($sp !== $data->id)?datetimefmysql($data->tanggal):NULL ?></td>
             <td><?= ($sp !== $data->id)?$data->supplier:NULL ?></td>
@@ -71,4 +73,5 @@ $(function() {
     ?>
 </tbody>
 </table>
+
 <?= paging_ajax($total_data, $limit, $page, '1', $_GET['search']) ?>
