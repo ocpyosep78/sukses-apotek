@@ -31,7 +31,7 @@ function form_radio($name, $value, $id, $label = null, $checked = null) {
         } else if ($checked == 'FALSE') {
             $attr = "";
         } else {
-            $attr = $checked;
+            $attr = "$checked";
         }
     }
     return '<input type=radio name="'.$name.'" value="'.$value.'" id="'.$id.'" '.$attr.' /><label for="'.$id.'">'.$label.'</label>';

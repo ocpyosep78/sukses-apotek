@@ -184,4 +184,8 @@ $tile[] = array("type"=>"img","group"=>3,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"b
 $tile[] = array("type"=>"img","group"=>3,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#6b6b6b","url"=>"laba-rugi.php",
 	"img"=>"img/icons/laba-rugi.png","desc"=>"Laba-rugi","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
+$tile[] = array("type"=>"img","group"=>3,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#d04525","url"=>"buku-besar.php",
+	"img"=>"img/icons/akuntansi.png","desc"=>"Akuntansi","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 ?> 
