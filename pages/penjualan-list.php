@@ -89,7 +89,8 @@ $(function() {
                 <!--<a class='edition' onclick="edit_penjualan('<?= $str ?>');" title="Klik untuk edit">&nbsp;</a>-->
                 <?php
                 if ($id !== $data->id) { ?>
-                    <a class='deletion' onclick="delete_penjualan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
+<!--                    <a class='deletion' onclick="delete_penjualan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>-->
+                        <a class='printing' onclick="cetak_struk('<?= $data->id ?>');" title="Klik untuk cetak struk">&nbsp;</a>
                 <?php } ?>
             </td>
         </tr>

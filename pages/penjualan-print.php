@@ -28,7 +28,15 @@ function cetak() {
         <th width="5%">Tuslah <br/>RP.</th>
         <th width="5%">Embalage RP.</th>
         <th width="5%">Total</th>
+        <?php if ($_GET['status'] === 'detail') { ?>
+        <th width="20%">Nama Barang</th>
+        <th width="5%">Kemasan</th>
+        <th width="5%">Jumlah</th>
+        <th width="5%">Harga</th>
+        <th width="10%">Subtotal</th>
+        <?php } else { ?>
         <th width="5%">Terbayar</th>
+        <?php } ?>
     </tr>
 </thead>
 <tbody>
@@ -43,7 +51,8 @@ function cetak() {
         'awal' => date2mysql($_GET['awal']),
         'akhir' => date2mysql($_GET['akhir']),
         'pasien' => $_GET['pasien'],
-        'dokter' => $_GET['dokter']
+        'dokter' => $_GET['dokter'],
+        'laporan' => $_GET['status']
     );
     $penjualan = penjualan_load_data($param);
     $list_data = $penjualan['data'];
@@ -59,7 +68,7 @@ function cetak() {
         }
         ?>
         <tr id="<?= $data->id ?>" class="detail <?= ($id !== $data->id)?'odd':NULL ?> <?= $alert ?>">
-            <td align="center"><?= ++$key ?></td>
+            <td align="center"><?= ($id !== $data->id)?$no:NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?datetimefmysql($data->waktu):NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?$data->id_resep:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->customer:NULL ?></td>
@@ -70,20 +79,33 @@ function cetak() {
             <td align="right"><?= ($id !== $data->id)?rupiah($data->tuslah):NULL ?></td>
             <td align="right"><?= ($id !== $data->id)?rupiah($data->embalage):NULL ?></td>
             <td align="right"><?= ($id !== $data->id)?rupiah($data->total):NULL ?></td>
+            <?php if ($_GET['status'] === 'detail') { ?>
+            <td><?= $data->nama_barang ?></td>
+            <td align="center"><?= $data->kemasan ?></td>
+            <td align="center"><?= $data->qty ?></td>
+            <td align="right"><?= rupiah($data->harga_jual) ?></td>
+            <td align="right"><?= rupiah($data->subtotal) ?></td>
+            <?php } else { ?>
             <td align="right"><?= ($id !== $data->id)?rupiah($data->terbayar):NULL ?></td>
+            <?php } ?>
             
         </tr>
     <?php 
     if ($id !== $data->id) {
         $no++;
+        $total_nota = $total_nota+$data->total;
+        $total_terbayar = $total_terbayar+$data->terbayar;
     }
     $id = $data->id;
-    $total_nota = $total_nota+$data->total;
-    $total_terbayar = $total_terbayar+$data->terbayar;
     }
     ?>
         <tr>
-            <td colspan="10" align="right">TOTAL</td><td align="right"><b><?= rupiah($total_nota) ?></b></td><td align="right"><b><?= rupiah($total_terbayar) ?></b></td>
+            <td colspan="10" align="right">TOTAL</td><td align="right"><b><?= rupiah($total_nota) ?></b></td>
+            <?php if ($_GET['status'] !== 'detail') { ?>
+            <td align="right"><b><?= rupiah($total_terbayar) ?></b></td>
+            <?php } else { ?>
+            <td colspan="4"></td><td align="right"><b><?= rupiah($total_nota) ?></b></td>
+            <?php } ?>
         </tr>
 </tbody>
 </table>

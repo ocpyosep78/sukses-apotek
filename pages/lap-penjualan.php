@@ -82,13 +82,14 @@ function cetak() {
     var akhir   = $('#akhir').val();
     var pasien  = $('#id_pasien').val();
     var dokter  = $('#id_dokter').val();
+    var status  = $('input:checked').val();
     var wWidth = $(window).width();
     var dWidth = wWidth * 0.9;
     var wHeight= $(window).height();
     var dHeight= wHeight * 1;
     var x = screen.width/2 - dWidth/2;
     var y = screen.height/2 - dHeight/2;
-    window.open('pages/penjualan-print.php?awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter, 'cetak penjualan', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
+    window.open('pages/penjualan-print.php?awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter+'&status='+status, 'cetak penjualan', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
 }
 function load_data_penjualan(page, search, id) {
     pg = page; src = search; id_barg = id;

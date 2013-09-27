@@ -12,7 +12,7 @@ $tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"b
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"inkaso.php",
-	"img"=>"img/icons/pemesanan.png","desc"=>"Inkaso","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"img"=>"img/icons/inkaso.png","desc"=>"Inkaso","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 /*$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#009fb0","url"=>"pemeriksaan.php",
@@ -48,7 +48,7 @@ $tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"b
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#b44528","url"=>"uang-in-out.php",
-	"img"=>"img/icons/trans.png","desc"=>"Pemasukan / Pengeluaran Uang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"img"=>"img/icons/pp-uang.png","desc"=>"Pemasukan / Pengeluaran Uang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 
@@ -141,7 +141,7 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/lap-sp.png","desc"=>"Pemesanan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#175e88","url"=>"lap-penjualan.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#eb6796","url"=>"lap-penjualan.php",
 	"img"=>"img/icons/penjualan.png","desc"=>"Penjualan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
@@ -150,31 +150,31 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"b
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-penerimaan.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Penerimaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"img"=>"img/icons/lap-penerimaan.png","desc"=>"Penerimaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-hutang.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Hutang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#97c024","url"=>"lap-hutang.php",
+	"img"=>"img/icons/lap-hutang.png","desc"=>"Hutang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-arus-kas.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Arus Kas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#ff6621","url"=>"lap-arus-kas.php",
+	"img"=>"img/icons/lap-arus-kas.png","desc"=>"Arus Kas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#4c4344","url"=>"expired-date.php",
-	"img"=>"img/icons/expiry.png","desc"=>"Expiry Date","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#aa3f41","url"=>"expired-date.php",
+	"img"=>"img/icons/expiry.png","desc"=>"Barang Kadaluarsa","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 
 
 $tile[] = array("type"=>"img","group"=>3,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-statistik-obat.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa Probabilitas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"img"=>"img/icons/probabilitas.png","desc"=>"Analisa Probabilitas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>3,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-analisis-abc.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa ABC","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>3,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#3c17b7","url"=>"lap-analisis-abc.php",
+	"img"=>"img/icons/lap-abc.png","desc"=>"Analisa ABC / Pareto","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 $tile[] = array("type"=>"img","group"=>3,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#c17e0f","url"=>"statistik.php",

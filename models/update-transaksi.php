@@ -49,7 +49,7 @@ if ($method === 'delete_pemesanan') {
 if ($method === 'save_penerimaan') {
     $faktur         = $_POST['faktur'];
     $tanggal        = date2mysql($_POST['tanggal']);
-    $no_sp          = $_POST['no_sp'];
+    $no_sp          = ($_POST['no_sp'] !== '')?"'".$_POST['no_sp']."'":"NULL";
     $supplier       = $_POST['id_supplier'];
     $ppn            = $_POST['ppn'];
     $materai        = currencyToNumber($_POST['materai']);
@@ -66,7 +66,7 @@ if ($method === 'save_penerimaan') {
             faktur = '$faktur',
             tanggal = '$tanggal',
             id_supplier = '$supplier',
-            id_pemesanan = '$no_sp',
+            id_pemesanan = $no_sp,
             ppn = '$ppn',
             materai = '$materai',
             jatuh_tempo = '$tempo',

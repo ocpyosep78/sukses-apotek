@@ -15,11 +15,14 @@ foreach ($pelanggan['data'] as $rows);
 header_surat();
 ?>
 <body onload="cetak();">
+    <h1>
+        LAPORAN PERSONAL MEDICATION RECORDS
+    </h1>
 <table width="100%">
 <tr valign="top">
     <td width="50%" colspan="3">
     <table width="100%" class="attribute">
-        <tr><td width="40%">No. RM:</td><td><?= $rows->id ?></td></tr>
+        <tr><td width="40%">No. PMR:</td><td><?= $rows->id ?></td></tr>
         <tr><td width="40%">Nama Pasien:</td><td><?= $rows->nama ?></td></tr>
         <tr><td>Alamat Pasien:</td><td><?= $rows->alamat ?></td></tr>
         <tr><td>No. Telepon:</td><td><?= $rows->telp ?></td></tr>
@@ -37,7 +40,7 @@ header_surat();
 <table cellspacing="0" width="100%" class="list-data-print">
 <tr>
     <th>Tanggal</th>
-    <th>Status Resep</th>
+<!--    <th>Status Resep</th>-->
     <th>Packing Barang</th>
     <th>Kekuatan Obat</th>
     <th>Dosis</th>
@@ -59,7 +62,7 @@ $list_data = load_data_resep($param);
 foreach ($list_data['data'] as $key => $data) { ?>
 <tr valign="top" bgcolor="<?= ($key%2==0)?'#ffffe0':'#ffffff' ?>">
     <td><?= datetimefmysql($data->waktu) ?></td>
-    <td align="center"><?= (count($list_data) > 1)?'Lama':'Baru' ?></td>
+    <!--<td align="center"><?= (count($list_data) > 1)?'Lama':'Baru' ?></td>-->
     <td><?= $data->nama_barang ?></td>
     <td align="center"><?= $data->kekuatan ?></td>
     <td align="center"><?= $data->dosis_racik ?></td>

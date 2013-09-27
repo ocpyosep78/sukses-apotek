@@ -7,7 +7,7 @@
 	Master Data
  </a>
 <a rel="group2">
-	<img src="img/icons/laporan2.png" alt="Laporan"/>
+	<img src="img/icons/laporan.png" alt="Laporan"/>
 	Laporan
 </a>
 

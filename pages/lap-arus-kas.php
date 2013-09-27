@@ -109,7 +109,7 @@ $jenis_laporan   = array('Harian','Bulanan','Tahunan');
     <tr><td width="10%">Jenis Laporan:</td><td><select name="jenis" id="jenis"><option value="">Pilih ...</option><?php foreach ($jenis_laporan as $data) { ?><option value="<?= $data ?>"><?= $data ?></option> <?php } ?></select></td></tr>
     <tr id="jenis_attr"></tr>
     <tr><td>Nama Transaksi:</td><td><select name="transaksi" id="transaksi"><option value="">Pilih ...</option><?php foreach ($jenis_transaksi as $data) { ?><option value="<?= $data ?>"><?= $data ?></option> <?php } ?></select></td></tr>
-    <tr><td></td><td><?= form_button('Tampilkan', 'id=search') ?> <?= form_button('Reset', 'id=reset') ?> <?= form_button('Cetak', 'id=cetak') ?></td></tr>
+    <tr><td></td><td><?= form_button('Tampilkan', 'id=search') ?> <?= form_button('Reset', 'id=reset') ?> <!--<?= form_button('Cetak', 'id=cetak') ?> --></td></tr>
 </table>
 </div>
 <div id="result-info">

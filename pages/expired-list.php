@@ -2,8 +2,8 @@
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
 ?>
-<div style="background: yellow; width: 20px; margin-right: 2px; border: 1px solid #000; display: inline-block;">&nbsp;</div> Expired memasuki 6 bulan
-<div style="background: yellowgreen; width: 20px; margin-right: 2px; border: 1px solid #000; display: inline-block;">&nbsp;</div> Expired memasuki 3 bulan
+<div style="background: yellowgreen; width: 20px; margin-right: 2px; border: 1px solid #000; display: inline-block;">&nbsp;</div> Expired memasuki 6 bulan
+<div style="background: yellow; width: 20px; margin-right: 2px; border: 1px solid #000; display: inline-block;">&nbsp;</div> Expired memasuki 3 bulan
 <div style="background: red; width: 20px; margin-right: 2px; border: 1px solid #000; display: inline-block;">&nbsp;</div> Expired
 <table cellspacing="0" width="100%" class="list-data">
 <thead>
@@ -42,10 +42,10 @@ include_once '../inc/functions.php';
         $var2     = mktime(0, 0, 0, date("m")+6, date("d"), date("Y"));
         $enam_bln = date("Y-m-d", $var2);
         if (($data->ed > $sekarang) and ($data->ed <= $tiga_bln)) {
-            $alert = "threemonth";
+            $alert = "warning";
         }
         else if (($data->ed > $sekarang) and ($data->ed <= $enam_bln)) {
-            $alert = "warning";
+            $alert = "threemonth";
         }
         else if ($data->ed <= $sekarang) {
             $alert = "urgent";

@@ -1,8 +1,21 @@
 <?php
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
+
 ?>
-<table cellspacing="0" width="100%" class="list-data">
+<link rel="stylesheet" href="../themes/theme_default/theme-print.css" />
+<script type="text/javascript">
+function cetak() {
+    window.print();
+    setTimeout(function(){ window.close();},300);
+}
+</script>
+<body onload="cetak();">
+<?php header_surat(); ?>
+<h1>
+    LAPORAN RESEP <br /> TANGGAL <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?>
+</h1>
+<table cellspacing="0" width="100%" class="list-data-print">
 <thead>
 <tr class="italic">
     <th width="3%">No.</th>
@@ -60,3 +73,4 @@ include_once '../inc/functions.php';
     } ?>
 </tbody>
 </table>
+</body>

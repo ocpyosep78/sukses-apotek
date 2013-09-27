@@ -78,11 +78,12 @@ function penerimaan_load_data($param) {
     }
     
     $sql = "select p.*, k.nama as karyawan, s.nama as supplier, concat_ws(' ',b.nama, b.kekuatan, st.nama) as nama_barang, 
-        dp.jumlah, dp.expired, dp.nobatch, dp.harga, dp.disc_pr, dp.disc_rp
+        dp.jumlah, dp.expired, dp.nobatch, dp.harga, dp.disc_pr, dp.disc_rp, stn.nama as kemasan
         from penerimaan p
         left join pemesanan ps on (p.id_pemesanan = ps.id)
         join detail_penerimaan dp on (dp.id_penerimaan = p.id)
         join kemasan km on (dp.id_kemasan = km.id)
+        join satuan stn on (stn.id = km.id_kemasan)
         join barang b on (km.id_barang = b.id)
         join satuan st on (b.satuan_kekuatan = st.id)
         join supplier s on (ps.id_supplier = s.id)
@@ -131,7 +132,7 @@ function hutang_load_data($param) {
         left join users u on (p.id_users = u.id)
         left join karyawan k on (u.id_karyawan = k.id)
         where p.id is not NULL $q group by p.id $having";
-    //echo $sql.$limit;
+    //echo "<pre>".$sql.$limit."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -345,7 +346,7 @@ function load_data_resep($param) {
     }
     $sql   = "select r.*, rr.id as id_rr, rr.id_resep, rr.id_barang, rr.id_tarif, rr.r_no, concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, 
         rr.dosis_racik, rr.jumlah_pakai, rr.jual_harga, d.nama as dokter, k.nama as apoteker, t.nama as tarif, p.nama as pasien, p.tanggal_lahir, b.kekuatan,
-        rr.resep_r_jumlah, sd.nama as sediaan, concat_ws(' ',rr.pakai, rr.aturan) as pakai_aturan, d.no_str as sip_no, d.alamat as alamat_dokter,
+        rr.resep_r_jumlah, sd.nama as sediaan, concat_ws(' ',rr.pakai, ' X ', rr.aturan) as pakai_aturan, d.no_str as sip_no, d.alamat as alamat_dokter,
         rr.tebus_r_jumlah, rr.pakai, rr.aturan, rr.iter, rr.nominal from resep r
         join resep_r rr on (r.id = rr.id_resep)
         join barang b on (b.id = rr.id_barang)
@@ -383,14 +384,19 @@ function penjualan_nr_load_data($param) {
     if ($param['id'] !== '') {
         $q.="and p.id = '".$param['id']."' ";
     } else {
-        if (isset($param['awal']) and $param['awal'] !== '' and $param['akhir'] !== '') {
+        if (isset($param['status']) and $param['status'] === 'group') {
             $q.="and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
             $q.=" group by p.id";
-        } else {
+        } 
+        else if (isset($param['status']) and $param['status'] === 'detail') {
+            $q.="and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
+        }
+        else {
             $q.="and date(p.waktu) between '".date("Y-m-d")."' and '".date("Y-m-d")."'";
             $limit = " limit ".$param['start'].", ".$param['limit']."";
         }
     }
+    
     $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, a.nama as asuransi,
         (select sum(bayar) from detail_bayar_penjualan where id_penjualan = p.id) as terbayar,
         concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, (dp.harga_jual*dp.qty) as subtotal
@@ -403,7 +409,7 @@ function penjualan_nr_load_data($param) {
         left join pelanggan pl on (p.id_pelanggan = pl.id)
         left join asuransi a on (pl.id_asuransi = a.id) 
         where p.id_resep is NULL $q order by p.waktu desc";
-    //echo $sql.$limit;
+    //echo "<pre>".$sql.$limit."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -426,9 +432,11 @@ function penjualan_load_data($param) {
     if (isset($param['dokter']) and $param['dokter'] !== '') {
         $q.=" and r.id_dokter = '".$param['dokter']."'";
     }
-    if (isset($param['laporan'])) {
+    if (isset($param['laporan']) and $param['laporan'] !== 'detail') {
         $q.=" and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
         $q.=" group by p.id";
+    } else if (isset($param['laporan']) and $param['laporan'] === 'detail') {
+        $q.=" and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
     } else {
         $q.=" and date(p.waktu) between '".date("Y-m-d")."' and '".date("Y-m-d")."'";
         //$limit = " limit ".$param['start'].", ".$param['limit']."";
