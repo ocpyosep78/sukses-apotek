@@ -272,4 +272,45 @@ function hitungUmur($tgl) {
         return '-';
     }
 }
+
+function tampil_nama_bulan($ym) { // parameter year and month
+    $split  = explode("-", $ym);
+    if ($split[1] === '01') {
+        $mon    = "Januari";
+    } 
+    if ($split[1] === '02') {
+        $mon    = "Februari";
+    } 
+    if ($split[1] === '03') {
+        $mon    = "Maret";
+    } 
+    if ($split[1] === '04') {
+        $mon    = "April";
+    } 
+    if ($split[1] === '05') {
+        $mon    = "Mei";
+    } 
+    if ($split[1] === '06') {
+        $mon    = "Juni";
+    } 
+    if ($split[1] === '07') {
+        $mon    = "Juli";
+    } 
+    if ($split[1] === '08') {
+        $mon    = "Agustus";
+    } 
+    if ($split[1] === '09') {
+        $mon    = "September";
+    } 
+    if ($split[1] === '10') {
+        $mon    = "Oktober";
+    } 
+    if ($split[1] === '11') {
+        $mon    = "November";
+    } 
+    if ($split[1] === '12') {
+        $mon    = "Desember";
+    }
+    return strtoupper($mon)." ".$split[0];
+}
 ?>

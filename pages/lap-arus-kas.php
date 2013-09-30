@@ -100,6 +100,32 @@ $jenis_laporan   = array('Harian','Bulanan','Tahunan');
             $('input[type=text], select').val('');
             $('#jenis_attr').html('');
         });
+        $('#cetak').click(function() {
+            var wWidth = $(window).width();
+            var dWidth = wWidth * 0.8;
+            var wHeight= $(window).height();
+            var dHeight= wHeight * 1;
+            var x = screen.width/2 - dWidth/2;
+            var y = screen.height/2 - dHeight/2;
+            var jenis   = $('#jenis').val();
+            if (jenis === 'Harian') {
+                var awal  = $('#awal').val();
+                var akhir = $('#akhir').val();
+                var jenis_trans = $('#transaksi').val();
+                window.open('pages/arus-kas-harian-print.php?awal='+awal+'&akhir='+akhir+'&jenis_transaksi='+jenis_trans, 'Arus Kas', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
+            }
+            if (jenis === 'Bulanan') {
+                var bulan = $('#bulan').val();
+                var tahun = $('#tahun').val();
+                var jenis_trans = $('#transaksi').val();
+                window.open('pages/arus-kas-bulanan-print.php?bulan='+tahun+'-'+bulan+'&jenis_transaksi='+jenis_trans, 'Arus Kas', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
+            }
+            if (jenis === 'Tahunan') {
+                var tahun = $('#tahun').val();
+                var jenis_trans = $('#transaksi').val();
+                window.open('pages/arus-kas-tahunan-print.php?tahun='+tahun+'&jenis_transaksi='+jenis_trans, 'Arus Kas', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
+            }
+        });
     });
 </script>
 
@@ -109,7 +135,7 @@ $jenis_laporan   = array('Harian','Bulanan','Tahunan');
     <tr><td width="10%">Jenis Laporan:</td><td><select name="jenis" id="jenis"><option value="">Pilih ...</option><?php foreach ($jenis_laporan as $data) { ?><option value="<?= $data ?>"><?= $data ?></option> <?php } ?></select></td></tr>
     <tr id="jenis_attr"></tr>
     <tr><td>Nama Transaksi:</td><td><select name="transaksi" id="transaksi"><option value="">Pilih ...</option><?php foreach ($jenis_transaksi as $data) { ?><option value="<?= $data ?>"><?= $data ?></option> <?php } ?></select></td></tr>
-    <tr><td></td><td><?= form_button('Tampilkan', 'id=search') ?> <?= form_button('Reset', 'id=reset') ?> <!--<?= form_button('Cetak', 'id=cetak') ?> --></td></tr>
+    <tr><td></td><td><?= form_button('Tampilkan', 'id=search') ?> <?= form_button('Reset', 'id=reset') ?> <?= form_button('Cetak', 'id=cetak') ?></td></tr>
 </table>
 </div>
 <div id="result-info">

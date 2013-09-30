@@ -1,4 +1,8 @@
 <?php
+$subNav = array(
+        "Stok Opname ; stok-opname.php ; #509601;",
+        "Koreksi Stok ; koreksi-stok.php ; #509601;",
+);
 set_include_path("../");
 include_once("inc/essentials.php");
 include_once("inc/functions.php");
@@ -7,6 +11,12 @@ include_once("pages/message.php");
 ?>
 
 <script type="text/javascript">
+$(function() {
+    $('#search').keyup(function() {
+        var value = $(this).val();
+        load_data_stokopname('',value,'');
+    });
+});
 $(document).tooltip();
 load_data_stokopname();
 function removeMe(el) {
@@ -303,6 +313,7 @@ function delete_stokopname(id, page) {
 <hr>
 <button id="button">Tambah Data</button>
 <button id="reset">Reset</button>
+<?= form_input('search', NULL, 'id=search placeholder="Search ..." class=search') ?>
 <div id="result-stokopname">
     
 </div>

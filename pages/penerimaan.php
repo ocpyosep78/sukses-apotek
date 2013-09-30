@@ -31,6 +31,7 @@ function check_perubahan_hna(i) {
     var hrg_beli    = parseInt(currencyToNumber($('#harga'+i).val()));
     var new_var     = hrg_beli/(isi*isi_satuan); // pengali
     var new_hna     = (ppn*new_var)+new_var;
+    //alert(hrg_beli+' - '+isi+' - '+isi_satuan);
     if (hna > new_hna) {
         $('<div>HNA untuk barang '+barang+' mengalami perubahan dari Rp. '+numberToCurrency(hna)+' menjadi Rp. '+numberToCurrency(new_hna)+'</br> Apakah anda akan melakukan perubahan?</div>').dialog({
             title: 'Konfirmasi Perubahan HNA',
@@ -168,20 +169,21 @@ function form_add() {
                 '<table width=100% class=data-input><tr valign=top><td width=50%>'+
                     '<table width=100%>'+
                         '<tr><td>No. SP:</td><td><input type=text name=no_sp id=no_sp size=10 /></td></tr>'+
+                        '<tr><td>Jenis Penerimaan:</td><td><select name=status id=status style="min-width: 86px;"><option value="Tempo">Tempo</option><option value="Cash">Cash</option><option value="Konsinyasi">Konsinyasi</option></select></td></tr>'+
                         '<tr><td>Faktur:</td><td><input type=text name=faktur id=faktur size=10 /></td></tr>'+
                         '<tr><td>Tanggal:</td><td><input type=text value="<?= date("d/m/Y") ?>" name=tanggal id=tanggal size=10 /></td></tr>'+
                         '<tr><td>Supplier:</td><td><input type=text name=supplier id=supplier size=40 /><input type=hidden name=id_supplier id=id_supplier /></td></tr>'+
                         '<tr><td>Jatuh Tempo:</td><td><input type=text name=tempo id=tempo size=10 /></td></tr>'+
-                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn size=10 value="0" /> %</td></tr>'+
                     '</table>'+
                     '</td><td width=50%>'+
                     '<table width=100%>'+
+                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn size=10 value="0" /> %</td></tr>'+
                         '<tr><td>Diskon:</td><td><input type=text name=disc_pr id=disc_pr value="0" size=10 /> %, Rp. <input type=text name=disc_rp id=disc_rp onblur=FormNum(this); onfocus=javascript:this.value=currencyToNumber(this.value); size=10 value="0" /></td></tr>'+
                         '<tr><td>Materai (Rp.):</td><td><input type=text name=materai onblur=FormNum(this); id=materai size=10 value="0" /></td></tr>'+
                         '<tr><td>Total (Rp.):</td><td><input type=text name=total id=total size=10 /></td></tr>'+
                         '<tr><td width=20%>Nama Barang:</td><td width=50%><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?><?= form_hidden(NULL, NULL, 'id=hna') ?><?= form_hidden(NULL, NULL, 'id=isi') ?><?= form_hidden(NULL, NULL, 'id=isi_satuan') ?></td></tr>'+
-                        '<tr><td>Kemasan:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select></td></tr>'+
-                        '<tr><td>Jumlah:</td><td><?= form_input('jumlah', NULL, 'id=jumlah size=10') ?></td></tr>'+
+                        '<tr><td>Kemasan & Jumlah:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select> & <?= form_input('jumlah', NULL, 'id=jumlah size=10') ?></td></tr>'+
+                        
                     '</table>'+
                 '</td></tr></table>'+
                 '<table width=100% cellspacing="0" class="list-data-input" id="penerimaan-list"><thead>'+
@@ -206,16 +208,17 @@ function form_add() {
         changeYear: true,
         changeMonth: true
     });
+    
     $('#jumlah').keydown(function(e) {
         if (e.keyCode === 13) {
             var id_barang       = $('#id_barang').val();
             var nama_barang     = $('#barang').val();
-            var id_satuan_beli  = $('#kemasan').val();
+            var id_satuan_beli  = $('#kemasan').val().split('-');
             var jumlah          = $('#jumlah').val();
             var hna             = $('#hna').val();
-            var isi             = $('#isi').val();
-            var isi_satuan      = $('#isi_satuan').val();
-            load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi, isi_satuan);
+            var isi             = id_satuan_beli[1];
+            var isi_satuan      = id_satuan_beli[2];
+            load_list_data(id_barang, nama_barang, id_satuan_beli[0], jumlah, hna, isi, isi_satuan);
         }
     });
     $('#kemasan').change(function() {
@@ -262,7 +265,7 @@ function form_add() {
                 alert('Kemasan barang tidak tersedia !');
             } else {
                 $.each(data, function (index, value) {
-                    $('#kemasan').append("<option value='"+value.id_kemasan+"'>"+value.nama+"</option>");
+                    $('#kemasan').append("<option value='"+value.id_kemasan+"-"+value.isi+"-"+value.isi_satuan+"'>"+value.nama+"</option>");
                 });
             }
         });
@@ -287,6 +290,9 @@ function form_add() {
             "Cancel": function() {    
                 $(this).dialog().remove();
                 $.cookie('session', 'false');
+            }, "Reset": function() {
+                $('#no_sp, #supplier, #id_suppplier, #tempo, #total').val('');
+                $('#penerimaan-list tbody').html('');
             }
         }, close: function() {
             $(this).dialog().remove();
@@ -294,6 +300,14 @@ function form_add() {
         }, open: function() {
             $('#no_sp').focus();
             $.cookie('session', 'true');
+            /*$.ajax({
+                url: 'models/autocomplete.php?method=get_attr_penerimaan',
+                cache: false,
+                dataType: 'json',
+                success: function(msg) {
+                    $('#faktur').val(msg.faktur);
+                }
+            });*/
         }
     });
     var lebar = $('#supplier').width();
@@ -322,7 +336,7 @@ function form_add() {
         $('#supplier').val(data.supplier);
         $('#id_supplier').val(data.id_supplier);
         $('#penerimaan-list tbody').html('');
-        $.ajax({
+        /*$.ajax({
             url: 'models/autocomplete.php?method=get_attr_penerimaan',
             cache: false,
             dataType: 'json',
@@ -331,7 +345,7 @@ function form_add() {
                 $('#tempo').val(msg.tempo);
                 $('#ppn,#materai,#disc_rp, #disc_pr').val('0');
             }
-        });
+        });*/
         $.getJSON('models/autocomplete.php?method=get_data_pemesanan_penerimaan&id='+data.id, function(data){
             $.each(data, function (index, value) {
                 // function here
@@ -363,6 +377,9 @@ function form_add() {
         $('#id_supplier').val(data.id);
     });
     $('#save_penerimaan').submit(function() {
+        if ($('#id_supplier').val() === '') {
+            alert_empty('Supplier','#supplier'); return false;
+        }
         var jml_baris = $('.tr_rows').length;
         for (i = 1; i <= jml_baris; i++) {
             if ($('#satuan'+i).val() === '') {

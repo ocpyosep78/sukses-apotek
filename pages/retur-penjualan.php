@@ -58,7 +58,8 @@ function load_list_data() {
     $('#barang').focus();
     $('#ed'+no).datepicker({
         changeMonth: true,
-        changeYear: true
+        changeYear: true,
+        minDate: 0
     });
 }
 

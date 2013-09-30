@@ -11,7 +11,7 @@ foreach ($attr_array as $attr);
 <script type="text/javascript">
 window.onunload = refreshParent;
 function refreshParent() {
-    window.opener.location.reload();
+    //window.opener.location.reload();
 }
 function cetak() {  		
     window.print();

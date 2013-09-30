@@ -145,7 +145,7 @@ if ($method === 'get_detail_barang_by_ed') {
 if ($method === 'get_kemasan_barang') {
     $id = $_GET['id'];
     $rows = NULL;
-    $sql = mysql_query("select k.id, k.default_kemasan, k.id_kemasan, s.nama 
+    $sql = mysql_query("select k.id, k.default_kemasan, k.id_kemasan, s.nama, k.isi, k.isi_satuan 
         from kemasan k 
         join satuan s on (k.id_kemasan = s.id) 
         where k.id_barang = '$id' order by k.id desc");

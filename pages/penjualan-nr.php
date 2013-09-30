@@ -428,7 +428,7 @@ function form_add() {
             return parsed;
         },
         formatItem: function(data,i,max){
-            var str = '<div class=result>'+data.nama+' <br/> '+data.alamat+'</div>';
+            var str = '<div class=result>'+data.id+' '+data.nama+' <br/> '+data.alamat+'</div>';
             return str;
         },
         width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian

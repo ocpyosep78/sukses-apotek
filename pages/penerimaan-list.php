@@ -17,15 +17,17 @@ $(function() {
         <th width="3%">PPN</th>
         <th width="4%">Materai</th>
         <th width="5%">Tempo</th>
-        <th width="3%">Diskon<br/> (%)</th>
-        <th width="3%">Diskon<br/> Rp.</th>
+        <th width="3%">Disc (%)</th>
+        <th width="3%">Disc Rp.</th>
         <th width="5%">Total RP.</th>
+        <th width="3%">Secara</th>
         <th width="15%">Nama Barang</th>
         <th width="5%">Jumlah</th>
         <th width="5%">ED</th>
         <th width="5%">No. Batch</th>
         <th width="5%">Harga RP.</th>
         <th width="3%">Diskon<br/> (%)</th>
+        
         <th width="2%">#</th>
     </tr>
 </thead>
@@ -53,7 +55,7 @@ $(function() {
     $no = 1;
     foreach ($list_data as $key => $data) { ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
-            <td align="center"><?= ($id !== $data->id)?(++$key+$offset):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?($no):NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?datefmysql($data->tanggal):NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?$data->faktur:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->supplier:NULL ?></td>
@@ -63,6 +65,7 @@ $(function() {
             <td align="center"><?= ($id !== $data->id)?$data->diskon_persen:NULL ?></td>
             <td align="right"><?= ($id !== $data->id)?rupiah($data->diskon_rupiah):NULL ?></td>
             <td align="right"><?= ($id !== $data->id)?rupiah($data->total):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?$data->status:NULL ?></td>
             <td><?= $data->nama_barang ?></td>
             <td align="center"><?= $data->jumlah ?></td>
             <td align="center"><?= datefmysql($data->expired) ?></td>

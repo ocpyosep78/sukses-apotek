@@ -101,7 +101,8 @@ var str = '<div id=form_add>'+
                     } else {
                         alert_edit();
                         $('#form_add').dialog().remove();
-                        load_data_pelanggan($('.noblock').html());
+                        var search = $('#search').val();
+                        load_data_pelanggan('',search,'');
                     }
                     
                 }

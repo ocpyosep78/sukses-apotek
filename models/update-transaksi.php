@@ -36,9 +36,9 @@ if ($method === 'save_pemesanan') {
     }
     
     $result['status'] = TRUE;
-    $result['id_pemesanan'] = get_last_pemesanan();
-    $result['id'] = $id_pemesanan;
-    //die(json_encode($result));
+    $result['id_pemesanan'] = $id;
+    $result['id'] = $id;
+    die(json_encode($result));
 }
 
 if ($method === 'delete_pemesanan') {
@@ -47,13 +47,15 @@ if ($method === 'delete_pemesanan') {
 }
 
 if ($method === 'save_penerimaan') {
+    session_start();
     $faktur         = $_POST['faktur'];
     $tanggal        = date2mysql($_POST['tanggal']);
     $no_sp          = ($_POST['no_sp'] !== '')?"'".$_POST['no_sp']."'":"NULL";
     $supplier       = $_POST['id_supplier'];
     $ppn            = $_POST['ppn'];
     $materai        = currencyToNumber($_POST['materai']);
-    $tempo          = date2mysql($_POST['tempo']);
+    $tempo          = ($_POST['tempo'] !== '')?"'".date2mysql($_POST['tempo'])."'":"NULL";
+    $status         = $_POST['status'];
     //$id_user        = ""; // unUsed
     $disc_pr        = $_POST['disc_pr'];
     $disc_rp        = currencyToNumber($_POST['disc_rp']);
@@ -69,10 +71,12 @@ if ($method === 'save_penerimaan') {
             id_pemesanan = $no_sp,
             ppn = '$ppn',
             materai = '$materai',
-            jatuh_tempo = '$tempo',
+            jatuh_tempo = $tempo,
+            id_users = '$_SESSION[id_user]',
             diskon_persen = '$disc_pr',
             diskon_rupiah = '$disc_rp',
-            total = '$total'";
+            total = '$total',
+            status = '$status'";
         mysql_query($sql);
         $id = mysql_insert_id();
         
@@ -121,6 +125,24 @@ if ($method === 'save_penerimaan') {
             ";
             mysql_query($stok);
         }
+        
+        if ($status === 'Cash') {
+            $sql = mysql_query("select substr(no_ref, 4,3) as id  from inkaso order by id desc limit 1");
+            $row = mysql_fetch_object($sql);
+            if (!isset($row->id)) {
+                $res = "IN.001-".date("m/Y");
+            } else {
+                $res = "IN.".str_pad((string)($row->id+1), 3, "0", STR_PAD_LEFT)."-".date("m/Y");
+            }
+            $q_inkaso = "insert into inkaso set
+                no_ref = '$res',
+                tanggal = NOW(),
+                id_penerimaan = '$id_penerimaan',
+                cara_bayar = 'Uang',
+                nominal = '$total'";
+            mysql_query($q_inkaso);
+        }
+        
         $result['action'] = 'add';
     } else {
         $sql = "update penerimaan set
@@ -131,9 +153,11 @@ if ($method === 'save_penerimaan') {
             ppn = '$ppn',
             materai = '$materai',
             jatuh_tempo = '$tempo',
+            id_users = '$_SESSION[id_user]',
             diskon_persen = '$disc_pr',
             diskon_rupiah = '$disc_rp',
-            total = '$total'
+            total = '$total',
+            status = '$status'
             where id = '$id_penerimaan'";
         mysql_query($sql);
         $id = $id_penerimaan;
@@ -385,6 +409,52 @@ if ($method === 'save_retur_penerimaan') {
                 waktu = '$tanggal ".date("H:i:s")."',
                 id_transaksi = '$id',
                 transaksi = 'Retur Penerimaan',
+                nobatch = '".(isset($row->nobatch)?$row->nobatch:'')."',
+                id_barang = '$data',
+                ed = '".date2mysql($ed[$key])."',
+                keluar = '$jumlah[$key]'";
+           //echo $query2;
+           mysql_query($query2);
+        }
+    }
+    $result['status'] = TRUE;
+    $result['action'] = 'add';
+    die(json_encode($result));
+}
+
+if ($method === 'save_retur_penjualan') {
+    $tanggal        = date2mysql($_POST['tanggal']);
+    $id_barang      = $_POST['id_barang'];
+    $id_kemasan     = $_POST['id_kemasan'];
+    $ed             = $_POST['ed'];
+    $jumlah         = $_POST['jumlah'];
+    $id_retur       = $_POST['nonota'];
+    
+    if ($id_retur === '') {
+        $sql = "insert into retur_penjualan set
+            waktu = '$tanggal',
+            id_penjualan = '$id_retur'";
+        mysql_query($sql);
+        $id         = mysql_insert_id();
+        foreach ($id_barang as $key => $data) {
+            $kemasan = mysql_fetch_object(mysql_query("select id from kemasan where id_barang = '$data' and id_kemasan = '$id_kemasan[$key]'"));
+            $query = "insert into detail_retur_penjualan set
+                id_penjualan = '$id_retur',
+                id_kemasan = '".$kemasan->id."',
+                expired = '".date2mysql($ed[$key])."',
+                qty = '$jumlah[$key]'
+                ";
+            //echo $query;
+            mysql_query($query);
+            $query1 = mysql_query("select dp.* from kemasan k
+                join barang b on (k.id_barang = b.id) 
+                join detail_penerimaan dp on (k.id = dp.id_kemasan)
+                where b.id = '$data' and k.id = '$id_kemasan[$key]' and dp.expired = '".date2mysql($ed[$key])."'");
+            $row = mysql_fetch_object($query1);
+           $query2 = "insert into stok set
+                waktu = '$tanggal ".date("H:i:s")."',
+                id_transaksi = '$id',
+                transaksi = 'Retur Penjualan',
                 nobatch = '".(isset($row->nobatch)?$row->nobatch:'')."',
                 id_barang = '$data',
                 ed = '".date2mysql($ed[$key])."',
@@ -794,5 +864,39 @@ if ($method === 'save_in_out_uang') {
 if ($method === 'delete_in_out_uang') {
     $id = $_GET['id'];
     mysql_query("delete from arus_kas where id = '$id'");
+}
+
+if ($method === 'save_koreksi_stok') {
+    session_start();
+    $id_barang  = $_POST['id_barang'];
+    $penyesuaian= $_POST['penyesuaian'];
+    
+    foreach ($id_barang as $key => $data) {
+        $get    = mysql_fetch_object(mysql_query("select * from stok where id_barang = '$data' order by ed desc limit 1"));
+        if ($penyesuaian[$key] !== '') {
+            if ($penyesuaian[$key] < 0) {
+                $sql= "insert into stok set
+                    waktu = NOW(),
+                    transaksi = 'Koreksi Stok',
+                    id_barang = '$data',
+                    ed = '".(isset($get->ed)?$get->ed:'NULL')."',
+                    keluar = '".abs($penyesuaian[$key])."',
+                    id_users = '".$_SESSION['id_user']."'";
+                mysql_query($sql);
+            }
+            else if ($penyesuaian[$key] > 0) {
+                $sql = "insert into stok set
+                    waktu = NOW(),
+                    transaksi = 'Koreksi Stok',
+                    id_barang = '$data',
+                    ed = '".(isset($get->ed)?$get->ed:'NULL')."',
+                    masuk = '".abs($penyesuaian[$key])."',
+                    id_users = '".$_SESSION['id_user']."'";
+                //echo $sql;
+                mysql_query($sql);
+            }
+        }
+    }
+    die(json_encode(array('status' => TRUE)));
 }
 ?>

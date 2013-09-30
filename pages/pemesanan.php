@@ -76,8 +76,14 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
 }
 
 function cetak_sp(id_pemesanan) {
+    var wWidth = $(window).width();
+    var dWidth = wWidth * 0.3;
+    var wHeight= $(window).height();
+    var dHeight= wHeight * 1;
+    var x = screen.width/2 - dWidth/2;
+    var y = screen.height/2 - dHeight/2;
     var perundangan = $('#perundangan1').val();
-    window.open('pages/pemesanan-print.php?id='+id_pemesanan+'&perundangan='+perundangan, 'Pemesanan Cetak', 'width=300px, height=500px, scrollabars=1, resizable=1');
+    window.open('pages/pemesanan-print.php?id='+id_pemesanan+'&perundangan='+perundangan, 'Pemesanan Cetak', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
 }
 
 function form_add() {
@@ -245,12 +251,12 @@ function form_add() {
             type: 'POST',
             success: function(data) {
                 if (data.status === true) {
-                    alert_tambah('#supplier');
+                    alert_refresh('Data pemesanan berhasil di tambahkan !');
                     $('#supplier, #id_supplier').val('');
                     $('#no_sp').val(data.id_pemesanan);
                     $('#pesanan-list tbody').html('');
                     $('#estimasi').html('0');
-                    load_data_pemesanan();
+                    load_data_pemesanan('','',data.id_pemesanan);
                     cetak_sp(data.id);
                 } else {
                     alert_edit();

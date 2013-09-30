@@ -81,8 +81,14 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
 }
 
 function cetak_sp(id_defecta) {
+    var wWidth = $(window).width();
+    var dWidth = wWidth * 0.8;
+    var wHeight= $(window).height();
+    var dHeight= wHeight * 1;
+    var x = screen.width/2 - dWidth/2;
+    var y = screen.height/2 - dHeight/2;
     var perundangan = $('#perundangan1').val();
-    window.open('pages/defecta-print.php?id='+id_defecta+'&perundangan='+perundangan, 'defecta Cetak', 'width=300px, height=500px, scrollabars=1, resizable=1');
+    window.open('pages/defecta-print.php?id='+id_defecta+'&perundangan='+perundangan, 'defecta Cetak', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
 }
 
 function form_add() {

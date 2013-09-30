@@ -64,6 +64,9 @@ function penerimaan_load_data($param) {
     if (isset($param['id']) and $param['id'] !== '') {
         $q.="and p.id = '".$param['id']."' ";
     }
+    if (isset($param['id_supplier'])) {
+        //$q.=" and p.status != 'Cash'";
+    }
     if (isset($param['id_supplier']) and $param['id_supplier'] !== '') {
         $q.=" and s.id = '".$param['id_supplier']."'";
     }
@@ -77,7 +80,7 @@ function penerimaan_load_data($param) {
         $limit = " limit ".$param['start'].", ".$param['limit']."";
     }
     
-    $sql = "select p.*, k.nama as karyawan, s.nama as supplier, concat_ws(' ',b.nama, b.kekuatan, st.nama) as nama_barang, 
+    $sql = "select p.*, k.nama as karyawan, IFNULL(s.nama,'-') as supplier, concat_ws(' ',b.nama, b.kekuatan, st.nama) as nama_barang, 
         dp.jumlah, dp.expired, dp.nobatch, dp.harga, dp.disc_pr, dp.disc_rp, stn.nama as kemasan
         from penerimaan p
         left join pemesanan ps on (p.id_pemesanan = ps.id)
@@ -86,10 +89,10 @@ function penerimaan_load_data($param) {
         join satuan stn on (stn.id = km.id_kemasan)
         join barang b on (km.id_barang = b.id)
         join satuan st on (b.satuan_kekuatan = st.id)
-        join supplier s on (ps.id_supplier = s.id)
+        left join supplier s on (ps.id_supplier = s.id)
         left join users u on (p.id_users = u.id)
         left join karyawan k on (u.id_karyawan = k.id)
-        where p.id is not NULL $q";
+        where p.id is not NULL $q order by p.id desc";
     //echo $sql.$limit;
     $query = mysql_query($sql.$limit);
     $data = array();
@@ -131,7 +134,7 @@ function hutang_load_data($param) {
         join supplier s on (ps.id_supplier = s.id)
         left join users u on (p.id_users = u.id)
         left join karyawan k on (u.id_karyawan = k.id)
-        where p.id is not NULL $q group by p.id $having";
+        where p.status in ('Tempo','Konsinyasi') $q group by p.id $having";
     //echo "<pre>".$sql.$limit."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
@@ -176,8 +179,12 @@ function load_data_stok_opname($param) {
     if ($param['id'] !== '') {
         $q.="and s.id = '".$param['id']."' ";
     }
+    if (isset($param['search']) and $param['search'] !== '') {
+        $q.=" and b.nama like ('%".$param['search']."%')";
+    }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select s.*, b.kekuatan, b.nama, st.nama as satuan_kekuatan, sum(s.masuk) as masuk, sum(s.keluar) as keluar, (sum(s.masuk)-sum(s.keluar)) as sisa from stok s 
+    $sql = "select s.*, b.kekuatan, b.nama, st.nama as satuan_kekuatan, sum(s.masuk) as masuk, sum(s.keluar) as keluar, 
+        (sum(s.masuk)-sum(s.keluar)) as sisa, b.id as id_barang from stok s 
         join barang b on (s.id_barang = b.id)
         left join satuan st on (b.satuan_kekuatan = st.id)
         where s.id is not NULL $q group by s.id_barang";
@@ -651,7 +658,7 @@ function inkaso_load_data($param) {
     $sql = "select i.*, p.faktur, s.nama supplier, b.nama as bank from inkaso i
         join penerimaan p on (i.id_penerimaan = p.id)
         join supplier s on (p.id_supplier = s.id)
-        left join bank b on (i.id_bank = b.id) where i.id is not NULL $q";
+        left join bank b on (i.id_bank = b.id) where i.id is not NULL $q order by i.id desc";
     
     //echo $sql.$limit;
     $query = mysql_query($sql.$limit);

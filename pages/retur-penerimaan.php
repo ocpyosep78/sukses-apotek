@@ -231,12 +231,12 @@ function form_add() {
             success: function(data) {
                 if (data.status === true) {
                     if (data.action === 'add') {
-                        alert_tambah('#supplier');
+                        alert_refresh('Transaksi retur penerimaan berhasil dilakukan!');
                         $('#supplier, #id_supplier').val('');
                         load_data_retur_penerimaan();
                         $('#retur_penerimaan-list tbody').html('');
                     } else {
-                        alert_edit();
+                        alert_refresh('Update transaksi retur penerimaan berhasil dilakukan!');
                         load_data_retur_penerimaan();
                     }
                 }
