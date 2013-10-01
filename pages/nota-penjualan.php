@@ -62,16 +62,27 @@ function cetak() {
     ?>
     <table width="100%">
         <tr><td>Subtotal:</td><td align="right"><?= rupiah($total_brg) ?></td></tr>
-        <tr><td>Diskon:</td><td align="right"><?= rupiah($rows->diskon_rupiah) ?></td></tr>
+        <tr><td>Diskon:</td><td align="right"><?= ($rows->diskon_rupiah !== '0')?rupiah($rows->diskon_rupiah):$rows->diskon_persen.' %' ?></td></tr>
         <tr><td>PPN <?= $rows->ppn ?> %:</td><td align="right"><?= rupiah($ppn) ?></td></tr>
         <tr><td>Tuslah & Embalage:</td><td align="right"><?= rupiah($tusem) ?></td></tr>
         <?php if ($rows->id_resep !== NULL) { 
         $biaya_apt = mysql_fetch_object(mysql_query("select sum(nominal) as total from resep_r where id_resep = '".$rows->id_resep."'"));    
         $biaya_apoteker = $biaya_apt->total;
+        
         ?>
         <tr><td>Biaya Apoteker:</td><td align="right"><?= rupiah($biaya_apt->total) ?></td></tr>
-        <?php } ?>
-        <tr><td>Total:</td><td align="right"><?= rupiah(($total+$biaya_apoteker)-$rows->diskon_rupiah) ?></td></tr>
+        <?php } 
+        $totals = ($total+$biaya_apoteker);
+        if ($rows->diskon_rupiah !== '0') {
+            $diskon = $rows->diskon_rupiah;
+        } else {
+            $diskon = ($totals*($rows->diskon_persen/100));
+        }
+        $total_tagihan = $totals - $diskon;
+        ?>
+        <tr><td>Total:</td><td align="right"><?= rupiah($total_tagihan) ?></td></tr>
+        <tr><td>Pembayaran:</td><td align="right"><?= rupiah($rows->bayar) ?></td></tr>
+        <tr><td>Kembalian:</td><td align="right"><?= rupiah($rows->bayar-$total_tagihan) ?></td></tr>
     </table>
     <br/>
     <center style="border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;">

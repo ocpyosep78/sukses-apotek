@@ -245,6 +245,7 @@ if ($method === 'save_penjualannr') {
     $asuransi   = ($_POST['asuransi'] !== '')?$_POST['asuransi']:'NULL';
     $embalage   = currencyToNumber($_POST['embalage']);
     $reimburse  = isset($_POST['reimburse'])?$_POST['reimburse']:'0';
+    $uangserah  = currencyToNumber($_POST['pembayaran']);
     $pembayaran = currencyToNumber($_POST['pembulatan']); // yang dientrikan pembulatan pembayarannya
     $sql = "insert into penjualan set
         waktu = '$tanggal',
@@ -256,7 +257,8 @@ if ($method === 'save_penjualannr') {
         tuslah = '$tuslah',
         embalage = '$embalage',
         id_asuransi = $asuransi,
-        reimburse = '$reimburse'";
+        reimburse = '$reimburse',
+        bayar = '$uangserah'";
     
     mysql_query($sql);
     $id_penjualan = mysql_insert_id();
@@ -288,6 +290,7 @@ if ($method === 'save_penjualannr') {
             $sql = "insert into detail_penjualan set
                 id_penjualan = '$id_penjualan',
                 id_kemasan = '$kemasan[$key]',
+                ed = '".$ed[$key]."',
                 qty = '".($jumlah[$key]*$isi)."',
                 harga_jual = '$harga_jual[$key]'
                 ";
@@ -557,8 +560,10 @@ if ($method === 'save_penjualan') {
     $asuransi   = ($_POST['asuransi'] !== '')?$_POST['asuransi']:'NULL';
     $embalage   = currencyToNumber($_POST['embalage']);
     $reimburse  = isset($_POST['reimburse'])?$_POST['reimburse']:'0';
+    $uangserah  = currencyToNumber($_POST['pembayaran']);
     $pembayaran = currencyToNumber($_POST['pembulatan']); // yang dientrikan pembulatan pembayarannya
     $id_resep   = $_POST['id_resep'];
+    $expired    = $_POST['ed'];
     // cek apakah nomor resep pernah ditransaksikan
     $cek = mysql_query("select count(*) as jumlah, id from penjualan where id_resep = '$id_resep'");
     $row = mysql_fetch_object($cek);
@@ -574,7 +579,8 @@ if ($method === 'save_penjualan') {
             tuslah = '$tuslah',
             embalage = '$embalage',
             id_asuransi = $asuransi,
-            reimburse = '$reimburse'";
+            reimburse = '$reimburse',
+            bayar = '$uangserah'";
         mysql_query($sql);
         $id_penjualan = mysql_insert_id();
     
@@ -603,6 +609,7 @@ if ($method === 'save_penjualan') {
             $sql = "insert into detail_penjualan set
                 id_penjualan = '$id_penjualan',
                 id_kemasan = '$kemasan[$key]',
+                expired = '".$expired[$key]."',
                 qty = '".($jumlah[$key]*$isi)."',
                 harga_jual = '$harga_jual[$key]'
                 ";
@@ -617,7 +624,7 @@ if ($method === 'save_penjualan') {
                 id_transaksi = '$id_penjualan',
                 transaksi = 'Penjualan',
                 id_barang = '$data',
-                ed = '".$ed->ed."',
+                ed = '".$expired[$key]."',
                 keluar = '".($jumlah[$key]*$isi)."'";
             //echo $stok;
             mysql_query($stok);

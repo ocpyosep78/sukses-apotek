@@ -12,7 +12,6 @@ include_once("pages/message.php");
 ?>
 
 <script type="text/javascript">
-$(document).tooltip();
 load_data_penjualan();
 $.cookie('session', 'false');
 $.cookie('formbayar', 'false');
@@ -93,6 +92,23 @@ function hitung_total_penjualan() {
 function removeMe(el) {
     var parent = el.parentNode.parentNode;
     parent.parentNode.removeChild(parent);
+    var jumlah = $('.tr_rows').length;
+    var col = 0;
+    for (i = 1; i <= jumlah; i++) {
+        $('.tr_rows:eq('+col+')').children('td:eq(0)').html(i);
+        $('.tr_rows:eq('+col+')').children('td:eq(1)').children('.id_barang').attr('id','id_barang'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(2)').children('.jumlah').attr('id','jumlah'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(3)').children('.harga_jual').attr('id','harga_jual'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(3)').children('.kemasan').attr('id','kemasan'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(4)').children('.ed').attr('id','ed'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(5)').attr('id','sisa'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(6)').attr('id','hargajual'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(7)').children('.diskon_rupiah').attr('id','diskon_rupiah'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(8)').children('.diskon_persen').attr('id','diskon_persen'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(9)').attr('id','subtotal'+i);
+        col++;
+    }
+    hitung_total_penjualan();
 }
 
 function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
@@ -101,12 +117,13 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
     var str = '<tr class="tr_rows">'+
                 '<td align=center>'+jml+'</td>'+
                 '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_barang[] value="'+id_brg+'" class=id_barang id=id_barang'+jml+' /></td>'+
-                '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" style="text-align: center;" /></td>'+
-                '<td><input type=hidden name=harga_jual[] id=harga_jual'+jml+' /> <select name=kemasan[] id=kemasan'+jml+'></select></td>'+
+                '<td><input type=text name=jumlah[] class=jumlah id=jumlah'+jml+' value="'+jumlah+'" style="text-align: center;" /></td>'+
+                '<td><input type=hidden name=harga_jual[] id=harga_jual'+jml+' class=harga_jual /> <select name=kemasan[] class=kemasan id=kemasan'+jml+'></select></td>'+
+                '<td align=center><select name=ed[] class=ed id=ed'+jml+' class=ed></select></td>'+
                 '<td align=center id=sisa'+jml+'></td>'+
                 '<td align=right id=hargajual'+jml+'></td>'+
-                '<td><input type=text name=diskon_rupiah[] style="text-align: right;" id=diskon_rupiah'+jml+' value="0" onblur="FormNum(this)" /></td>'+
-                '<td><input type=text name=diskon_persen[] style="text-align: center;" id=diskon_persen'+jml+' value="0" /></td>'+
+                '<td><input type=text name=diskon_rupiah[] class=diskon_rupiah style="text-align: right;" id=diskon_rupiah'+jml+' value="0" onblur="FormNum(this)" /></td>'+
+                '<td><input type=text name=diskon_persen[] class=diskon_persen style="text-align: center;" id=diskon_persen'+jml+' value="0" /></td>'+
                 '<td align=right id=subtotal'+jml+'></td>'+
                 '<td align=center><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
               '</tr>';
@@ -336,9 +353,10 @@ function form_add() {
             '</table><input type=hidden name=total_penjualan id=total_penjualan /></td></tr></table>'+
             '<table width=100% cellspacing="0" class="list-data-input" id="penjualan-list"><thead>'+
                 '<tr><th width=5%>No.</th>'+
-                    '<th width=29%>Nama Barang</th>'+
-                    '<th width=10%>Jumlah</th>'+
+                    '<th width=25%>Nama Barang</th>'+
+                    '<th width=5%>Jumlah</th>'+
                     '<th width=10%>Kemasan</th>'+
+                    '<th width=10%>ED</th>'+
                     '<th width=5%>Sisa<br/>Stok</th>'+
                     '<th width=10%>Harga Jual</th>'+
                     '<th width=10%>Diskon RP.</th>'+

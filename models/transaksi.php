@@ -603,7 +603,7 @@ function analisis_abc__load_data($param) {
 
 function penjualan_load_data_barang($id) {
     $sql = "select b.*, s.nama as satuan, dp.qty, dp.harga_jual, 
-        p.waktu, p.total, p.tuslah, p.embalage, p.ppn, p.diskon_persen, p.diskon_rupiah, p.id_resep, pl.nama as pelanggan,
+        p.waktu, p.total, p.tuslah, p.embalage, p.ppn, p.diskon_persen, p.diskon_rupiah, p.id_resep, pl.nama as pelanggan, p.bayar,
         (dp.qty*dp.harga_jual) as subtotal from detail_penjualan dp
         join penjualan p on (dp.id_penjualan = p.id)
         left join pelanggan pl on (p.id_pelanggan = pl.id)
