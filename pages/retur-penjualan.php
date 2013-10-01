@@ -100,7 +100,8 @@ function load_list_data_by_id_penjualan(id) {
             $('#barang').focus();
             $('#ed'+no).datepicker({
                 changeMonth: true,
-                changeYear: true
+                changeYear: true,
+                minDate: 0
             });
         });
     });
