@@ -159,7 +159,7 @@ if ($method === 'get_nomor_sp') {
     $sql = mysql_query("select p.*, s.nama as supplier 
         FROM pemesanan p 
         join supplier s on (p.id_supplier = s.id) 
-        where p.id not in (select id_pemesanan from penerimaan) and p.id like ('%$q%') order by locate('$q',p.id)");
+        where p.id not in (select id_pemesanan from penerimaan where id_pemesanan is not NULL) and p.id like ('%$q%') order by locate('$q',p.id)");
     $rows = array();
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;
