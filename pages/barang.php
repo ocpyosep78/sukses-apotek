@@ -275,7 +275,7 @@ var str = '<div id=form_add>'+
                             '</table></div>'+
                     '<div id="tabs-3"><?= form_hidden('id_kemasan', NULL, 'id=id_kemasan') ?>'+
                         '<img src="img/icons/add-kemasan.png" id=add_kemasan align=left style="margin-bottom: 3px;" />'+
-                            '<table width=100% class="data-input packing">'+
+                            '<table width=100% class="data-input packing" id="input-packing">'+
                                 
                             '</table>'+
                     '</div>'+
@@ -286,17 +286,23 @@ var str = '<div id=form_add>'+
     $('textarea').focus(function() {
         $(this).select();
     });
+    $('#barcode').blur(function() {
+        if ($('#id_barang').val() === '') {
+            var barcode = $(this).val();
+            $('#barcode0').val(barcode);
+        }
+    });
     $('#margin_nr_rp').keyup(function() {
         var hna     = parseInt(currencyToNumber($('#hna').val()));
         var hja     = parseInt(currencyToNumber($(this).val()));
         var mar_nr  = ((hja-hna)/hna)*100;
-        $('#margin_nr').val(isNaN(mar_nr)?'':Math.ceil(mar_nr));
+        $('#margin_nr').val(isNaN(mar_nr)?'':(mar_nr));
     });
     $('#margin_r_rp').keyup(function() {
         var hna     = parseInt(currencyToNumber($('#hna').val()));
         var hja     = parseInt(currencyToNumber($(this).val()));
         var mar_r   = ((hja-hna)/hna)*100;
-        $('#margin_r').val(isNaN(mar_r)?'':Math.ceil(mar_r));
+        $('#margin_r').val(isNaN(mar_r)?'':(mar_r));
     });
     $('add_kemasan').button();
     $('#farmakoterapi').change(function() {
@@ -436,6 +442,7 @@ var str = '<div id=form_add>'+
                     if (cek_id === '') {
                         alert_tambah('#barcode');
                         $('input[type=text], textarea, select').val('');
+                        $('#input-packing').html('');
                         load_data_barang('1','',data.id_barang);
                     } else {
                         alert_edit();

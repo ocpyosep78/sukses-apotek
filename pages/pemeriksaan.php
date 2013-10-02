@@ -1,8 +1,5 @@
 <?php
-$subNav = array(
-	"Data Pendaftaran ; pendaftaran.php ; #509601;",
-        "Data Pemeriksaan ; pemeriksaan.php ; #509601;"
-);
+
 set_include_path("../");
 include_once("inc/essentials.php");
 include_once("inc/functions.php");
@@ -60,31 +57,42 @@ function add_tindakan(id, nama, nominal) {
 
 function form_add() {
     var str = '<div id=form_pemeriksaan>'+
-                '<form id=save_pemeriksaan action="models/update-transaksi.php?method=save_pemeriksaan" enctype=multipart/form-data>'+
-                    '<span id=output></span><?= form_hidden('id_pendaftaran', NULL, 'id=id_pendaftaran') ?>'+
-                    '<table width=100% class=data-input><tr valign=top><td width=33%>'+
-                    '<table width=100%>'+
-                        '<tr><td>No. Pemeriksaan</td><td><?= form_input('nopemeriksaan', NULL, 'id=nopemeriksaan readonly size=10') ?></td></tr>'+
-                        '<tr><td>Tanggal:</td><td><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
-                        '<tr><td>Nomor PMR:</td><td><?= form_input('norm', NULL, 'id=norm size=40') ?></td></tr>'+
-                        '<tr><td>Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>'+
-                        '<tr><td>Dokter:</td><td><?= form_input('dokter', NULL, 'id=dokter size=40') ?><?= form_hidden('id_dokter', NULL, 'id=id_dokter') ?></td></tr>'+
-                        '<tr><td>Foto Pasien:</td><td><?= form_upload('mFile') ?></td></tr>'+
-                    '</table></td><td width=33%>'+
-                    '<table width=100%>'+
-                        '<tr><td valign=top>Anamnesis:</td><td><?= form_textarea('anamnesis', NULL, 'id=anamnesis cols=37 style="height: 30px"') ?></td></tr>'+
-                        '<tr><td>Diagnosis:</td><td><?= form_input('diagnosis', NULL, 'id=diagnosis size=40') ?><?= form_hidden('id_diagnosis', NULL, 'id=id_diagnosis') ?></td></tr>'+
-                        '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakan', NULL, 'id=id_tindakan') ?></td></tr>'+
-                    '</table>'+
-                    '</td><td id=foto></td></tr></table>'+
-                    '<table width=100% cellspacing="0" class="list-data-input" id="penjualan-list">\n\
-                        <thead><tr>'+
-                            '<th width=50%>DIAGNOSIS</th>'+
-                            '<th width=50%>TINDAKAN</th>'+
-                        '</tr></thead>'+
-                        '<tbody><tr><td valign=top><table width=100% class=diagnosis></table></td><td valign=top><table width=100% class=tindakan></td></tr></tbody>'+
-                    '</table>'+
-                '</form>'+
+                '<div id="tabs">'+
+                    '<ul>'+
+                        '<li><a href="#tabs-1">Data Pasien</a></li>'+
+                        '<li><a href="#tabs-2">Riwayat Penyakit</a></li>'+
+                        '<li><a href="#tabs-3">Dinamis Pasien</a></li>'+
+                    '</ul>'+
+                    '<div id="tabs-1">'+
+                        '<form id=save_pemeriksaan action="models/update-transaksi.php?method=save_pemeriksaan" enctype=multipart/form-data>'+
+                            '<span id=output></span><?= form_hidden('id_pendaftaran', NULL, 'id=id_pendaftaran') ?>'+
+                            '<table width=100% class=data-input><tr valign=top><td width=33%>'+
+                            '<table width=100%>'+
+                                '<tr><td>No. Pemeriksaan</td><td><?= form_input('nopemeriksaan', NULL, 'id=nopemeriksaan readonly size=10') ?></td></tr>'+
+                                '<tr><td>Tanggal:</td><td><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
+                                '<tr><td>Nomor PMR:</td><td><?= form_input('norm', NULL, 'id=norm size=40') ?></td></tr>'+
+                                '<tr><td>Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>'+
+                                '<tr><td>Dokter:</td><td><?= form_input('dokter', NULL, 'id=dokter size=40') ?><?= form_hidden('id_dokter', NULL, 'id=id_dokter') ?></td></tr>'+
+                                '<tr><td>Foto Pasien:</td><td><?= form_upload('mFile') ?></td></tr>'+
+                            '</table></td><td width=33%>'+
+                            '<table width=100%>'+
+                                '<tr><td valign=top>Anamnesis:</td><td><?= form_textarea('anamnesis', NULL, 'id=anamnesis cols=37 style="height: 30px"') ?></td></tr>'+
+                                '<tr><td>Diagnosis:</td><td><?= form_input('diagnosis', NULL, 'id=diagnosis size=40') ?><?= form_hidden('id_diagnosis', NULL, 'id=id_diagnosis') ?></td></tr>'+
+                                '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakan', NULL, 'id=id_tindakan') ?></td></tr>'+
+                            '</table>'+
+                            '</td><td id=foto></td></tr></table>'+
+                            '<table width=100% cellspacing="0" class="list-data-input" id="penjualan-list">\n\
+                                <thead><tr>'+
+                                    '<th width=50%>DIAGNOSIS</th>'+
+                                    '<th width=50%>TINDAKAN</th>'+
+                                '</tr></thead>'+
+                                '<tbody><tr><td valign=top><table width=100% class=diagnosis></table></td><td valign=top><table width=100% class=tindakan></td></tr></tbody>'+
+                            '</table>'+
+                        '</form>'+
+                    '</div>'+
+                    '<div id="tabs-2">'+
+                        
+                    '</div>'+
               '</div>';
     $('body').append(str);
     var lebar = $('#pasien').width();
@@ -301,9 +309,9 @@ function delete_pemeriksaan(id, page) {
     });
 }
 </script>
-<h1>Pemeriksaan</h1>
+<h1>Data Konsultasi</h1>
 <hr>
-<!--<button id="button">Pemeriksaan (F9)</button>-->
+<button id="button">Pemeriksaan (F9)</button>
 <button id="reset">Reset</button>
 <div id="result-pemeriksaan">
     

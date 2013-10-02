@@ -38,7 +38,8 @@ function pemesanan_load_data($param) {
     if (isset($param['start']) and isset($param['limit'])) {
         $limit = " limit ".$param['start'].", ".$param['limit']."";
     }
-    $sql = "select p.*, k.nama as karyawan, dp.jumlah, concat_ws(' ',b.nama, b.kekuatan, st.nama) as nama_barang, st.nama as kemasan, s.nama as supplier from pemesanan p
+    $sql = "select p.*, k.nama as karyawan, dp.jumlah, concat_ws(' ',b.nama, b.kekuatan, st.nama) as nama_barang, b.perundangan,
+        st.nama as kemasan, s.nama as supplier from pemesanan p
         join supplier s on (p.id_supplier = s.id)
         join detail_pemesanan dp on (dp.id_pemesanan = p.id)
         join kemasan km on (km.id = dp.id_kemasan)
@@ -89,11 +90,11 @@ function penerimaan_load_data($param) {
         join satuan stn on (stn.id = km.id_kemasan)
         join barang b on (km.id_barang = b.id)
         join satuan st on (b.satuan_kekuatan = st.id)
-        left join supplier s on (ps.id_supplier = s.id)
+        left join supplier s on (p.id_supplier = s.id)
         left join users u on (p.id_users = u.id)
         left join karyawan k on (u.id_karyawan = k.id)
         where p.id is not NULL $q order by p.id desc";
-    //echo $sql.$limit;
+    //echo "<pre>".$sql.$limit."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {

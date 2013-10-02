@@ -60,7 +60,7 @@ $(function() {
                 <!--<a class='edition' onclick="edit_pemesanan('<?= $str ?>');" title="Klik untuk edit pemesanan">&nbsp;</a>-->
                 <?php
                 if ($sp !== $data->id) { ?>
-                    <a class='printing' onclick="cetak_sp('<?= $data->id ?>');" title="Klik untuk cetak SP">&nbsp;</a>
+                    <a class='printing' onclick="cetak_sp('<?= $data->id ?>','<?= $data->perundangan ?>');" title="Klik untuk cetak SP">&nbsp;</a>
                     <a class='deletion' onclick="delete_pemesanan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus pemesanan">&nbsp;</a>
                 <?php } ?>
             </td>

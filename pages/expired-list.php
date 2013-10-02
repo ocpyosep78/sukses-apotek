@@ -2,7 +2,7 @@
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
 ?>
-<div style="background: yellowgreen; width: 20px; margin-right: 2px; border: 1px solid #000; display: inline-block;">&nbsp;</div> Expired memasuki 6 bulan
+<div style="background: white; width: 20px; margin-right: 2px; border: 1px solid #000; display: inline-block;">&nbsp;</div> Expired memasuki 6 bulan
 <div style="background: yellow; width: 20px; margin-right: 2px; border: 1px solid #000; display: inline-block;">&nbsp;</div> Expired memasuki 3 bulan
 <div style="background: red; width: 20px; margin-right: 2px; border: 1px solid #000; display: inline-block;">&nbsp;</div> Expired
 <table cellspacing="0" width="100%" class="list-data">

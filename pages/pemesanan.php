@@ -75,14 +75,13 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
     });
 }
 
-function cetak_sp(id_pemesanan) {
+function cetak_sp(id_pemesanan, perundangan) {
     var wWidth = $(window).width();
-    var dWidth = wWidth * 0.3;
+    var dWidth = wWidth * 0.4;
     var wHeight= $(window).height();
     var dHeight= wHeight * 1;
     var x = screen.width/2 - dWidth/2;
     var y = screen.height/2 - dHeight/2;
-    var perundangan = $('#perundangan1').val();
     window.open('pages/pemesanan-print.php?id='+id_pemesanan+'&perundangan='+perundangan, 'Pemesanan Cetak', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
 }
 
@@ -257,7 +256,8 @@ function form_add() {
                     $('#pesanan-list tbody').html('');
                     $('#estimasi').html('0');
                     load_data_pemesanan('','',data.id_pemesanan);
-                    cetak_sp(data.id);
+                    var perundangan = $('#perundangan1').val();
+                    cetak_sp(data.id, perundangan);
                 } else {
                     alert_edit();
                 }

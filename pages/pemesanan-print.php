@@ -20,6 +20,7 @@ function cetak() {
 </script>
 <body onload="cetak();" class="default-printing">
 <?= header_surat() ?>
+<?php if ($_GET['perundangan'] !== 'Psikotropika') { ?>
 <br/>
 <table>
     <tr><td><?= $attr->id ?></td></tr>
@@ -28,14 +29,22 @@ function cetak() {
     <tr><td><?= $attr->alamat_supplier ?></td></tr>
     <tr><td></td></tr>
 </table>
+<?php } else { ?>
+<h1 style="text-align: center;">SURAT PESANAN PSIKOTROPIKA</h1>
+<table width="100%">
+    <tr valign="top"><td width="10%">Nama:</td><td width="50%"><?= $apa->nama ?></td><td colspan="2" width="40%">Kepada: </td></tr>
+    <tr valign="top"><td>Alamat:</td><td><?= isset($apa->alamat)?$apa->alamat:null ?></td><td colspan="2">Yth. <?= $attr->supplier ?></td></tr>
+    <tr valign="top"><td>Jabatan:</td><td><?= isset($apa->jabatan)?$apa->jabatan:null ?></td><td colspan="2">Di <?= $attr->alamat_supplier ?></td></tr>
+</table>
+<?php } ?>
 <br/>
 Dengan Hormat,<br/>
 Mohon dikirim obat-obatan untuk keperluan Apotek kami sebagai berikut:
 <br/><br/>
-<table width="100%">
-    <tr><th width="5%">No.</th><th width="70%" align="left">Nama Barang</th><th width="25%">Jumlah</th></tr>
+<table width="100%" class="list-data-print" cellspacing="0">
+    <tr><th width="5%">No.</th><th width="55%" align="left">Nama Barang</th><th width="15%">Kemasan</th><th width="25%">Jumlah</th></tr>
 <?php foreach ($attr_array as $key => $data) { ?>
-    <tr><td align="center"><?= ++$key ?></td><td><?= $data->nama_barang ?></td><td align="center"><?= $data->jumlah ?></td></tr>
+    <tr><td align="center"><?= ++$key ?></td><td><?= $data->nama_barang ?></td><td align="center"><?= $data->kemasan ?></td><td align="center"><?= $data->jumlah ?></td></tr>
 <?php } ?>
 </table>
 <br/>

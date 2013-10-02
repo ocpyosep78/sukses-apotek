@@ -324,7 +324,7 @@ if ($method === 'delete_penjualannr') {
 }
 
 if ($method === 'save_pemusnahan') {
-    $tanggal    = date2mysql($_POST['tanggal']);
+    $tanggal    = date2mysql($_POST['tanggal']).' '.date("H:i:s");
     $apoteker   = $_POST['id_apoteker'];
     $bpom       = strtoupper($_POST['bpom']);
     

@@ -15,10 +15,10 @@ $tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/inkaso.png","desc"=>"Inkaso","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-/*$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#009fb0","url"=>"pemeriksaan.php",
+$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"background"=>"#009fb0","url"=>"pemeriksaan.php",
 	"img"=>"img/icons/pendaftaran.png","desc"=>"Pemeriksaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
-
+/*
 $tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#ff0084","url"=>"pendaftaran.php",
 	"img"=>"img/icons/pendaftaran2.png","desc"=>"Pendaftaran Antrian","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");*/

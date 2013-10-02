@@ -89,7 +89,7 @@ function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi
         changeYear: true,
         minDate: 0
     });
-    $('#harga'+no+', #diskon_rp'+no+', #subtotal'+no+', #diskon_pr'+no+', #jumlah'+no+', #disc_pr, #disc_rp, #materai').keyup(function() {
+    $('#harga'+no+', #diskon_rp'+no+', #subtotal'+no+', #diskon_pr'+no+', #jumlah'+no+', #disc_pr, #disc_rp, #materai, #ppn').keyup(function() {
         hitung_sub_total(no);
     });
     $('#satuan'+no).change(function() {
@@ -177,13 +177,12 @@ function form_add() {
                     '</table>'+
                     '</td><td width=50%>'+
                     '<table width=100%>'+
-                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn size=10 value="0" /> %</td></tr>'+
                         '<tr><td>Diskon:</td><td><input type=text name=disc_pr id=disc_pr value="0" size=10 /> %, Rp. <input type=text name=disc_rp id=disc_rp onblur=FormNum(this); onfocus=javascript:this.value=currencyToNumber(this.value); size=10 value="0" /></td></tr>'+
                         '<tr><td>Materai (Rp.):</td><td><input type=text name=materai onblur=FormNum(this); id=materai size=10 value="0" /></td></tr>'+
+                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn size=10 value="0" /> %</td></tr>'+
                         '<tr><td>Total (Rp.):</td><td><input type=text name=total id=total size=10 /></td></tr>'+
                         '<tr><td width=20%>Nama Barang:</td><td width=50%><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?><?= form_hidden(NULL, NULL, 'id=hna') ?><?= form_hidden(NULL, NULL, 'id=isi') ?><?= form_hidden(NULL, NULL, 'id=isi_satuan') ?></td></tr>'+
                         '<tr><td>Kemasan & Jumlah:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select> & <?= form_input('jumlah', NULL, 'id=jumlah size=10') ?></td></tr>'+
-                        
                     '</table>'+
                 '</td></tr></table>'+
                 '<table width=100% cellspacing="0" class="list-data-input" id="penerimaan-list"><thead>'+
@@ -219,6 +218,11 @@ function form_add() {
             var isi             = id_satuan_beli[1];
             var isi_satuan      = id_satuan_beli[2];
             load_list_data(id_barang, nama_barang, id_satuan_beli[0], jumlah, hna, isi, isi_satuan);
+        }
+    });
+    $('#kemasan').keydown(function(e) {
+        if (e.keyCode === 13) {
+            $('#jumlah').focus();
         }
     });
     $('#kemasan').change(function() {
@@ -379,6 +383,11 @@ function form_add() {
     $('#save_penerimaan').submit(function() {
         if ($('#id_supplier').val() === '') {
             alert_empty('Supplier','#supplier'); return false;
+        }
+        if ($('#status').val() === 'Tempo') {
+            if ($('#tempo').val() === '') {
+                alert_empty('Jatuh tempo','#tempo'); return false;
+            }
         }
         var jml_baris = $('.tr_rows').length;
         for (i = 1; i <= jml_baris; i++) {
