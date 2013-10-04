@@ -10,10 +10,10 @@ foreach ($attr as $rows);
 <title>Nota</title>
 <link rel="stylesheet" href="../themes/theme_default/theme-print.css" />
 <script type="text/javascript">
-window.onunload = refreshParent;
-function refreshParent() {
-    window.opener.location.reload();
-}
+//window.onunload = refreshParent;
+//function refreshParent() {
+//    window.opener.location.reload();
+//}
 function cetak() {  		
     window.print();
     setTimeout(function(){ window.close();},300);

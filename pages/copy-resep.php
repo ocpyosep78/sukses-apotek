@@ -56,7 +56,7 @@ foreach ($attr_array['data'] as $rows);
         <?php }
         if (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa)) { ?>
         <tr>
-            <td>ITER: <?= ($data->r_no !== $jasa)?$data->iter:NULL ?></td>
+            <td>R /: <?= ($data->r_no !== $jasa)?$data->r_no:NULL ?></td>
         </tr>
         <?php }
         if (($data->id_resep !== $id_resep) or ($data->r_no !== $jasa)) { ?>

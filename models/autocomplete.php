@@ -193,8 +193,8 @@ if ($method === 'get_data_pemesanan_penerimaan') {
         from detail_pemesanan dp
         join kemasan k on (k.id = dp.id_kemasan)
         join barang b on (b.id = k.id_barang)
-        join satuan s on (k.id_kemasan = s.id)
-        join satuan st on (b.satuan_kekuatan = st.id) where dp.id_pemesanan = '$id'";
+        left join satuan s on (k.id_kemasan = s.id)
+        left join satuan st on (b.satuan_kekuatan = st.id) where dp.id_pemesanan = '$id'";
     $result = mysql_query($sql);
     while ($data = mysql_fetch_object($result)) {
         $rows[] = $data;
@@ -430,7 +430,8 @@ if ($method === 'get_data_penjualan') {
     $id = $_GET['id'];
     $sql = mysql_query("select p.*, date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer, a.nama as asuransi, d.nama as dokter, 
         (select sum(bayar) from detail_bayar_penjualan where id_penjualan = p.id) as terbayar, dp.id_kemasan, b.id as id_barang,
-        concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, (dp.harga_jual*dp.qty) as subtotal
+        concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, (dp.harga_jual*dp.qty) as subtotal,
+        dp.expired
         from penjualan p
         join detail_penjualan dp on (p.id = dp.id_penjualan)
         join kemasan k on (k.id = dp.id_kemasan)

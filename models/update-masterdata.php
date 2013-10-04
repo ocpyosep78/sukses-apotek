@@ -13,7 +13,7 @@ if ($method === 'save_barang') {
     $formularium= $_POST['formularium'];
     $kekuatan   = $_POST['kekuatan'];
     $golongan   = ($_POST['golongan'] !== '')?$_POST['golongan']:'NULL';
-    $s_kekuatan = $_POST['s_sediaan'];
+    $s_kekuatan = ($_POST['s_sediaan'] !== '')?$_POST['s_sediaan']:'NULL';
     $sediaan    = ($_POST['sediaan'] !== '')?$_POST['sediaan']:'NULL';
     $admr       = $_POST['admr'];
     $generik    = $_POST['generik'];
@@ -217,6 +217,7 @@ if ($method === 'save_barang') {
             $sql.= ",image = '$NewFileName'";
         }
         $sql.="where id = '$id_barang'";
+        //echo "<pre>".$sql."</pre>";
         mysql_query($sql);
         mysql_query("update kemasan set default_kemasan = '0' where id_barang = '$id_barang'");
         $id = $id_barang;

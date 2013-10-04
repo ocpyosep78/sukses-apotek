@@ -89,7 +89,7 @@ function penerimaan_load_data($param) {
         join kemasan km on (dp.id_kemasan = km.id)
         join satuan stn on (stn.id = km.id_kemasan)
         join barang b on (km.id_barang = b.id)
-        join satuan st on (b.satuan_kekuatan = st.id)
+        left join satuan st on (b.satuan_kekuatan = st.id)
         left join supplier s on (p.id_supplier = s.id)
         left join users u on (p.id_users = u.id)
         left join karyawan k on (u.id_karyawan = k.id)
@@ -866,12 +866,12 @@ function retur_penjualan_load_data($param) {
         $q.="and rp.id = '".$param['id']."' ";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select rp.waktu, st.nama as kemasan, b.nama as barang, b.kekuatan, 
+    $sql = "select rp.id_penjualan, rp.total, rp.waktu, st.nama as kemasan, b.nama as barang, b.kekuatan, 
         stn.nama as satuan, dp.* from retur_penjualan rp
-        join detail_retur_penjualan dp on (rp.id = dp.id_penjualan)
+        join detail_retur_penjualan dp on (rp.id = dp.id_retur_penjualan)
         join kemasan k on (k.id = dp.id_kemasan)
         join barang b on (b.id = k.id_barang)
-        join satuan st on (st.id = k.id_kemasan)
+        left join satuan st on (st.id = k.id_kemasan)
         left join satuan stn on (stn.id = b.satuan_kekuatan)
         where rp.id is not NULL $q order by rp.id";
     //echo $sql;

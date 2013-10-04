@@ -218,7 +218,7 @@ function form_add() {
             type: 'POST',
             success: function(data) {
                 if (data.status === true) {
-                    alert_tambah();
+                    alert_refresh('Resep berhasil di tambahkan');
                     load_data_stokopname();
                     $('#pesanan-list tbody').html('');
                 }

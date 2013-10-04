@@ -556,6 +556,7 @@ function form_add() {
                     $('#barang').focus();
                     $.cookie('session', 'true');
                     $.cookie('formbayar', 'false');
+                    alert_refresh('Penjualan berhasil disimpan');
                     cetak_struk(data.id);
                     $('#form_penjualannr').dialog().remove();
                     //alert_tambah('#barcode');

@@ -290,7 +290,7 @@ if ($method === 'save_penjualannr') {
             $sql = "insert into detail_penjualan set
                 id_penjualan = '$id_penjualan',
                 id_kemasan = '$kemasan[$key]',
-                ed = '".$ed[$key]."',
+                expired = '".$ed[$key]."',
                 qty = '".($jumlah[$key]*$isi)."',
                 harga_jual = '$harga_jual[$key]'
                 ";
@@ -314,8 +314,6 @@ if ($method === 'save_penjualannr') {
         }
     die(json_encode(array('status' => TRUE, 'id' => $id_penjualan)));
 }
-
-
 
 if ($method === 'delete_penjualannr') {
     $id     = $_GET['id'];
@@ -426,23 +424,26 @@ if ($method === 'save_retur_penerimaan') {
 }
 
 if ($method === 'save_retur_penjualan') {
+    session_start();
     $tanggal        = date2mysql($_POST['tanggal']).' '.date("H:i:s");
     $id_barang      = $_POST['id_barang'];
     $id_kemasan     = $_POST['id_kemasan'];
     $ed             = $_POST['ed'];
     $jumlah         = $_POST['jumlah'];
     $id_retur       = $_POST['nonota'];
+    $total_retur    = $_POST['total'];
     
     if ($id_retur !== '') {
         $sql = "insert into retur_penjualan set
             waktu = '$tanggal',
-            id_penjualan = '$id_retur'";
+            id_penjualan = '$id_retur',
+            total = '$total_retur'";
         mysql_query($sql);
         $id         = mysql_insert_id();
         foreach ($id_barang as $key => $data) {
             //$kemasan = mysql_fetch_object(mysql_query("select id from kemasan where id_barang = '$data' and id_kemasan = ''"));
             $query = "insert into detail_retur_penjualan set
-                id_penjualan = '$id_retur',
+                id_retur_penjualan = '$id',
                 id_kemasan = '$id_kemasan[$key]',
                 expired = '".date2mysql($ed[$key])."',
                 qty = '$jumlah[$key]'
@@ -461,6 +462,14 @@ if ($method === 'save_retur_penjualan') {
            mysql_query($query2);
         }
     }
+    $query2= "insert into arus_kas set
+        id_transaksi = '$id_retur',
+        transaksi = 'Retur Penjualan',
+        id_users = '$_SESSION[id_user]',
+        waktu = NOW(),
+        keluar = '$total_retur'";
+    mysql_query($query2);
+    
     $result['status'] = TRUE;
     $result['action'] = 'add';
     die(json_encode($result));
