@@ -81,6 +81,7 @@ window.onload = displayTime;
             <h1>Login Apotek <img src="../themes/theme_default/img/primary/loader.gif" align="right" id="loader" /></h1>
             <input type="text" name="username" id="username" placeholder="Username ..." size="50" autocomplete="off" />
             <input type="password" name="password" id="password" placeholder="Password ..." size="50" autocomplete="off" /><br/>
+            <select name="shift"><option value="">Pilih ...</option><option value="1">Shift 1</option><option value="2">Shift 2</option></select>
             <input type="button" value="Submit" class="button" id="login" /><span id="result"></span>
         </div>
     </form>
