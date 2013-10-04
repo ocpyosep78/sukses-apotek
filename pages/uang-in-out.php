@@ -1,4 +1,8 @@
 <?php
+$subNav = array(
+    "Keluar / Masuk Uang ; uang-in-out.php ; #509601;",
+    "Set Kas Awal ; set-kas-awal.php ; #509601;",
+);
 set_include_path("../");
 include_once("inc/essentials.php");
 include_once("inc/functions.php");

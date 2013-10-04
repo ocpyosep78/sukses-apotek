@@ -15,7 +15,8 @@
 .body-login .wrapper { margin: auto; width: 600px; height: 300px; position: absolute; top: 0; left: 0; bottom: 0; right: 0;  }
 .body-login h1 { font-size: 20px; font-weight: lighter; margin-bottom: 3px; }
 .body-login .wrapper img { margin: 10px; }
-.body-login .wrapper input { border: 1px solid #f4f4f4; margin-top: 10px; padding: 2px 5px; }
+.body-login .wrapper input { border: 1px solid #f4f4f4; margin-top: 3px; padding: 2px 5px; }
+.body-login .wrapper select { border: 1px solid #f4f4f4; margin-top: 3px; padding: 1px; min-width: 130px; }
 .body-login .wrapper input:focus { border: 1px solid #ccc; }
 .body-login .wrapper .button { background: #0269c6; border: 2px solid #cee0ed; color: #fff; width: 80px; padding: 0 0 1px; margin-right: 10px; }
 .body-login .wrapper .button:visited { background: #0269c6; border: 2px solid #cee0ed; color: #fff; width: 80px; padding: 0 0 1px; margin-right: 10px; }

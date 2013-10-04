@@ -270,6 +270,7 @@ if ($method === 'save_penjualannr') {
     mysql_query($query); // insert ke tabel detail pembayaran
     
     $query2= "insert into arus_kas set
+        id_shift = '$_SESSION[shift]',
         id_transaksi = '$id_penjualan',
         transaksi = 'Penjualan Non Resep',
         id_users = '$_SESSION[id_user]',
@@ -463,6 +464,7 @@ if ($method === 'save_retur_penjualan') {
         }
     }
     $query2= "insert into arus_kas set
+        id_shift = '$_SESSION[shift]',
         id_transaksi = '$id_retur',
         transaksi = 'Retur Penjualan',
         id_users = '$_SESSION[id_user]',
@@ -595,6 +597,7 @@ if ($method === 'save_penjualan') {
         mysql_query($query);
         
         $query2= "insert into arus_kas set
+            id_shift = '$_SESSION[shift]',
             id_transaksi = '$id_penjualan',
             transaksi = 'Penjualan Resep',
             id_users = '$_SESSION[id_user]',
@@ -764,6 +767,7 @@ if ($method === 'save_inkaso') {
     $id = mysql_insert_id();
     
     $query2= "insert into arus_kas set
+        id_shift = '$_SESSION[shift]',
         id_transaksi = '$id',
         transaksi = 'Inkaso',
         id_users = '$_SESSION[id_user]',
@@ -852,6 +856,7 @@ if ($method === 'save_in_out_uang') {
     
     if ($jenis === 'masuk') {
         $sql = "insert into arus_kas set
+        id_shift = '$_SESSION[shift]',
         transaksi = 'Lain-lain',
         id_users = '$_SESSION[id_user]',
         waktu = '$tanggal',
@@ -860,6 +865,7 @@ if ($method === 'save_in_out_uang') {
         ";
     } else {
         $sql = "insert into arus_kas set
+        id_shift = '$_SESSION[shift]',
         transaksi = 'Lain-lain',
         id_users = '$_SESSION[id_user]',
         waktu = '$tanggal',
@@ -909,5 +915,42 @@ if ($method === 'save_koreksi_stok') {
         }
     }
     die(json_encode(array('status' => TRUE)));
+}
+
+if ($method === 'save_set_kas_awal') {
+    session_start();
+    $uang_awal      = currencyToNumber($_POST['uang_awal']);
+    $tanggal        = date2mysql($_POST['tanggal']);
+    $id_shift       = $_POST['id_shift'];
+    $uang_real      = currencyToNumber($_POST['uang_real']);
+    $pend_resep     = currencyToNumber($_POST['pend_resep']);
+    $pend_nresep    = currencyToNumber($_POST['pend_nresep']);
+    $keterangan     = $_POST['keterangan'];
+    
+    if ($id_shift === '') {
+        $cek = mysql_fetch_object(mysql_query("select * from shift where id = '$_SESSION[shift]'"));
+        if ($cek->uang_awal === '0') {
+            $sql = "update shift set 
+                id_users = '$_SESSION[id_user]', 
+                uang_awal = '$uang_awal'
+                where id = '$_SESSION[shift]'";
+            mysql_query($sql);
+            $status = TRUE;
+        } else {
+            $status = FALSE;
+        }
+    } else {
+        $sql = "update shift set 
+                pendapatan_resep = '$pend_resep',
+                pendapatan_non_resep = '$pend_nresep',
+                total_real = '$uang_real',
+                keterangan = '$keterangan',
+                is_closed = '1'
+                where id = '$id_shift'";
+        //echo $sql;
+        mysql_query($sql);
+        $status = TRUE;
+    }
+    die(json_encode(array('status' => $status)));
 }
 ?>

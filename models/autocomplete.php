@@ -16,6 +16,16 @@ if ($method === 'login') {
         $_SESSION['password'] = $data->password;
         $_SESSION['id_user']  = $data->id;
         $_SESSION['level']    = $data->level;
+        
+        $sql = mysql_query("select * from shift where tanggal = '".date("Y-m-d")."' and shift = '".$_POST['shift']."'");
+        $cek = mysql_num_rows($sql);
+        $row = mysql_fetch_object($sql);
+        if ($cek === 0) {
+            mysql_query("insert into shift set tanggal = NOW(), shift = '".$_POST['shift']."'");
+            $_SESSION['shift']    = mysql_insert_id();
+        } else {
+            $_SESSION['shift']    = $row->id;
+        }
     } else {
         $_SESSION['username'] = NULL;
     }
@@ -510,4 +520,15 @@ if ($method === 'get_detail_hpp') {
     $total_hpp = $cek->isi_satuan*$hpp;
     die(json_encode(array('total_hpp' => $total_hpp)));
 }
+
+if ($method === 'get_pemasukan_penjualan') {
+    $id_shift   = $_GET['id_shift'];
+    $uawal = mysql_fetch_object(mysql_query("select uang_awal from shift where id = '$id_shift'"));
+    $resep = mysql_fetch_object(mysql_query("select IFNULL(sum(masuk),'0') as jual_resep from arus_kas where transaksi = 'Penjualan Resep' and id_shift = '$id_shift'"));
+    $nresep = mysql_fetch_object(mysql_query("select IFNULL(sum(masuk),'0') as jual_nresep from arus_kas where transaksi = 'Penjualan Non Resep' and id_shift = '$id_shift'"));
+    
+    $total   = $resep->jual_resep+$nresep->jual_nresep+$uawal->uang_awal;
+    die(json_encode(array('resep' => $resep->jual_resep,'nonresep' => $nresep->jual_nresep, 'total_pendapatan' => $total)));
+}
+
 ?>

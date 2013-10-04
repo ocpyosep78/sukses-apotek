@@ -1,5 +1,4 @@
 <?php
-
 include_once '../config/database.php';
 
 function get_jenis_transaksi() {
@@ -941,6 +940,41 @@ function total_pengeluaran_kas_load_data($awal, $akhir) {
     $sql = "select IFNULL(sum(keluar),'0') as pengeluaran_total from arus_kas where transaksi = 'Lain-lain' and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
     $row = mysql_fetch_object(mysql_query($sql));
     return $row;
+}
+
+function check_data_shift() {
+    session_start();
+    $sql = mysql_query("select * from shift where tanggal = '".date("Y-m-d")."' and shift = '".$_SESSION['shift']."'");
+    $cek = mysql_num_rows($sql);
+    $row = mysql_fetch_object($cek);
+    $result['jumlah'] = $cek;
+    $result['data'] = $row;
+    return $result;
+}
+
+function set_kas_awal_load_data($param) {
+    $q = NULL; $limit = NULL;
+    if ($param['id'] !== '') {
+        $q.=" and s.id = '".$param['id']."'";
+    }
+    if (isset($param['limit'])) {
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
+    $sql = "select s.*, k.nama as karyawan
+        from shift s 
+        left join users u on (s.id_users = u.id)
+        left join karyawan k on (u.id_karyawan = k.id)
+        where s.id is not NULL $q";
+    //echo "<pre>".$sql."</pre>";
+    $query = mysql_query($sql.$limit);
+    $rows = array();
+    while ($data = mysql_fetch_object($query)) {
+        $rows[] = $data;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $rows;
+    $result['total']= $total;
+    return $result;
 }
 
 ?>

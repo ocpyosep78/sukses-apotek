@@ -52,6 +52,7 @@ $pageTitles['pendaftaran.php'] = "Pendaftaran";
 $pageTitles['pemusnahan.php'] = "Pemusnahan";
 $pageTitles['uang-in-out.php'] = "Pemasukkan Pengeluaran Uang";
 $pageTitles['koreksi-stok.php'] = "Koreksi Stok";
+$pageTitles['set-kas-awal.php'] = "Set Kas Awal";
 
 /*Laporan*/
 $pageTitles['arus-stok.php'] = "Arus Stok";
