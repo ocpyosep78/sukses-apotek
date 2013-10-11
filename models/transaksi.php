@@ -626,15 +626,10 @@ function pemeriksaan_load_data($param) {
         $q.=" and p.id = '".$param['id']."'";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select p.*, pl.nama as pasien, d.nama as dokter, py.topik, py.sub_kode, tr.id as id_tarif, tr.nama as tarif, t.nominal from pemeriksaan p
-        join pendaftaran pd on (p.id_pendaftaran = pd.id)
-        join pelanggan pl on (pd.id_pelanggan = pl.id)
-        join dokter d on (p.id_dokter = d.id)
-        left join diagnosis dg on (p.id = dg.id_pemeriksaan)
-        left join penyakit py on (dg.id_penyakit = py.id)
-        left join tindakan t on (p.id = t.id_pemeriksaan)
-        left join tarif tr on (t.id_tarif = tr.id)
-        where p.id is not NULL $q order by p.tanggal desc";
+    $sql = "select p.*, pl.nama as pasien, py.topik as penyakit, py.sub_kode as kode from pemeriksaan p
+        join pelanggan pl on (p.id_pasien = pl.id)
+        join penyakit py on (p.id_penyakit = py.id)
+        where p.id is NOT NULL";
     
     $query = mysql_query($sql.$limit);
     $data = array();

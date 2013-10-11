@@ -10,6 +10,7 @@ include_once("pages/message.php");
 $.cookie('session','false');
 $(function() {
     load_data_pemeriksaan();
+    
     $('#button').button({
         icons: {
             primary: 'ui-icon-newwin'
@@ -57,26 +58,56 @@ function add_obat_alergi(id, nama) {
     $('#data-alergi tbody').append(str);
 }
 
+function get_alergi_data_obat(id_pasien) {
+    $.getJSON('models/autocomplete.php?method=get_alergi_data_obat&id_pasien='+id_pasien, function(data){
+        $.each(data, function (index, value) {
+            var str = 
+            '<tr class=alergi>'+
+                '<td align=center>'+(index+1)+'</td><td><input type=hidden name=id_obat[] value="'+value.id_barang+'" /> '+value.nama_barang+'</td><td width=1% class=aksi align=center><a class="deletion" onclick="delete_obat(this);" title="Klik untuk hapus">&nbsp;</a></td>'+
+            '</tr>';
+            $('#data-alergi tbody').append(str);
+        });
+    });
+}
+
+function add_saran_pengobatan(id, nama, jumlah, keterangan) {
+    var jml = $('.saran_pengobatan').length+1;
+    var str = 
+            '<tr class=saran_pengobatan>'+
+                '<td align=center>'+jml+'</td>'+
+                '<td><input type=hidden name=id_obat[] value="'+id+'" /> '+nama+'</td>'+
+                '<td><input type=text name=jumlah[] value="'+jumlah+'" style="text-align: center;" /></td>'+
+                '<td><input type=text name=keterangan[] value="'+keterangan+'" style="width: 100%;" /></td>'+
+                '<td class=aksi align=center><a class="deletion" onclick="delete_obat(this);" title="Klik untuk hapus">&nbsp;</a></td>'+
+            '</tr>';
+    $('#data-saran-pengobatan tbody').append(str);
+}
+
 function form_add() {
     var str = '<div id=form_pemeriksaan>'+
+                '<form id=save_pemeriksaan action="models/update-transaksi.php?method=save_pemeriksaan" enctype=multipart/form-data>'+
                 '<div id="tabs">'+
                     '<ul>'+
                         '<li><a href="#tabs-1">Data Pasien</a></li>'+
-                        '<li><a href="#tabs-2">Riwayat Penyakit</a></li>'+
-                        '<li><a href="#tabs-3">Dinamis Pasien</a></li>'+
                         '<li><a href="#tabs-4">Data Alergi Obat</a></li>'+
+                        '<li><a href="#tabs-2">Riwayat Penyakit</a></li>'+
+                        '<li><a href="#tabs-3">Konsultasi</a></li>'+
                     '</ul>'+
                     '<div id="tabs-1">'+
-                        '<form id=save_pemeriksaan action="models/update-transaksi.php?method=save_pemeriksaan" enctype=multipart/form-data>'+
-                            '<span id=output></span><?= form_hidden('id_pendaftaran', NULL, 'id=id_pendaftaran') ?>'+
-                            '<table width=100% class=data-input><tr valign=top><td width=33%>'+
-                            '<table width=100%>'+
-                                '<tr><td>Tanggal:</td><td><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
+                            '<span id=output></span>'+
+                            
+                            '<table width=100% class=data-input style="line-height: 20px;">'+
+                                '<tr><td width=13%>Tanggal:</td><td width=87%><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
                                 '<tr><td>Nomor PMR:</td><td><?= form_input('norm', NULL, 'id=norm size=40') ?></td></tr>'+
                                 '<tr><td>Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>'+
-                            '</table></td><td width=33%>'+
-                            '</td><td id=foto></td></tr></table>'+
-                        '</form>'+
+                                '<tr><td>Kelamin:</td><td id=kelamin></td></tr>'+
+                                '<tr><td>Tempat Lahir:</td><td id=tempat-lahir></td></tr>'+
+                                '<tr><td>Tanggal Lahir:</td><td id=tanggal-lahir></td></tr>'+
+                                '<tr><td>Alamat:</td><td id=alamat></td></tr>'+
+                                '<tr><td>No. Telepon:</td><td id=telp></td></tr>'+
+                                '<tr><td>Email:</td><td id=email></td></tr>'+
+                                '<tr><td>Asuransi:</td><td id=asuransi></td></tr>'+
+                            '</table>'+
                     '</div>'+
                     '<div id="tabs-2">'+
                         '<table width=100% class=data-input>'+
@@ -92,24 +123,50 @@ function form_add() {
                         '</table>'+
                     '</div>'+
                     '<div id="tabs-3">'+
-                        '<table width=100% class=data-input>'+
-                            '<tr><td width=13%>Subjektif:</td><td><?= form_textarea('subjektif', NULL, 'id=subjektif cols=40') ?></td></tr>'+
-                            '<tr><td>Objektif</td><td></td></tr>'+
-                            '<tr><td style="padding-left: 20px;">Suhu Badan:</td><td><?= form_input('suhubadan', NULL, 'id=suhubadan') ?> <sup>o</sup> C</td></tr>'+
-                            '<tr><td style="padding-left: 20px;">Tekanan Darah:</td><td><?= form_input('tekanandarah', NULL, 'id=tekanandarah') ?> mmHg</td></tr>'+
-                            '<tr><td style="padding-left: 20px;">Respiration Rate:</td><td><?= form_input('respirationrate', NULL, 'id=respirationrate') ?> x / menit</td></tr>'+
-                            '<tr><td style="padding-left: 20px;">Nadi:</td><td><?= form_input('nadi', NULL, 'id=nadi') ?> x / menit</td></tr>'+
-                            '<tr><td style="padding-left: 20px;">Gula Darah Sewaktu:</td><td><?= form_input('gdsewaktu', NULL, 'id=gdsewaktu') ?> mg/dL</td></tr>'+
-                            '<tr><td style="padding-left: 20px;">Angka Kolesterol Total:</td><td><?= form_input('angkakoltotal', NULL, 'id=angkakoltotal') ?> mg/dL</td></tr>'+
-                            '<tr><td style="padding-left: 20px;">Kadar Asam Urat:</td><td><?= form_input('kadarasamurat', NULL, 'id=kadarasamurat') ?> mg/dL</td></tr>'+
-                            '<tr><td width=13%>Assesment:</td><td><?= form_textarea('assesment', NULL, 'id=assesment cols=40') ?></td></tr>'+
-                            '<tr><td width=13%>Goal Terapi:</td><td><?= form_textarea('goalterapi', NULL, 'id=goalterapi cols=40') ?></td></tr>'+
-                            '<tr><td width=13%>Saran Non Farmakoterapi:</td><td><?= form_textarea('sarannonfarm', NULL, 'id=sarannonfarm cols=40') ?></td></tr>'+
-                        '</table>'+
+                        '<div id="tabs-sub-pemeriksaan">'+
+                            '<ul>'+
+                                '<li><a href="#sub-tabs-1">Utama</a></li>'+
+                                '<li><a href="#sub-tabs-2">Saran Pengobatan</a></li>'+
+                            '</ul>'+
+                            '<div id="sub-tabs-1">'+
+                                '<table width=100% class=data-input>'+
+                                    '<tr><td>Nama Penyakit:</td><td><?= form_input(NULL, NULL, 'id=penyakit size=43') ?><?= form_hidden('id_penyakit', NULL, 'id=id_penyakit') ?></td></tr>'+
+                                    '<tr><td width=14%>Subjektif:</td><td><?= form_textarea('subjektif', NULL, 'id=subjektif cols=40') ?></td></tr>'+
+                                    '<tr><td>Objektif:</td><td></td></tr>'+
+                                    '<tr><td style="padding-left: 20px;">Suhu Badan:</td><td><?= form_input('suhubadan', NULL, 'id=suhubadan') ?> <sup>o</sup> C</td></tr>'+
+                                    '<tr><td style="padding-left: 20px;">Tekanan Darah:</td><td><?= form_input('tekanandarah', NULL, 'id=tekanandarah') ?> mmHg</td></tr>'+
+                                    '<tr><td style="padding-left: 20px;">Respiration Rate:</td><td><?= form_input('respirationrate', NULL, 'id=respirationrate') ?> x / menit</td></tr>'+
+                                    '<tr><td style="padding-left: 20px;">Nadi:</td><td><?= form_input('nadi', NULL, 'id=nadi') ?> x / menit</td></tr>'+
+                                    '<tr><td style="padding-left: 20px;">Gula Darah Sewaktu:</td><td><?= form_input('gdsewaktu', NULL, 'id=gdsewaktu') ?> mg/dL</td></tr>'+
+                                    '<tr><td style="padding-left: 20px;">Angka Kolesterol Total:</td><td><?= form_input('angkakoltotal', NULL, 'id=angkakoltotal') ?> mg/dL</td></tr>'+
+                                    '<tr><td style="padding-left: 20px;">Kadar Asam Urat:</td><td><?= form_input('kadarasamurat', NULL, 'id=kadarasamurat') ?> mg/dL</td></tr>'+
+                                    '<tr><td width=13%>Assesment:</td><td><?= form_textarea('assesment', NULL, 'id=assesment cols=40') ?></td></tr>'+
+                                    '<tr><td width=13%>Goal Terapi:</td><td><?= form_textarea('goalterapi', NULL, 'id=goalterapi cols=40') ?></td></tr>'+
+                                    '<tr><td width=13%>Saran Non Farmakoterapi:</td><td><?= form_textarea('sarannonfarm', NULL, 'id=sarannonfarm cols=40') ?></td></tr>'+
+                                '</table>'+
+                            '</div>'+
+                            '<div id="sub-tabs-2">'+
+                                '<table width=100% class=data-input>'+
+                                '<tr><td width=14%>Pilih Nama Obat:</td><td> <?= form_input(NULL, NULL, 'id=saran_obat style="margin-left: 0; margin-bottom: 0;" size=40') ?> <?= form_hidden('id_saran_obat', NULL, 'id=id_saran_obat') ?></td></tr>'+
+                                '<tr><td>Jumlah:</td><td><?= form_input('jumlah', NULL, 'id=jumlah size=5') ?></td></tr>'+
+                                '<tr><td>Keterangan:</td><td><?= form_input('keterangan', NULL, 'id=keterangan onKeyup="javascript:this.value=this.value.toUpperCase();" size=40') ?></td></tr>'+
+                                '</table>'+
+                                '<table width=100% class=list-data-input id=data-saran-pengobatan>'+
+                                    '<thead><tr>'+
+                                        '<th width=5%>No.</th>'+
+                                        '<th width=30%>Nama Obat</th>'+
+                                        '<th width=5%>Jumlah</th>'+
+                                        '<th width=59%>Keterangan</th>'+
+                                        '<th width=1%>#</th>'+
+                                    '</tr></thead>'+
+                                    '<tbody></tbody>'+
+                                '</table>'+
+                            '</div>'+
+                        '</div>'+
                     '</div>'+
                     '<div id="tabs-4">'+
                         '<table width=50% class=data-input>'+
-                        '<tr><td width=15%>Pilih Nama Obat:</td><td> <?= form_input('obat', NULL, 'id=obat style="margin-left: 0; margin-bottom: 0;" size=40') ?> <?= form_hidden('id_obat', NULL, 'id=id_obat') ?></td></tr>'+
+                        '<tr><td width=26%>Pilih Nama Obat:</td><td> <?= form_input('obat', NULL, 'id=obat style="margin-left: 0; margin-bottom: 0;" size=40') ?> <?= form_hidden('id_obat', NULL, 'id=id_obat') ?></td></tr>'+
                         '</table>'+
                         '<table width=50% class=list-data id=data-alergi>'+
                             '<thead><tr>'+
@@ -120,9 +177,10 @@ function form_add() {
                             '<tbody></tbody>'+
                         '</table>'+
                     '</div>'+
+                    '</form>'+
               '</div>';
     $('body').append(str);
-    $('#tabs').tabs();
+    $('#tabs, #tabs-sub-pemeriksaan').tabs();
     var lebar = $('#pasien').width();
     $('#pasien,#norm').autocomplete("models/autocomplete.php?method=pasien",
     {
@@ -149,6 +207,13 @@ function form_add() {
         $('#norm').val(data.id);
         $('#pasien').val(data.nama);
         $('#id_pasien').val(data.id);
+        $('#kelamin').html(data.kelamin);
+        $('#tempat-lahir').html(data.tempat_lahir);
+        $('#tanggal-lahir').html(datefmysql(data.tanggal_lahir));
+        $('#alamat').html(data.alamat+' '+data.kabupaten+' '+data.provinsi);
+        $('#telp').html(data.telp);
+        $('#email').html(data.email);
+        $('#asuransi').html(data.asuransi+' / '+data.nopolish);
         $.ajax({
             url: 'models/autocomplete.php?method=get_photo_pemeriksaan&id_pelanggan='+data.id,
             dataType: 'json',
@@ -163,6 +228,7 @@ function form_add() {
             }
         });
         $('#dokter').focus();
+        get_alergi_data_obat(data.id);
     });
     $('#dokter').autocomplete("models/autocomplete.php?method=dokter",
     {
@@ -191,6 +257,33 @@ function form_add() {
         $('#id_dokter').val(data.id);
         //alert(data.id);
     });
+    var lebar_pny = $('#penyakit').width();
+    $('#penyakit').autocomplete("models/autocomplete.php?method=diagnosis",
+    {
+        parse: function(data){
+            var parsed = [];
+            for (var i=0; i < data.length; i++) {
+                parsed[i] = {
+                    data: data[i],
+                    value: data[i].nama // nama field yang dicari
+                };
+            }
+            $('#id_dokter').val('');
+            return parsed;
+        },
+        formatItem: function(data,i,max){
+            var str = '<div class=result>'+data.sub_kode+' - '+data.topik+'</div>';
+            return str;
+        },
+        width: lebar_pny, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
+        dataType: 'json', // tipe data yang diterima oleh library ini disetup sebagai JSON
+        cacheLength: 0,
+        max: 100
+    }).result(
+    function(event,data,formated){
+        $(this).val(data.topik);
+        $('#id_penyakit').val(data.id);
+    });
     $('#obat').autocomplete("models/autocomplete.php?method=barang",
     {
         parse: function(data){
@@ -216,6 +309,47 @@ function form_add() {
         $('#id_obat').val(data.id);
         add_obat_alergi(data.id, data.nama);
         $('#obat, #id_obat').val('');
+    });
+    $('#saran_obat').autocomplete("models/autocomplete.php?method=barang",
+    {
+        parse: function(data){
+            var parsed = [];
+            for (var i=0; i < data.length; i++) {
+                parsed[i] = {
+                    data: data[i],
+                    value: data[i].nama // nama field yang dicari
+                };
+            }
+            return parsed;
+        },
+        formatItem: function(data,i,max){
+            var str = '<div class=result>'+data.nama_barang+'</div>';
+            return str;
+        },
+        width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
+        dataType: 'json', // tipe data yang diterima oleh library ini disetup sebagai JSON
+        cacheLength: 0
+    }).result(
+    function(event,data,formated){
+        $(this).val(data.nama_barang);
+        $('#id_saran_obat').val(data.id);
+        $('#jumlah').val('1').focus().select();
+    });
+    $('#jumlah').keydown(function(e) {
+        if (e.keyCode === 13) {
+            $('#keterangan').focus();
+        }
+    });
+    $('#keterangan').keydown(function(e) {
+        if (e.keyCode === 13) {
+            var id      = $('#id_saran_obat').val();
+            var nama    = $('#saran_obat').val();
+            var jumlah  = $('#jumlah').val();
+            var ket     = $('#keterangan').val();
+            add_saran_pengobatan(id, nama, jumlah, ket);
+            $('#id_saran_obat, #saran_obat, #jumlah, #keterangan').val('');
+            $('#saran_obat').focus();
+        }
     });
     $('#save_pemeriksaan').on('submit', function(e) {
         e.preventDefault();

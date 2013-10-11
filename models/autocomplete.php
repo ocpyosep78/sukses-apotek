@@ -328,7 +328,7 @@ if ($method === 'get_no_pemeriksaan') {
 }
 
 if ($method === 'diagnosis') {
-    $sql = "select * from penyakit where topik like ('%$q%') order by locate('$q', topik)";
+    $sql = "select * from penyakit where topik like ('%$q%') or sub_kode like ('%$q%') order by locate('$q', topik)";
     $result = mysql_query($sql);
     $rows = array();
     while ($data = mysql_fetch_object($result)) {
@@ -509,5 +509,21 @@ if ($method === 'get_detail_hpp') {
     $hpp = isset($row->hpp)?$row->hpp:'0';
     $total_hpp = $cek->isi_satuan*$hpp;
     die(json_encode(array('total_hpp' => $total_hpp)));
+}
+
+if ($method === 'get_alergi_data_obat') {
+    $id_pasien = $_GET['id_pasien'];
+    $sql = mysql_query("select a.*, CONCAT_WS(' ',b.nama,b.kekuatan,s.nama) as nama_barang
+        from alergi_obat_pasien a
+        join barang b on (a.id_barang = b.id)
+        join pelanggan p on (a.id_pasien = p.id)
+        join satuan s on (b.satuan_kekuatan = s.id)
+        where p.id = '$id_pasien'
+    ");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
 }
 ?>
