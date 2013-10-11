@@ -40,8 +40,23 @@ if ($method === 'dokter') {
 }
 
 if ($method === 'pasien') {
-    $sql = mysql_query("select p.*, a.nama as asuransi, a.diskon as reimburse from pelanggan p
+    $sql = mysql_query("select p.*, a.nama as asuransi, a.diskon as reimburse
+        from pelanggan p
         left join asuransi a on (p.id_asuransi = a.id) 
+        where p.nama like ('%$q%') or p.id like ('%$q%') order by locate('$q', p.id)");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'pasien_pemeriksaan') {
+    $sql = mysql_query("select p.*, a.nama as asuransi, a.diskon as reimburse, 
+        dp.rpd, dp.rpk, dp.ps, dp.oh, dp.al, dp.dl, dp.mk, dp.ka
+        from pelanggan p
+        left join asuransi a on (p.id_asuransi = a.id) 
+        left join detail_pasien dp on (p.id = dp.id_pasien)
         where p.nama like ('%$q%') or p.id like ('%$q%') order by locate('$q', p.id)");
     $rows = array();
     while ($data = mysql_fetch_object($sql)) {
@@ -56,6 +71,17 @@ if ($method === 'get_photo_pemeriksaan') {
         where pd.id_pelanggan = '".$_GET['id_pelanggan']."' order by pd.waktu desc limit 1");
     $row = mysql_fetch_object($sql);
     die(json_encode($row));
+}
+
+if ($method === 'get_penyakit_by_pasien') {
+    $sql = mysql_query("select py.* from penyakit_pasien pp
+        join pelanggan pl on (pp.id_pasien = pl.id)
+        join penyakit py on (pp.id_penyakit = py.id)");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
 }
 
 if ($method === 'get_data_kemasan') {
@@ -520,6 +546,36 @@ if ($method === 'get_alergi_data_obat') {
         join satuan s on (b.satuan_kekuatan = s.id)
         where p.id = '$id_pasien'
     ");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'get_data_pemeriksaan') {
+    $id_pemeriksaan = $_GET['id'];
+    $sql = mysql_query("select p.*, pl.*, dp.*, pl.nama as pasien, p.id, pl.id as id_pasien, sp.jumlah, sp.keterangan, 
+        CONCAT_WS(' ',b.nama, b.kekuatan, s.nama) as nama_barang, a.nama as asuransi, p.id as id_pemeriksaan from pemeriksaan p
+        join pelanggan pl on (p.id_pasien = pl.id)
+        left join asuransi a on (pl.id_asuransi = a.id)
+        left join detail_pasien dp on (pl.id = dp.id_pasien)
+        left join saran_pengobatan sp on (p.id = sp.id_pemeriksaan)
+        left join barang b on (sp.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
+        where p.id = '$id_pemeriksaan'");
+    $data = mysql_fetch_object($sql);
+    die(json_encode($data));
+}
+
+if ($method === 'get_saran_pengobatan') {
+    $id = $_GET['id_pemeriksaan'];
+    $sql = mysql_query("select sp.*, CONCAT_WS(' ',b.nama,b.kekuatan,s.nama) as nama_barang, k.id as id_packing 
+        from saran_pengobatan sp
+        join barang b on (sp.id_barang = b.id)
+        join satuan s on (b.satuan_kekuatan = s.id)
+        join kemasan k on (k.id_barang = b.id)
+        where sp.id_pemeriksaan = '$id' and k.default_kemasan = '1'");
     $rows = array();
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;

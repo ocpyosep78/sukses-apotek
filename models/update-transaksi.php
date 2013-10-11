@@ -645,95 +645,131 @@ if ($method === 'save_penjualan') {
 }
 
 if ($method === 'save_pemeriksaan') {
-    $id_daftar  = $_POST['id_pendaftaran'];
-    $id         = $_POST['nopemeriksaan'];
-    $tanggal    = date2mysql($_POST['tanggal']);
-    $anamnesis  = $_POST['anamnesis'];
-    $id_dokter  = $_POST['id_dokter'];
+    $id_periksa     = $_POST['id_pemeriksaan'];
     
-    $id_diagnosis = $_POST['id_diagnosis'];
-    $id_tindakan  = $_POST['id_tindakan'];
-    $nominal      = $_POST['nominal'];
-    $UploadDirectory	= '../img/pemeriksaan/'; //Upload Directory, ends with slash & make sure folder exist
-    $NewFileName= "";
-        // replace with your mysql database details
-    if (!@file_exists($UploadDirectory)) {
-            //destination folder does not exist
-            die("Make sure Upload directory exist!");
+    $id_pasien      = $_POST['norm'];
+    $id_obat        = $_POST['id_obat']; // array
+    $id_penyakit    = $_POST['id_penyakit']; // array
+    if (!empty($id_obat)) {
+        mysql_query("delete from alergi_obat_pasien where id_pasien = '$id_pasien'");
+        foreach ($id_obat as $obat) {
+            $sql1 = "insert into alergi_obat_pasien set 
+                id_pasien = '$id_pasien',
+                id_barang = '$obat'";
+            mysql_query($sql1);
+        }
     }
-    if(isset($_FILES['mFile']['name'])) {
-
-            $FileName           = strtolower($_FILES['mFile']['name']); //uploaded file name
-            $FileTitle		= mysql_real_escape_string($_POST['pasien']); // file title
-            $ImageExt		= substr($FileName, strrpos($FileName, '.')); //file extension
-            $FileType		= $_FILES['mFile']['type']; //file type
-            //$FileSize		= $_FILES['mFile']["size"]; //file size
-            $RandNumber   		= rand(0, 9999999999); //Random number to make each filename unique.
-            //$uploaded_date		= date("Y-m-d H:i:s");
-            
-            switch(strtolower($FileType))
-            {
-                    //allowed file types
-                    case 'image/png': //png file
-                    case 'image/gif': //gif file 
-                    case 'image/jpeg': //jpeg file
-                    case 'application/pdf': //PDF file
-                    case 'application/msword': //ms word file
-                    case 'application/vnd.ms-excel': //ms excel file
-                    case 'application/x-zip-compressed': //zip file
-                    case 'text/plain': //text file
-                    case 'text/html': //html file
-                            break;
-                    default:
-                            die('Unsupported File!'); //output error
-            }
-
-
-            //File Title will be used as new File name
-            $NewFileName = preg_replace(array('/\s/', '/\.[\.]+/', '/[^\w_\.\-]/'), array('_', '.', ''), strtolower($FileTitle));
-            $NewFileName = $NewFileName.'_'.$RandNumber.$ImageExt;
-       //Rename and save uploded file to destination folder.
-       if(move_uploaded_file($_FILES['mFile']["tmp_name"], $UploadDirectory . $NewFileName ))
-       {
-            //die('Success! File Uploaded.');
-       }else{
-            //die('error uploading File!');
-       }
+    if (!empty($id_penyakit)) {
+        mysql_query("delete from penyakit_pasien where id_pasien = '$id_pasien'");
+        foreach ($id_penyakit as $pyk) {
+            $sql2 = "insert into penyakit_pasien set
+                id_pasien = '$id_pasien',
+                id_penyakit = '$pyk'";
+            mysql_query($sql2);
+        }
     }
-    $sql = "insert into pemeriksaan set
-        id = '$id',
-        tanggal = '$tanggal',
-        anamnesis = '$anamnesis',
-        id_pendaftaran = '$id_daftar',
-        id_dokter = '$id_dokter',
-        foto = '$NewFileName'";
-   mysql_query($sql);
-   $id_pemeriksaan = $id;
-   
-   $sql2= "update pendaftaran set 
-        waktu_pelayanan = NOW(),
-        id_dokter = '$id_dokter'
-        where id = '$id_daftar'";
-   mysql_query($sql2);
-   
-   foreach ($id_diagnosis as $key => $data) {
-       $query = "insert into diagnosis set
-            id_pemeriksaan = '$id_pemeriksaan',
-            waktu = '$tanggal ".date("H:i:s")."',
-            id_penyakit = '$data'";
-       mysql_query($query);
-   }
-
-   foreach ($id_tindakan as $key => $data) {
-       $query = "insert into tindakan set
-            waktu = '$tanggal ".date("H:i:s")."',
-            id_pemeriksaan = '$id_pemeriksaan',
-            id_tarif = '$data',
-            nominal = '$nominal[$key]'
-            ";
-       mysql_query($query);
-   }
-   die(json_encode(array('status' => TRUE, 'id' => $id_pemeriksaan)));
+    $tanggal        = date2mysql($_POST['tanggal']);
+    $rpd            = $_POST['rpd'];
+    $rpk            = $_POST['rpk'];
+    $ps             = $_POST['ps'];
+    $oh             = $_POST['oh'];
+    $al             = $_POST['al'];
+    $dl             = $_POST['dl'];
+    $merokok        = $_POST['merokok'];
+    $ka             = $_POST['ka'];
+    $cek = mysql_num_rows(mysql_query("select * from detail_pasien where id_pasien = '$id_pasien'"));
+    if ($cek === 0) {
+        $sql3 = "insert into detail_pasien set
+            id_pasien = '$id_pasien',
+            tanggal = '$tanggal',
+            rpd = '$rpd',
+            rpk = '$rpk',
+            ps = '$ps',
+            oh = '$oh',
+            al = '$al',
+            dl = '$dl',
+            mk = '$merokok',
+            ka = '$ka'";
+        mysql_query($sql3);
+    } else {
+        $sql3 = "update detail_pasien set
+            tanggal = '$tanggal',
+            rpd = '$rpd',
+            rpk = '$rpk',
+            ps = '$ps',
+            oh = '$oh',
+            al = '$al',
+            dl = '$dl',
+            mk = '$merokok',
+            ka = '$ka'
+            where id_pasien = '$id_pasien'";
+        mysql_query($sql3);
+    }
+    $subjectif      = $_POST['subjektif'];
+    $suhubadan      = $_POST['suhubadan'];
+    $tekanandarah   = $_POST['tekanandarah'];
+    $respiration    = $_POST['respirationrate'];
+    $nadi           = $_POST['nadi'];
+    $gdsewaktu      = $_POST['gdsewaktu'];
+    $angkakoltotal  = $_POST['angkakoltotal'];
+    $kadarasamurat  = $_POST['kadarasamurat'];
+    $assesment      = $_POST['assesment'];
+    $goalterapi     = $_POST['goalterapi'];
+    $sarannonfarm   = $_POST['sarannonfarm'];
+    
+    if ($id_periksa === '') {
+        $sql4 = "insert into pemeriksaan set
+            id_pasien = '$id_pasien',
+            tanggal = '$tanggal',
+            subjektif = '$subjectif',
+            suhu_badan = '$suhubadan',
+            tek_darah = '$tekanandarah',
+            res_rate = '$respiration',
+            nadi = '$nadi',
+            gds = '$gdsewaktu',
+            angka_kolesterol = '$angkakoltotal',
+            asam_urat = '$kadarasamurat',
+            assesment = '$assesment',
+            goal = '$goalterapi',
+            saran_non_farmakoterapi = '$sarannonfarm'";
+        mysql_query($sql4);
+        $id_pemeriksaan = mysql_insert_id();
+    } else {
+        $sql4 = "update pemeriksaan set
+            id_pasien = '$id_pasien',
+            tanggal = '$tanggal',
+            subjektif = '$subjectif',
+            suhu_badan = '$suhubadan',
+            tek_darah = '$tekanandarah',
+            res_rate = '$respiration',
+            nadi = '$nadi',
+            gds = '$gdsewaktu',
+            angka_kolesterol = '$angkakoltotal',
+            asam_urat = '$kadarasamurat',
+            assesment = '$assesment',
+            goal = '$goalterapi',
+            saran_non_farmakoterapi = '$sarannonfarm'
+            where id = '$id_periksa'";
+        mysql_query($sql4);
+        $id_pemeriksaan = $id_periksa;
+    }
+    
+    
+    $id_obat_saran  = $_POST['id_obat_saran'];
+    $jumlah         = $_POST['jumlah'];
+    $keterangan     = $_POST['keterangan'];
+    if (!empty($id_obat_saran)) {
+        mysql_query("delete from saran_pengobatan where id_pemeriksaan = '$id_pemeriksaan'");
+        foreach ($id_obat_saran as $key => $data) {
+            $sql5 = "insert into saran_pengobatan set
+                id_pemeriksaan = '$id_pemeriksaan',
+                id_barang = '$data',
+                jumlah = '$jumlah[$key]',
+                keterangan = '$keterangan[$key]'";
+            mysql_query($sql5);
+        }
+    }
+    die(json_encode(array('status' => TRUE, 'id' => $id_pemeriksaan)));
 }
 
 if ($method === 'delete_pemeriksaan') {

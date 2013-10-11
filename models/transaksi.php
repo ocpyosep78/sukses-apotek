@@ -626,9 +626,11 @@ function pemeriksaan_load_data($param) {
         $q.=" and p.id = '".$param['id']."'";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select p.*, pl.nama as pasien, py.topik as penyakit, py.sub_kode as kode from pemeriksaan p
+    $sql = "select p.*, pl.nama as pasien, sp.jumlah, sp.keterangan, CONCAT_WS(' ',b.nama, b.kekuatan, s.nama) as nama_barang from pemeriksaan p
         join pelanggan pl on (p.id_pasien = pl.id)
-        join penyakit py on (p.id_penyakit = py.id)
+        left join saran_pengobatan sp on (p.id = sp.id_pemeriksaan)
+        left join barang b on (sp.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
         where p.id is NOT NULL";
     
     $query = mysql_query($sql.$limit);
