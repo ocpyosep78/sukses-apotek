@@ -32,8 +32,8 @@ $(function() {
     $total_masuk=0;
     $total_keluar = 0;
     foreach ($list_data as $key => $data) { 
-        $awal = mysql_fetch_object(mysql_query("select sum(masuk)-sum(keluar) as awal from arus_kas where waktu < '".$data->waktu."'"));
-        $sisa = mysql_fetch_object(mysql_query("select sum(masuk)-sum(keluar) as sisa from arus_kas where waktu <= '".$data->waktu."'"));
+        $awal = mysql_fetch_object(mysql_query("select sum(masuk)-sum(keluar) as awal from arus_kas where id < '".$data->id."'"));
+        $sisa = mysql_fetch_object(mysql_query("select sum(masuk)-sum(keluar) as sisa from arus_kas where id <= '".$data->id."'"));
         ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
             <td align="center"><?= (++$key) ?></td>

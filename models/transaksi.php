@@ -871,7 +871,7 @@ function retur_penjualan_load_data($param) {
         left join satuan st on (st.id = k.id_kemasan)
         left join satuan stn on (stn.id = b.satuan_kekuatan)
         where rp.id is not NULL $q order by rp.id";
-    //echo $sql;
+    //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
