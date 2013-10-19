@@ -68,5 +68,6 @@ $pageTitles['expired-date.php'] = "Laporan Expired Date";
 $pageTitles['statistik.php'] = "Statistik Penggunaan Obat";
 $pageTitles['laba-rugi.php'] = "Laba Rugi";
 $pageTitles['buku-besar.php'] = "Buku Besar";
+$pageTitles['neraca.php'] = "Neraca";
 
 ?>

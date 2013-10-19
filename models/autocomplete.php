@@ -307,7 +307,7 @@ if ($method === 'get_detail_harga_barang') {
             where k.id = '$id'");
         $rows= mysql_fetch_object($sql);
     } else {
-        $sql= mysql_query("select d.*, d.hj_non_resep as harga_jual, d.hj_resep as harga_jual_resep, k.isi, k.isi_satuan as isi_sat, (k.isi*k.isi_satuan) as isi_satuan
+        $sql= mysql_query("select d.*, d.hj_non_resep as harga_jual, d.hj_resep as harga_jual_resep, k.isi, k.isi_satuan as isi_sat,  IF( k.isi_satuan !=1, '1', '1' ) AS isi_satuan
             from dinamic_harga_jual d
             join kemasan k on (d.id_kemasan = k.id)
             where d.id_kemasan = '$id' and $jml between d.jual_min and d.jual_max");

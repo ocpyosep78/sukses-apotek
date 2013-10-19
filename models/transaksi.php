@@ -921,6 +921,7 @@ function pendapatan_lain_lain_load_data($awal, $akhir) {
 
 function hna_load_data($awal, $akhir) {
     $sql = "select IFNULL(sum(b.hna*s.keluar),'0') as total_hna from stok s join barang b on (s.id_barang = b.id) where transaksi like ('Penjualan%') and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    //echo $sql;
     $row = mysql_fetch_object(mysql_query($sql));
     return $row;
 }
