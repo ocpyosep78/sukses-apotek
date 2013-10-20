@@ -22,15 +22,15 @@ function removeMe(el) {
     parent.parentNode.removeChild(parent);
 }
 
-function check_perubahan_hna() {
-    var jml_baris = $('.tr_rows').length;
-    for (i = 1; i <= jml_baris; i++) {
+function check_perubahan_hna(i) {
+    //var jml_baris = $('.tr_rows').length;
+    //for (i = 1; i <= jml_baris; i++) {
         var barang      = $('#barang'+i).val();
         var ppn         = $('#ppn').val()/100;
         var isi         = $('#isi'+i).val();
         var isi_satuan  = $('#isi_satuan'+i).val();
         var hna         = $('#existing_hna'+i).val(); // existing HNA
-        var hrg_beli    = parseInt(currencyToNumber($('#harga'+i).val()));
+        var hrg_beli    = parseFloat(currencyToNumber($('#harga'+i).val()));
         var new_var     = hrg_beli/(isi*isi_satuan); // pengali
         var new_hna     = (ppn*new_var)+new_var;
         //alert(hrg_beli+' - '+isi+' - '+isi_satuan);
@@ -43,6 +43,7 @@ function check_perubahan_hna() {
                 buttons: {
                     "Ya": function() {
                         $('#hna'+i).val(new_hna);
+                        
                         $(this).dialog().remove();
                         $('#diskon_pr'+i).focus().select();
                     },
@@ -61,7 +62,7 @@ function check_perubahan_hna() {
         if (hna < new_hna) {
             $('#hna'+i).val(new_hna);
         }
-    }
+    //}
 }
 function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi, isi_satuan) {
     var no   = $('.tr_rows').length+1;
@@ -85,7 +86,7 @@ function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi
     $('#penerimaan-list tbody').append(list);
     $('#harga'+no).blur(function() {
         FormNum(this);
-        check_perubahan_hna();
+        check_perubahan_hna(no);
     });
     $('#ed'+no).datepicker({
         changeMonth: true,

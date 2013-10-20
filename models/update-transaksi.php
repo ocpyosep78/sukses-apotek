@@ -281,7 +281,7 @@ if ($method === 'save_penjualannr') {
     $kemasan    = $_POST['kemasan'];
     $jumlah     = $_POST['jumlah'];
     $harga_jual = $_POST['harga_jual'];
-    $ed         = $_POST['ed'];
+    $ed         = isset($_POST['ed'])?$_POST['ed']:NULL;
         foreach ($id_barang as $key => $data) {
             $query = mysql_query("select k.*, b.hna from kemasan k join barang b on (k.id_barang = b.id) where k.id = '$kemasan[$key]'");
             $rows  = mysql_fetch_object($query);
@@ -292,7 +292,7 @@ if ($method === 'save_penjualannr') {
                 id_kemasan = '$kemasan[$key]',
                 expired = '".$ed[$key]."',
                 hna = '".$rows->hna."',
-                qty = '".($jumlah[$key]*$isi)."',
+                qty = '".$jumlah[$key]."',
                 harga_jual = '$harga_jual[$key]'
                 ";
             mysql_query($sql);
@@ -301,13 +301,13 @@ if ($method === 'save_penjualannr') {
             
             //$fefo  = mysql_query("SELECT id_barang, ed, (sum(masuk)-sum(keluar)) as sisa FROM `stok` WHERE id_barang = '$data' and ed > '".date("Y-m-d")."' group by ed order by ed");
             //while ($val = mysql_fetch_object($fefo)) {
-                
+                $ed = isset($ed[$key])?$ed[$key]:'NULL';
                 $stok = "insert into stok set
                     waktu = '$tanggal',
                     id_transaksi = '$id_penjualan',
                     transaksi = 'Penjualan',
                     id_barang = '$data',
-                    ed = '$ed[$key]',
+                    ed = $ed,
                     keluar = '".($jumlah[$key]*$isi)."'";
                 //echo $stok;
                 mysql_query($stok);
@@ -568,7 +568,7 @@ if ($method === 'save_penjualan') {
     $uangserah  = currencyToNumber($_POST['pembayaran']);
     $pembayaran = currencyToNumber($_POST['pembulatan']); // yang dientrikan pembulatan pembayarannya
     $id_resep   = $_POST['id_resep'];
-    $expired    = $_POST['ed'];
+    $expired    = isset($_POST['ed'])?$_POST['ed']:NULL;
     // cek apakah nomor resep pernah ditransaksikan
     $cek = mysql_query("select count(*) as jumlah, id from penjualan where id_resep = '$id_resep'");
     $row = mysql_fetch_object($cek);
@@ -616,7 +616,7 @@ if ($method === 'save_penjualan') {
                 id_kemasan = '$kemasan[$key]',
                 expired = '".$expired[$key]."',
                 hna = '".$rows->hna."',
-                qty = '".($jumlah[$key]*$isi)."',
+                qty = '".$jumlah[$key]."',
                 harga_jual = '$harga_jual[$key]'
                 ";
             mysql_query($sql);

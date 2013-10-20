@@ -79,7 +79,7 @@ $(function() {
             <td align="right"><?= ($id !== $data->id)?rupiah($data->terbayar):NULL ?></td>
             <td><?= $data->nama_barang ?></td>
             <td align="center"><?= $data->kemasan ?></td>
-            <td align="center"><?= $data->qty ?></td>
+            <td align="center"><?= ($data->qty/$data->isi_satuan) ?></td>
             <td align="right"><?= rupiah($data->harga_jual) ?></td>
             <td align="right"><?= rupiah($data->subtotal) ?></td>
             <td class='aksi' align='center'>

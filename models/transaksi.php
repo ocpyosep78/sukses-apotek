@@ -407,7 +407,8 @@ function penjualan_nr_load_data($param) {
     
     $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as customer, a.nama as asuransi,
         (select sum(bayar) from detail_bayar_penjualan where id_penjualan = p.id) as terbayar,
-        concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, (dp.harga_jual*dp.qty) as subtotal
+        concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, dp.qty, dp.harga_jual, 
+        (dp.harga_jual*dp.qty) as subtotal, k.isi_satuan
         from penjualan p
         join detail_penjualan dp on (p.id = dp.id_penjualan)
         join kemasan k on (k.id = dp.id_kemasan)
