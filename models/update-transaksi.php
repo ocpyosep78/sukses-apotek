@@ -283,7 +283,7 @@ if ($method === 'save_penjualannr') {
     $harga_jual = $_POST['harga_jual'];
     $ed         = $_POST['ed'];
         foreach ($id_barang as $key => $data) {
-            $query = mysql_query("select * from kemasan where id = '$kemasan[$key]'");
+            $query = mysql_query("select k.*, b.hna from kemasan k join barang b on (k.id_barang = b.id) where k.id = '$kemasan[$key]'");
             $rows  = mysql_fetch_object($query);
             $isi   = $rows->isi*$rows->isi_satuan;
             
@@ -291,6 +291,7 @@ if ($method === 'save_penjualannr') {
                 id_penjualan = '$id_penjualan',
                 id_kemasan = '$kemasan[$key]',
                 expired = '".$ed[$key]."',
+                hna = '".$rows->hna."',
                 qty = '".($jumlah[$key]*$isi)."',
                 harga_jual = '$harga_jual[$key]'
                 ";
@@ -607,13 +608,14 @@ if ($method === 'save_penjualan') {
     $jumlah     = $_POST['jumlah'];
     $harga_jual = $_POST['harga_jual'];
         foreach ($id_barang as $key => $data) {
-            $query = mysql_query("select * from kemasan where id = '$kemasan[$key]'");
+            $query = mysql_query("select k.*, b.hna from kemasan k join barang b on (k.id_barang = b.id) where k.id = '$kemasan[$key]'");
             $rows  = mysql_fetch_object($query);
             $isi   = $rows->isi*$rows->isi_satuan;
             $sql = "insert into detail_penjualan set
                 id_penjualan = '$id_penjualan',
                 id_kemasan = '$kemasan[$key]',
                 expired = '".$expired[$key]."',
+                hna = '".$rows->hna."',
                 qty = '".($jumlah[$key]*$isi)."',
                 harga_jual = '$harga_jual[$key]'
                 ";

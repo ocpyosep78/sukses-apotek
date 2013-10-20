@@ -920,7 +920,7 @@ function pendapatan_lain_lain_load_data($awal, $akhir) {
 }
 
 function hna_load_data($awal, $akhir) {
-    $sql = "select IFNULL(sum(b.hna*s.keluar),'0') as total_hna from stok s join barang b on (s.id_barang = b.id) where transaksi like ('Penjualan%') and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $sql = "select IFNULL(sum(dp.hna*dp.qty),'0') as total_hna from detail_penjualan dp join penjualan p on (p.id = dp.id_penjualan) where date(p.waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
     //echo $sql;
     $row = mysql_fetch_object(mysql_query($sql));
     return $row;
