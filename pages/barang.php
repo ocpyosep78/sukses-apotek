@@ -224,6 +224,10 @@ function hitung_hja() {
     $('#margin_r_rp').val(numberToCurrency(parseInt(rp_r)));
 }
 
+function set_margin(i,j) {
+    
+}
+
 function form_add() {
 var str = '<div id=form_add>'+
             '<form id="form_barang" action="models/update-masterdata.php?method=save_barang" enctype="multipart/form-data">'+
@@ -530,6 +534,7 @@ function edit_barang(str) {
     });
     $('#fda_pregnan').val(arr[27]);
     $('#fda_lactacy').val(arr[28]);
+    $('#perundangan').val(arr[29]);
     hitung_hja();
 }
 function delete_barang(id, page) {

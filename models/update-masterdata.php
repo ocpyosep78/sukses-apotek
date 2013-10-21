@@ -174,8 +174,8 @@ if ($method === 'save_barang') {
                             margin_resep = '$margin_r[$no]',
                             diskon_persen = '$diskon[$no]',
                             diskon_rupiah = '".currencyToNumber($diskon_rp[$no])."',
-                            hj_non_resep = '$hj_nonresep[$no]',
-                            hj_resep = '$hj_resep[$no]'";
+                            hj_non_resep = '".currencyToNumber($hj_nonresep[$no])."',
+                            hj_resep = '".currencyToNumber($hj_resep[$no])."'";
                         //echo $query1;
                         mysql_query($query1);
                     }
@@ -307,8 +307,8 @@ if ($method === 'save_barang') {
                             margin_resep = '$margin_r[$no]',
                             diskon_persen = '$diskon[$no]',
                             diskon_rupiah = '".currencyToNumber($diskon_rp[$no])."',
-                            hj_non_resep = '$hj_nonresep[$no]',
-                            hj_resep = '$hj_resep[$no]'";
+                            hj_non_resep = '".currencyToNumber($hj_nonresep[$no])."',
+                            hj_resep = '".currencyToNumber($hj_resep[$no])."'";
                         //echo $query1;
                         mysql_query($query1);
                     }
