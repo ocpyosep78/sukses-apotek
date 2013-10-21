@@ -41,9 +41,14 @@ $.ajax({
 });
  $.getJSON('models/autocomplete.php?method=get_expiry_barang&id='+<?= $data->id_barang ?>, function(data){
     $('#ed'+<?= $key ?>).html('');
+    var jmled = 0;
     $.each(data, function (index, value) {
         $('#ed'+<?= $key ?>).append("<option value='"+value.ed+"'>"+datefmysql(value.ed)+"</option>");
+        jmled++;
     });
+    if (jmled === 0) {
+        $('#ed'+<?= $key ?>).append("<option value=''></option>");
+    }
 });
 $('#jumlah'+<?= $key ?>).blur(function() {
     var id  = $('#kemasan'+<?= $key ?>).val();

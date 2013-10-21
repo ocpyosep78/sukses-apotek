@@ -20,6 +20,23 @@ load_data_penerimaan();
 function removeMe(el) {
     var parent = el.parentNode.parentNode;
     parent.parentNode.removeChild(parent);
+    var jumlah = $('.tr_rows').length;
+    var col = 0;
+//    for (i = 1; i <= jumlah; i++) {
+//        $('.tr_rows:eq('+col+')').children('td:eq(0)').html(i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(1)').children('.barang').attr('id','barang'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(1)').children('.id_barang').attr('id','id_barang'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(2)').children('.jumlah').attr('id','jumlah'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(3)').children('.harga_jual').attr('id','harga_jual'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(3)').children('.kemasan').attr('id','kemasan'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(4)').children('.ed').attr('id','ed'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(5)').attr('id','sisa'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(6)').attr('id','hargajual'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(7)').children('.diskon_rupiah').attr('id','diskon_rupiah'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(8)').children('.diskon_persen').attr('id','diskon_persen'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(9)').attr('id','subtotal'+i);
+//        col++;
+//    }
 }
 
 function check_perubahan_hna(i) {
