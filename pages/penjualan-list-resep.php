@@ -41,13 +41,13 @@ $.ajax({
 });
  $.getJSON('models/autocomplete.php?method=get_expiry_barang&id='+<?= $data->id_barang ?>, function(data){
     $('#ed'+<?= $key ?>).html('');
-    var idx = 0;
+    var jmled = 0;
     $.each(data, function (index, value) {
         $('#ed'+<?= $key ?>).append("<option value='"+value.ed+"'>"+datefmysql(value.ed)+"</option>");
-        idx++;
+        jmled++;
     });
-    if (idx === 0) {
-        $('#ed'+<?= $key ?>).append("<option value=''> ....... </option>");
+    if (jmled === 0) {
+        $('#ed'+<?= $key ?>).append("<option value=''></option>");
     }
 });
 $('#jumlah'+<?= $key ?>).blur(function() {

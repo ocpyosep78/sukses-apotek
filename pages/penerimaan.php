@@ -20,45 +20,66 @@ load_data_penerimaan();
 function removeMe(el) {
     var parent = el.parentNode.parentNode;
     parent.parentNode.removeChild(parent);
+    var jumlah = $('.tr_rows').length;
+    var col = 0;
+//    for (i = 1; i <= jumlah; i++) {
+//        $('.tr_rows:eq('+col+')').children('td:eq(0)').html(i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(1)').children('.barang').attr('id','barang'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(1)').children('.id_barang').attr('id','id_barang'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(2)').children('.jumlah').attr('id','jumlah'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(3)').children('.harga_jual').attr('id','harga_jual'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(3)').children('.kemasan').attr('id','kemasan'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(4)').children('.ed').attr('id','ed'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(5)').attr('id','sisa'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(6)').attr('id','hargajual'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(7)').children('.diskon_rupiah').attr('id','diskon_rupiah'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(8)').children('.diskon_persen').attr('id','diskon_persen'+i);
+//        $('.tr_rows:eq('+col+')').children('td:eq(9)').attr('id','subtotal'+i);
+//        col++;
+//    }
 }
 
 function check_perubahan_hna(i) {
-    var barang      = $('#barang'+i).val();
-    var ppn         = $('#ppn').val()/100;
-    var isi         = $('#isi'+i).val();
-    var isi_satuan  = $('#isi_satuan'+i).val();
-    var hna         = $('#existing_hna'+i).val(); // existing HNA
-    var hrg_beli    = parseInt(currencyToNumber($('#harga'+i).val()));
-    var new_var     = hrg_beli/(isi*isi_satuan); // pengali
-    var new_hna     = (ppn*new_var)+new_var;
-    //alert(hrg_beli+' - '+isi+' - '+isi_satuan);
-    if (hna > new_hna) {
-        $('<div>HNA untuk barang '+barang+' mengalami perubahan dari Rp. '+numberToCurrency(hna)+' menjadi Rp. '+numberToCurrency(new_hna)+'</br> Apakah anda akan melakukan perubahan?</div>').dialog({
-            title: 'Konfirmasi Perubahan HNA',
-            autoOpen: true,
-            modal: true,
-            width: 400,
-            buttons: {
-                "Ya": function() {
-                    $('#hna'+i).val(new_hna);
-                    $(this).dialog().remove();
-                    $('#diskon_pr'+i).focus().select();
-                },
-                "Tidak": function() {
+    //var jml_baris = $('.tr_rows').length;
+    //for (i = 1; i <= jml_baris; i++) {
+        var barang      = $('#barang'+i).val();
+        var ppn         = $('#ppn').val()/100;
+        var isi         = $('#isi'+i).val();
+        var isi_satuan  = $('#isi_satuan'+i).val();
+        var hna         = $('#existing_hna'+i).val(); // existing HNA
+        var hrg_beli    = parseFloat(currencyToNumber($('#harga'+i).val()));
+        var new_var     = hrg_beli/(isi*isi_satuan); // pengali
+        var new_hna     = (ppn*new_var)+new_var;
+        //alert(hrg_beli+' - '+isi+' - '+isi_satuan);
+        if (hna > new_hna) {
+            $('<div>HNA untuk barang '+barang+' mengalami perubahan dari Rp. '+numberToCurrency(hna)+' menjadi Rp. '+numberToCurrency(new_hna)+'</br> Apakah anda akan melakukan perubahan?</div>').dialog({
+                title: 'Konfirmasi Perubahan HNA',
+                autoOpen: true,
+                modal: true,
+                width: 400,
+                buttons: {
+                    "Ya": function() {
+                        $('#hna'+i).val(new_hna);
+                        
+                        $(this).dialog().remove();
+                        $('#diskon_pr'+i).focus().select();
+                    },
+                    "Tidak": function() {
+                        $('#hna'+i).val(hna);
+                        $(this).dialog().remove();
+                        $('#diskon_pr'+i).focus().select();
+                    }
+                }, close: function() {
                     $('#hna'+i).val(hna);
                     $(this).dialog().remove();
                     $('#diskon_pr'+i).focus().select();
                 }
-            }, close: function() {
-                $('#hna'+i).val(hna);
-                $(this).dialog().remove();
-                $('#diskon_pr'+i).focus().select();
-            }
-        });
-    }
-    if (hna < new_hna) {
-        $('#hna'+i).val(new_hna);
-    }
+            });
+        }
+        if (hna < new_hna) {
+            $('#hna'+i).val(new_hna);
+        }
+    //}
 }
 function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi, isi_satuan) {
     var no   = $('.tr_rows').length+1;
@@ -179,7 +200,7 @@ function form_add() {
                     '<table width=100%>'+
                         '<tr><td>Diskon:</td><td><input type=text name=disc_pr id=disc_pr value="0" size=10 /> %, Rp. <input type=text name=disc_rp id=disc_rp onblur=FormNum(this); onfocus=javascript:this.value=currencyToNumber(this.value); size=10 value="0" /></td></tr>'+
                         '<tr><td>Materai (Rp.):</td><td><input type=text name=materai onblur=FormNum(this); id=materai size=10 value="0" /></td></tr>'+
-                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn size=10 value="0" /> %</td></tr>'+
+                        '<tr><td>PPN:</td><td><input type=text name=ppn id=ppn onblur="check_perubahan_hna();" size=10 value="0" /> %</td></tr>'+
                         '<tr><td>Total (Rp.):</td><td><input type=text name=total id=total size=10 /></td></tr>'+
                         '<tr><td width=20%>Nama Barang:</td><td width=50%><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?><?= form_hidden(NULL, NULL, 'id=hna') ?><?= form_hidden(NULL, NULL, 'id=isi') ?><?= form_hidden(NULL, NULL, 'id=isi_satuan') ?></td></tr>'+
                         '<tr><td>Kemasan & Jumlah:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select> & <?= form_input('jumlah', NULL, 'id=jumlah size=10') ?></td></tr>'+

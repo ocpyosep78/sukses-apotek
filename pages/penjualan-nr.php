@@ -112,7 +112,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
                 '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_barang[] value="'+id_brg+'" class=id_barang id=id_barang'+jml+' /></td>'+
                 '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" class=jumlah style="text-align: center;" /></td>'+
                 '<td><input type=hidden name=harga_jual[] id=harga_jual'+jml+' class=harga_jual /> <input type=hidden name=isi_satuan[] id=isi_satuan'+jml+' /> <select name=kemasan[] class=kemasan id=kemasan'+jml+'></select></td>'+
-                '<td align=center><select name=ed[] class=ed id=ed'+jml+' class=ed></select></td>'+
+                '<td align=center><select name=ed[] class=ed id=ed'+jml+'></select></td>'+
                 '<td align=center id=sisa'+jml+'></td>'+
                 '<td align=right id=hargajual'+jml+'></td>'+
                 '<td><input type=text name=diskon_rupiah[] class=diskon_rupiah style="text-align: right;" id=diskon_rupiah'+jml+' value="0" onblur="FormNum(this)" /></td>'+
@@ -130,9 +130,14 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
     });
     $.getJSON('models/autocomplete.php?method=get_expiry_barang&id='+id_brg, function(data){
         $('#ed'+jml).html('');
+        var jmled = 0;
         $.each(data, function (index, value) {
             $('#ed'+jml).append("<option value='"+value.ed+"'>"+datefmysql(value.ed)+"</option>");
+            jmled++;
         });
+        if (jmled === 0) {
+            $('#ed'+jml).append("<option value=''></option>");
+        }
     });
     $.ajax({
         url: 'models/autocomplete.php?method=get_detail_harga_barang&id='+id_packing+'&jumlah='+jumlah,
